@@ -1,78 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alvin Li Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Top Navigation -->
-    <header>
-        <nav class="top-nav">
-            <div class="logo">Alvin Li</div>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#work">Work</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<html>
+  <head>
+   <title>Fall Final Exam</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section id="hero" class="section hero">
-            <h1>Welcome to My Portfolio</h1>
-            <p>Explore my work and experience.</p>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section about">
-            <h2>About Me</h2>
-            <p>Hello! I'm Alvin Li, a double major in Computer Science Engineering and Management and Economics. Passionate about innovation and technology, I strive to create impactful solutions.</p>
-        </section>
-
-        <!-- Work Section -->
-        <section id="work" class="section work">
-            <h2>My Work</h2>
-            <div class="work-gallery">
-                <div class="work-item">Project 1</div>
-                <div class="work-item">Project 2</div>
-                <div class="work-item">Project 3</div>
+  <body>
+    <div class="left">
+        <div class="banner center-content" id="top">
+            <img src="images/reset.png" id="rebetset" class ="invis" onclick="reset()">
+        </div>
+      <div class="leftrow">
+        <div class="box bottomright">
+          <!-- top left puzzle piece -->
+          <img src="images/puzzle/doodle1.jpg" id="slot_1" class ="invis" onclick="piece1()">
+        </div>
+        <div class="box bottomleft">
+           <!-- top right puzzle piece -->
+          <img src="images/puzzle/doodle1.jpg" id="slot_2" class ="invis" onclick="piece2()">
+        </div>
+    </div>
+    <div class="leftrow">
+        <div class="box topright">
+           <!-- bottom left puzzle piece -->
+          <img src="images/puzzle/doodle1.jpg" id="slot_3" class ="invis" onclick="piece3()">
+        </div>
+        <div class="box topleft">
+          <!-- bottom right puzzle piece -->
+          <img src="images/puzzle/doodle1.jpg" id="slot_4" class ="invis" onclick="piece4()">
+        </div>
+    </div>
+    </div>
+    <div class="right">
+        <div class="row">
+            <div class="box center-content yellow " id="backtl">
+              <img src="images/patrick.png" id="top-left" class="clickable" onclick="changeToSponge1()">
             </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section contact">
-            <h2>Contact Me</h2>
-            <form>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" required></textarea>
-
-                <button type="submit">Send</button>
-            </form>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <nav class="bottom-nav">
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#work">Work</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <p>&copy; 2025 Alvin Li. All Rights Reserved.</p>
-    </footer>
-
+            <div class="box center-content pink " id="backtr">
+              <img src="images/squidward.png" id="top-right" class="clickable" onclick="changeToSponge2()">
+            </div>
+        </div>
+        <div class="row">
+            <div class="box center-content purple "id="backbl">
+              <img src="images/sandy.png" id="bottom-left" class="clickable" onclick="changeToSponge3()">
+            </div>
+            <div class="box center-content green" id="backbr">
+              <img src="images/krabs.png" id="bottom-right" class="clickable" onclick="changeToSponge4()">
+            </div>
+        </div>
+    </div>
+  
+    <audio src="sounds/victoryscreech.mp3" id="done"></audio>
+    <audio src="sounds/theme.mp3" id="theme"></audio>
     <script src="script.js"></script>
-</body>
 </html>
