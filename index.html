@@ -25,7 +25,6 @@ html,body{
 }
 .active{opacity:1}
 
-/* LOGO */
 #logo img{
   width:320px;
   animation:pulse 2s infinite;
@@ -44,7 +43,6 @@ html,body{
   to { visibility: hidden; }
 }
 
-/* BOOT */
 .boot{
   text-align:left;
   border:1px solid #00ff88;
@@ -73,7 +71,6 @@ html,body{
   user-select:none;
 }
 
-/* CONSOLE */
 #console{
   align-items:flex-start;
   justify-content:flex-start;
@@ -102,7 +99,8 @@ input{
 <body>
 
 <div id="logo" class="screen active">
-  <img src="YOUR_LOGO.png">
+  <img src="https://i.postimg.cc/TpmCsdvp/Alvin-OSLogo.png">
+  
 </div>
 
 <div id="boot" class="screen">
@@ -162,7 +160,7 @@ function boot(){
 
 const terminal=document.getElementById("terminal");
 
-/* ---------- TERMINAL FX ---------- */
+/* ---------- TERMINAL thing magigs ---------- */
 function typeLine(text, delay=0, speed=18){
   return new Promise(res=>{
     if(text === "") { res(); return; }
@@ -212,36 +210,66 @@ function progressLine(prefix){
   });
 }
 
-/* ---------- FLOW ---------- */
+async function startConsole() {
+  if (locked) return;
+  locked = true;
+  terminal.innerHTML = '';
+  let now = new Date();
 
-async function startConsole(){
-  if(locked) return;
-  locked=true;
-  terminal.innerHTML="";
+  const cores = navigator.hardwareConcurrency || 0;
+  let ramDisplay = (navigator.deviceMemory === 0.5 || navigator.deviceMemory === 8 || !navigator.deviceMemory) 
+    ? 'UNKNOWN / UNAUTHORIZED' : `${navigator.deviceMemory || 0}GB`;
+  let bluetoothDisplay = 'UNKNOWN / UNAUTHORIZED';
+  let location = 'UNKNOWN / UNAUTHORIZED';
+  try {
+    location = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+  } catch (e) {}
 
-  let now=new Date();
+  const touchscreen = window.matchMedia('(pointer:coarse)').matches ? 'true' : 'false';
 
-  await instantLine("ALVINLIU(R)2005 OfficeofAlvinLiu, Inc.");
-  await typeLine("Windows (Win32)",200);
-  await typeLine("Cores: "+navigator.hardwareConcurrency,0);
-  await typeLine("RAM: 8GB",0);
-  await typeLine("Bluetooth: true",0);
-  await typeLine("Touchscreen: false",0);
-  await typeLine("Power Level: "+Math.floor(Math.random()*30+60)+"%",0);
-  await typeLine("Date: "+now.toISOString(),0);
+  let powerLevel = 'N/A (Desktop)';
+  if ('getBattery' in navigator) {
+    try {
+      const battery = await navigator.getBattery();
+      powerLevel = `${Math.round(battery.level * 100)}% (${battery.charging ? 'Charging' : 'Discharging'})`;
+    } catch (e) {}
+  }
 
-  await typeLine("Attempting to establish connection...",200);
-  await progressLine("Connection Established… ");
-  await typeLine("Verifying…",200);
-  await typeLine("Failed to verify unknown client.",200);
+  let gpu = 'None';
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) gpu = gl.getParameter(gl.RENDERER);
+  } catch (e) {}
 
-  await typeLine("Please enter applicable protocol number",200);
-  await typeLine("[1] Recruiter",150);
-  await typeLine("[2] Casual Viewer",0);
-  await typeLine("[3] Player (coming soon!)",0);
+  const resolution = `${screen.width}x${screen.height}`;
+
+  await instantLine(`ALVINLIUR@2005 Office of Alvin Liu, Inc.`);
+
+  await typeLine(`OS: Windows (Win32)`, 200);
+  await typeLine(`Cores: ${cores}`, 0);
+  await typeLine(`RAM: ${ramDisplay}`, 0);
+  await typeLine(`GPU: ${gpu}`, 0);
+  await typeLine(`Resolution: ${resolution}`, 0);
+  await typeLine(`Bluetooth: ${bluetoothDisplay}`, 0);
+  await typeLine(`Touchscreen: ${touchscreen}`, 0);
+  await typeLine(`Power Level: ${powerLevel}`, 0);
+  await typeLine(`Date: ${now.toISOString()}`, 0);
+  await typeLine(`Location: ${location}`, 0);
+
+  await typeLine(`Attempting to establish connection...`, 200);
+  await progressLine(`Connection: `);
+  await instantLine(`Connection Established`);
+  await typeLine(`Verifying...`, 200);
+  await typeLine(`Failed to verify unknown client.`, 200);
+  await typeLine(`Please enter applicable protocol number`, 200);
+  await typeLine(`1. Recruiter`, 150);
+  await typeLine(`2. Casual Viewer`, 0);
+  await typeLine(`3. Player (coming soon!)`, 0);
 
   inputPrompt();
 }
+
 
 
 function inputPrompt(){
@@ -277,13 +305,15 @@ function verify(val){
         setTimeout(()=>{
           document.body.classList.add("fadeout");
           setTimeout(()=>{
-            window.location.href="https://www.officeofalvinliu.com/home";
+            window.location.href="https://www.officeofalvinliu.com/";
           },900);
         },1800);
       });
     },600);
   });
 }
+setTimeout(() => { show(1); startTimer(); }, 2500);
+
 </script>
 
 </body>
