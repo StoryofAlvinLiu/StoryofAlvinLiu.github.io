@@ -1,199 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Alvin Liu's Portfolio</title>
-  <meta name="description" content="Portfolio of Alvin Liu specializing in Computer Science & Engineering, Management & Business Economics, and Marketing.">
-  <link rel="icon" href="https://framerusercontent.com/images/JHX8Ktd7YYZ4tAjGFDC2KfuUpYU.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Switzer:wght@700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-primary: #f2f3f4;
-      --bg-card: #e0e0e0;
-      --text-primary: #000;
-      --text-secondary: #999;
-      --accent: #09f;
-      --border: #eee;
-      --spacing-xs: 10px;
-      --spacing-sm: 15px;
-      --spacing-md: 20px;
-      --spacing-lg: 40px;
-      --spacing-xl: 80px;
-      --border-radius: 20px;
-    }
-    * { box-sizing: border-box; }
-    body { 
-      margin: 0; padding: 0; font-family: 'Inter', sans-serif; 
-      font-size: 16px; line-height: 1.5; color: var(--text-primary); 
-      background: var(--bg-primary); overflow-x: hidden;
-    }
-    h1, h2, p { margin: 0; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
-    /* Navbar */
-    nav { 
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-      background: #1f1f1f; backdrop-filter: blur(10px); 
-      border-bottom: 1px solid rgba(255,255,255,0.1); 
-    }
-    .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 75px; }
-    .logo { font-family: 'Switzer', sans-serif; font-size: 24px; font-weight: 700; color: white; text-decoration: none; }
-    .nav-links { display: flex; gap: var(--spacing-sm); }
-    .nav-link { color: white; text-decoration: none; font-weight: 500; opacity: 0.8; transition: opacity 0.3s; }
-    .nav-link:hover { opacity: 1; }
-    @media (max-width: 768px) { .nav-links { display: none; } }
-    /* Hero */
-    .hero { 
-      padding-top: 75px; padding-bottom: var(--spacing-xl); text-align: center; 
-      background: linear-gradient(135deg, var(--bg-primary) 0%, white 100%);
-    }
-    .hero h1 { 
-      font-family: 'Switzer', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); 
-      font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: var(--spacing-sm);
-    }
-    .hero-subtitle { 
-      font-size: clamp(1rem, 2.5vw, 1.125rem); color: var(--text-secondary); 
-      font-weight: 700; letter-spacing: 0.01em; margin-bottom: var(--spacing-xl);
-    }
-    /* Features */
-    .features { padding: var(--spacing-xl) var(--spacing-md); }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--spacing-lg); }
-    .feature-card { 
-      display: flex; gap: var(--spacing-sm); background: var(--bg-card); border-radius: var(--border-radius); 
-      padding: var(--spacing-md); height: 320px; transition: transform 0.3s ease, box-shadow 0.3s ease;
-      overflow: hidden;
-    }
-    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .feature-img { flex: 1; border-radius: 12px; background-size: cover; background-position: center; min-width: 250px; }
-    .feature-text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-    .feature-title { 
-      font-size: clamp(1.5rem, 3vw, 1.875rem); font-weight: 700; letter-spacing: -0.02em; 
-      margin-bottom: var(--spacing-xs); line-height: 1;
-    }
-    .feature-desc { 
-      font-size: clamp(0.875rem, 2vw, 1rem); color: var(--text-secondary); line-height: 1.6; 
-      font-variation-settings: 'wght' 500;
-    }
-    /* Footer */
-    .footer { 
-      background: var(--bg-primary); border-top: 1px solid var(--border); padding: var(--spacing-lg) var(--spacing-md); 
-      text-align: center;
-    }
-    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); }
-    .footer-link { font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; font-variation-settings: 'wght' 500; }
-    /* Animations */
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    .feature-card { animation: fadeInUp 0.6s ease forwards; }
-    .feature-card:nth-child(1) { animation-delay: 0.1s; }
-    .feature-card:nth-child(2) { animation-delay: 0.2s; }
-    .feature-card:nth-child(3) { animation-delay: 0.3s; }
-    .feature-card:nth-child(4) { animation-delay: 0.4s; }
-    /* Mobile */
-    @media (max-width: 768px) {
-      .container { padding: 0 var(--spacing-sm); }
-      .hero { padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-xl); }
-      .features { padding: var(--spacing-lg) var(--spacing-sm); }
-      .features-grid { grid-template-columns: 1fr; }
-      .feature-card { flex-direction: column; height: auto; text-align: center; }
-      .feature-img { height: 200px; width: 100%; }
-    }
-    /* Smooth scroll */
-    html { scroll-behavior: smooth; }
-  </style>
+<meta charset="UTF-8">
+<title>Office of Alvin Liu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  background:black;
+  color:#00ff88;
+  font-family:Consolas,monospace;
+  height:100%;
+  overflow:hidden;
+}
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition:.8s;
+  
+}
+.active{opacity:1}
+
+/* LOGO */
+#logo img{
+  width:320px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:.4}
+  50%{opacity:1}
+}
+.cursor {
+  display:inline-block;
+  width:10px;
+  animation: blink 1s steps(2,start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+/* BOOT */
+.boot{
+  text-align:left;
+  border:1px solid #00ff88;
+  padding:30px;
+  width:600px;
+}
+.option{
+  border:1px solid #00ff88;
+  padding:12px;
+  margin-top:20px;
+  cursor:pointer;
+}
+.option.active{
+  background:#00ff88;
+  color:black;
+}
+.screen{
+  pointer-events:none;
+}
+
+.screen.active{
+  pointer-events:auto;
+}
+
+.option{
+  user-select:none;
+}
+
+/* CONSOLE */
+#console{
+  align-items:flex-start;
+  justify-content:flex-start;
+}
+.console{
+  width:100%;
+  padding:40px;
+}
+.line{margin:6px 0}
+input{
+  background:none;
+  border:none;
+  color:#00ff88;
+  outline:none;
+  font-family:inherit;
+}
+.fadeout{
+  animation:fadeout 1s forwards;
+}
+@keyframes fadeout{
+  to{opacity:0}
+}
+</style>
 </head>
+
 <body>
-  <!-- Navbar -->
-  <nav>
-    <div class="container nav-inner">
-      <a href="#" class="logo">Alvin Liu</a>
-      <div class="nav-links">
-        <a href="#journey" class="nav-link">My Journey</a>
-        <a href="#career" class="nav-link">Professional Career</a>
-        <a href="#certs" class="nav-link">Certifications</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </div>
-    </div>
-  </nav>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container">
-      <h1>Take a look at what I can do for you!</h1>
-      <p class="hero-subtitle">Here are some of my skills…and I'm always trying to learn more!</p>
-    </div>
-  </section>
+<div id="logo" class="screen active">
+  <img src="YOUR_LOGO.png">
+</div>
 
-  <!-- Features -->
-  <section class="features" id="skills">
-    <div class="container">
-      <div class="features-grid">
-        <!-- CS Card -->
-        <div class="feature-card">
-          <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/KCShtRMn8b25jNyVf9qKP9yNuQ.jpg');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Computer Science & Engineering B.S</h2>
-            <p class="feature-desc">Proficient in full-stack development with expertise in JavaScript, Python, and additional programming languages. Winner of a first-place hackathon award for innovative software development. Industry experience through an internship with Northrop Grumman, contributing to 3D CAD design and CubeSat satellite engineering projects.</p>
-          </div>
-        </div>
-        <!-- Business Card -->
-        <div class="feature-card">
-          <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/3pb2YIZPlXR8xzUjDbjVaEeNJmc.png');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Management and Business & Economics B.S</h2>
-            <p class="feature-desc">Experienced in intellectual property management in a Tech Transfer office and the application of economic principles. Collaborated with the Small Business Development Center to support business growth and strategic development.</p>
-          </div>
-        </div>
-        <!-- Speaker Card -->
-        <div class="feature-card">
-          <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/kmClzKxYesYCxXUqXzAt5JUtUj8.jpg');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Friendly Public Speaker</h2>
-            <p class="feature-desc">Outgoing, approachable, and highly personable, with a proven ability to connect with diverse audiences. Delivered speeches to audiences of thousands, including graduation addresses, motivational talks, and end-of-year banquets for clubs and organizations. Experienced leader with numerous executive positions held across student and community organizations.</p>
-          </div>
-        </div>
-        <!-- Marketing Card -->
-        <div class="feature-card">
-          <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/9C7xItOHRG0L79ZudqgVQYETmYc.png');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Marketing & Advertising</h2>
-            <p class="feature-desc">Former social media manager for three companies, skilled in brand growth and audience engagement. Competed in business pitch competitions and collaborated with top advertising agencies, including Siegel+Gale and The Woo Agency, to deliver campaigns for real-world clients.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<div id="boot" class="screen">
+  <div class="boot">
+    <h2>ALVIN OS BOOT MANAGER</h2><br>
+    Choose an operating system to start.<br>
+    (Use arrow keys then ENTER)<br><br>
 
-  <!-- Footer -->
-  <footer class="footer" id="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div><a href="#" class="footer-link">Home Page</a></div>
-        <div><a href="#journey" class="footer-link">My Journey</a></div>
-        <div><a href="#career" class="footer-link">Professional Career</a></div>
-        <div><a href="#certs" class="footer-link">My Certifications</a></div>
-        <div><a href="#full" class="footer-link">My Full Journey</a></div>
-        <div><a href="#recs" class="footer-link">Recommendations</a></div>
-        <div><a href="#contact" class="footer-link">Contact Me</a></div>
-      </div>
-    </div>
-  </footer>
+    <div class="option active" id="bootOption">ALVIN OS v1.0 STABLE</div>
 
-  <script>
-    // Smooth scrolling for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    <br>
+    To specify an advanced option press "~"<br><br>
+    Seconds until start: <span id="timer">12</span>
+  </div>
+</div>
+
+<div id="console" class="screen">
+  <div class="console" id="terminal"></div>
+</div>
+<script>
+let screens=["logo","boot","console"];
+let booted=false;
+let locked=false;
+let t=12;
+let timer;
+
+const show=i=>{
+  screens.forEach(s=>document.getElementById(s).classList.remove("active"));
+  document.getElementById(screens[i]).classList.add("active");
+};
+
+setTimeout(()=>{show(1); startTimer();},2500);
+
+function startTimer(){
+  timer=setInterval(()=>{
+    t--;
+    timerEl.textContent=t;
+    if(t<=0) boot();
+  },1000);
+}
+
+const timerEl=document.getElementById("timer");
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !booted) boot();
+});
+
+document.getElementById("bootOption").onclick=()=>boot();
+
+function boot(){
+  if(booted) return;
+  booted=true;
+  clearInterval(timer);
+  show(2);
+  startConsole();
+}
+
+const terminal=document.getElementById("terminal");
+
+/* ---------- TERMINAL FX ---------- */
+function typeLine(text, delay=0, speed=18){
+  return new Promise(res=>{
+    if(text === "") { res(); return; }
+
+    setTimeout(()=>{
+      const div=document.createElement("div");
+      div.className="line";
+      terminal.appendChild(div);
+
+      let i=0;
+      const typer=setInterval(()=>{
+        div.textContent += text[i++] || "";
+        terminal.scrollTop=terminal.scrollHeight;
+        if(i>=text.length){
+          clearInterval(typer);
+          res();
         }
-      });
-    });
+      },speed);
+    },delay);
+  });
+}
 
-    // Mobile menu toggle (hamburger - add if needed)
-    // Intersection Observer for animations (already in CSS, enhance if desired)
-  </script>
+function instantLine(text){
+  return new Promise(res=>{
+    const div=document.createElement("div");
+    div.className="line";
+    div.textContent=text;
+    terminal.appendChild(div);
+    res();
+  });
+}
+
+function progressLine(prefix){
+  return new Promise(res=>{
+    const div=document.createElement("div");
+    div.className="line";
+    terminal.appendChild(div);
+    let p=0;
+    const run=setInterval(()=>{
+      p++;
+      div.textContent = prefix + p + "%";
+      if(p>=100){
+        clearInterval(run);
+        res();
+      }
+    },15);
+  });
+}
+
+/* ---------- FLOW ---------- */
+
+async function startConsole(){
+  if(locked) return;
+  locked=true;
+  terminal.innerHTML="";
+
+  let now=new Date();
+
+  await instantLine("ALVINLIU(R)2005 OfficeofAlvinLiu, Inc.");
+  await typeLine("Windows (Win32)",200);
+  await typeLine("Cores: "+navigator.hardwareConcurrency,0);
+  await typeLine("RAM: 8GB",0);
+  await typeLine("Bluetooth: true",0);
+  await typeLine("Touchscreen: false",0);
+  await typeLine("Power Level: "+Math.floor(Math.random()*30+60)+"%",0);
+  await typeLine("Date: "+now.toISOString(),0);
+
+  await typeLine("Attempting to establish connection...",200);
+  await progressLine("Connection Established… ");
+  await typeLine("Verifying…",200);
+  await typeLine("Failed to verify unknown client.",200);
+
+  await typeLine("Please enter applicable protocol number",200);
+  await typeLine("[1] Recruiter",150);
+  await typeLine("[2] Casual Viewer",0);
+  await typeLine("[3] Player (coming soon!)",0);
+
+  inputPrompt();
+}
+
+
+function inputPrompt(){
+  const wrap=document.createElement("div");
+  wrap.className="line";
+  wrap.innerHTML=`> <span id="typed"></span><span class="cursor">|</span>`;
+  terminal.appendChild(wrap);
+
+  let buffer="";
+
+  document.onkeydown=e=>{
+    if(e.key==="Backspace"){
+      buffer=buffer.slice(0,-1);
+    } 
+    else if(e.key==="Enter"){
+      document.onkeydown=null;
+      verify(buffer);
+      return;
+    } 
+    else if(e.key.length===1){
+      buffer+=e.key;
+    }
+
+    document.getElementById("typed").textContent=buffer;
+  };
+}
+
+
+function verify(val){
+  typeLine("Verifying...",100).then(()=>{
+    setTimeout(()=>{
+      typeLine("Access Granted. Welcome to the Office of Alvin Liu.",0).then(()=>{
+        setTimeout(()=>{
+          document.body.classList.add("fadeout");
+          setTimeout(()=>{
+            window.location.href="https://www.officeofalvinliu.com/home";
+          },900);
+        },1800);
+      });
+    },600);
+  });
+}
+</script>
+
 </body>
 </html>
