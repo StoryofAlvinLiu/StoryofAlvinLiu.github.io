@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,168 +24,490 @@
       --spacing-xl: 80px;
       --border-radius: 20px;
     }
-    * { box-sizing: border-box; }
-    body { 
-      margin: 0; padding: 0; font-family: 'Inter', sans-serif; 
-      font-size: 16px; line-height: 1.5; color: var(--text-primary); 
-      background: var(--bg-primary); overflow-x: hidden;
+
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
-    h1, h2, p { margin: 0; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--spacing-md); }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      overflow-x: hidden;
+    }
+
+    h1, h2, p {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+    }
+
     /* Navbar */
-    nav { 
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-      background: #1f1f1f; backdrop-filter: blur(10px); 
-      border-bottom: 1px solid rgba(255,255,255,0.1); 
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(31, 31, 31, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.3s ease;
     }
-    .nav-inner { display: flex; justify-content: space-between; align-items: center; height: 75px; }
-    .logo { font-family: 'Switzer', sans-serif; font-size: 24px; font-weight: 700; color: white; text-decoration: none; }
-    .nav-links { display: flex; gap: var(--spacing-sm); }
-    .nav-link { color: white; text-decoration: none; font-weight: 500; opacity: 0.8; transition: opacity 0.3s; }
-    .nav-link:hover { opacity: 1; }
-    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    .nav-scrolled {
+      background: rgba(31, 31, 31, 0.98);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 75px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    .logo {
+      font-family: 'Switzer', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .logo:hover {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--spacing-sm);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      opacity: 0.9;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    .nav-link:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Menu */
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-menu-btn:hover {
+      opacity: 0.8;
+    }
+
     /* Hero */
-    .hero { 
-      padding-top: 75px; padding-bottom: var(--spacing-xl); text-align: center; 
-      background: linear-gradient(135deg, var(--bg-primary) 0%, white 100%);
+    .hero {
+      padding-top: 100px;
+      padding-bottom: var(--spacing-xl);
+      text-align: center;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #ffffff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
     }
-    .hero h1 { 
-      font-family: 'Switzer', sans-serif; font-size: clamp(2.5rem, 5vw, 4rem); 
-      font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: var(--spacing-sm);
+
+    .hero-content {
+      width: 100%;
     }
-    .hero-subtitle { 
-      font-size: clamp(1rem, 2.5vw, 1.125rem); color: var(--text-secondary); 
-      font-weight: 700; letter-spacing: 0.01em; margin-bottom: var(--spacing-xl);
+
+    .hero h1 {
+      font-family: 'Switzer', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: var(--spacing-sm);
+      background: linear-gradient(135deg, var(--text-primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
+
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      color: var(--text-secondary);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      margin-bottom: var(--spacing-xl);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     /* Features */
-    .features { padding: var(--spacing-xl) var(--spacing-md); }
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--spacing-lg); }
-    .feature-card { 
-      display: flex; gap: var(--spacing-sm); background: var(--bg-card); border-radius: var(--border-radius); 
-      padding: var(--spacing-md); height: 320px; transition: transform 0.3s ease, box-shadow 0.3s ease;
+    .features {
+      padding: var(--spacing-xl) 0;
+    }
+
+    .features h2 {
+      text-align: center;
+      font-family: 'Switzer', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: var(--spacing-lg);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(40px);
     }
-    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    .feature-img { flex: 1; border-radius: 12px; background-size: cover; background-position: center; min-width: 250px; }
-    .feature-text { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-    .feature-title { 
-      font-size: clamp(1.5rem, 3vw, 1.875rem); font-weight: 700; letter-spacing: -0.02em; 
-      margin-bottom: var(--spacing-xs); line-height: 1;
+
+    .feature-card.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
-    .feature-desc { 
-      font-size: clamp(0.875rem, 2vw, 1rem); color: var(--text-secondary); line-height: 1.6; 
-      font-variation-settings: 'wght' 500;
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
     }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .feature-img {
+      width: 100%;
+      height: 220px;
+      border-radius: 16px;
+      background-size: cover;
+      background-position: center;
+      margin-bottom: var(--spacing-md);
+      transition: transform 0.4s ease;
+    }
+
+    .feature-card:hover .feature-img {
+      transform: scale(1.05);
+    }
+
+    .feature-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+      line-height: 1.2;
+    }
+
+    .feature-desc {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-variation-settings: 'wght' 450;
+    }
+
     /* Footer */
-    .footer { 
-      background: var(--bg-primary); border-top: 1px solid var(--border); padding: var(--spacing-lg) var(--spacing-md); 
+    .footer {
+      background: #f8f9fa;
+      border-top: 1px solid var(--border);
+      padding: var(--spacing-xl) var(--spacing-md);
       text-align: center;
     }
-    .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); }
-    .footer-link { font-size: 0.875rem; color: var(--text-secondary); text-decoration: none; font-variation-settings: 'wght' 500; }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .footer-link {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 8px 0;
+      display: block;
+      transition: color 0.3s ease;
+      font-variation-settings: 'wght' 500;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    .footer p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
     /* Animations */
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-    .feature-card { animation: fadeInUp 0.6s ease forwards; }
-    .feature-card:nth-child(1) { animation-delay: 0.1s; }
-    .feature-card:nth-child(2) { animation-delay: 0.2s; }
-    .feature-card:nth-child(3) { animation-delay: 0.3s; }
-    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* Mobile */
     @media (max-width: 768px) {
-      .container { padding: 0 var(--spacing-sm); }
-      .hero { padding: var(--spacing-lg) var(--spacing-sm) var(--spacing-xl); }
-      .features { padding: var(--spacing-lg) var(--spacing-sm); }
-      .features-grid { grid-template-columns: 1fr; }
-      .feature-card { flex-direction: column; height: auto; text-align: center; }
-      .feature-img { height: 200px; width: 100%; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 75px;
+        left: 0;
+        right: 0;
+        background: rgba(31, 31, 31, 0.98);
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+        backdrop-filter: blur(20px);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .mobile-menu-btn {
+        display: block;
+      }
+
+      .hero {
+        padding-top: 100px;
+        min-height: calc(100vh - 75px);
+        padding-bottom: var(--spacing-lg);
+      }
+
+      .features {
+        padding: var(--spacing-lg) 0;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+
+      .feature-card {
+        padding: var(--spacing-lg);
+      }
     }
-    /* Smooth scroll */
-    html { scroll-behavior: smooth; }
+
+    /* Focus states for accessibility */
+    .nav-link:focus,
+    .footer-link:focus,
+    .mobile-menu-btn:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
   <!-- Navbar -->
-  <nav>
-    <div class="container nav-inner">
-      <a href="#" class="logo">Alvin Liu</a>
-      <div class="nav-links">
-        <a href="#journey" class="nav-link">My Journey</a>
-        <a href="#career" class="nav-link">Professional Career</a>
-        <a href="#certs" class="nav-link">Certifications</a>
-        <a href="#contact" class="nav-link">Contact</a>
-      </div>
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="logo" aria-label="Home">Alvin Liu</a>
+      <ul class="nav-links" id="nav-links" role="navigation">
+        <li><a href="#journey" class="nav-link">My Journey</a></li>
+        <li><a href="#career" class="nav-link">Professional Career</a></li>
+        <li><a href="#certs" class="nav-link">Certifications</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+        ☰
+      </button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="container">
-      <h1>Take a look at what I can do for you!</h1>
-      <p class="hero-subtitle">Here are some of my skills…and I'm always trying to learn more!</p>
+      <div class="hero-content">
+        <h1>Take a look at what I can do for you!</h1>
+        <p class="hero-subtitle">Here are some of my skills and I'm always trying to learn more!</p>
+      </div>
     </div>
   </section>
 
   <!-- Features -->
   <section class="features" id="skills">
     <div class="container">
+      <h2>Skills & Experience</h2>
       <div class="features-grid">
         <!-- CS Card -->
-        <div class="feature-card">
+        <article class="feature-card">
           <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/KCShtRMn8b25jNyVf9qKP9yNuQ.jpg');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Computer Science & Engineering B.S</h2>
+          <div>
+            <h3 class="feature-title">Computer Science & Engineering B.S</h3>
             <p class="feature-desc">Proficient in full-stack development with expertise in JavaScript, Python, and additional programming languages. Winner of a first-place hackathon award for innovative software development. Industry experience through an internship with Northrop Grumman, contributing to 3D CAD design and CubeSat satellite engineering projects.</p>
           </div>
-        </div>
+        </article>
+
         <!-- Business Card -->
-        <div class="feature-card">
+        <article class="feature-card">
           <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/3pb2YIZPlXR8xzUjDbjVaEeNJmc.png');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Management and Business & Economics B.S</h2>
+          <div>
+            <h3 class="feature-title">Management & Business Economics B.S</h3>
             <p class="feature-desc">Experienced in intellectual property management in a Tech Transfer office and the application of economic principles. Collaborated with the Small Business Development Center to support business growth and strategic development.</p>
           </div>
-        </div>
-        <div class="feature-card">
+        </article>
+
+        <!-- Public Speaker Card -->
+        <article class="feature-card">
           <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/kmClzKxYesYCxXUqXzAt5JUtUj8.jpg');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Friendly Public Speaker</h2>
-            <p class="feature-desc">Outgoing, approachable, and highly personable, with a proven ability to connect with diverse audiences. Delivered speeches to audiences of thousands, including graduation addresses, motivational talks, and end-of-year banquets for clubs and organizations. Experienced leader with numerous executive positions held across student and community organizations.</p>
+          <div>
+            <h3 class="feature-title">Friendly Public Speaker</h3>
+            <p class="feature-desc">Outgoing, approachable, and highly personable, with a proven ability to connect with diverse audiences. Delivered speeches to audiences of thousands, including graduation addresses, motivational talks, and end-of-year banquets for clubs and organizations.</p>
           </div>
-        </div>
-        <div class="feature-card">
+        </article>
+
+        <!-- Marketing Card -->
+        <article class="feature-card">
           <div class="feature-img" style="background-image: url('https://framerusercontent.com/images/9C7xItOHRG0L79ZudqgVQYETmYc.png');"></div>
-          <div class="feature-text">
-            <h2 class="feature-title">Marketing & Advertising</h2>
+          <div>
+            <h3 class="feature-title">Marketing & Advertising</h3>
             <p class="feature-desc">Former social media manager for three companies, skilled in brand growth and audience engagement. Competed in business pitch competitions and collaborated with top advertising agencies, including Siegel+Gale and The Woo Agency, to deliver campaigns for real-world clients.</p>
           </div>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer class="footer" id="footer">
     <div class="container">
       <div class="footer-grid">
-        <div><a href="#" class="footer-link">Home Page</a></div>
-        <div><a href="#journey" class="footer-link">My Journey</a></div>
-        <div><a href="#career" class="footer-link">Professional Career</a></div>
-        <div><a href="#certs" class="footer-link">My Certifications</a></div>
-        <div><a href="#full" class="footer-link">My Full Journey</a></div>
-        <div><a href="#recs" class="footer-link">Recommendations</a></div>
-        <div><a href="#contact" class="footer-link">Contact Me</a></div>
+        <a href="#hero" class="footer-link">Home</a>
+        <a href="#journey" class="footer-link">Journey</a>
+        <a href="#career" class="footer-link">Career</a>
+        <a href="#certs" class="footer-link">Certs</a>
+        <a href="#full" class="footer-link">Full Journey</a>
+        <a href="#recs" class="footer-link">Recommendations</a>
+        <a href="#contact" class="footer-link">Contact</a>
       </div>
+      <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
     </div>
   </footer>
 
   <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScrollY = 0;
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 50) {
+        navbar.classList.add('nav-scrolled');
+      } else {
+        navbar.classList.remove('nav-scrolled');
+      }
+      lastScrollY = currentScrollY;
+    });
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const navLinks = document.getElementById('nav-links');
+    mobileBtn.addEventListener('click', () => {
+      const isExpanded = mobileBtn.getAttribute('aria-expanded') === 'true';
+      mobileBtn.setAttribute('aria-expanded', !isExpanded);
+      navLinks.classList.toggle('active');
+    });
+
+    // Smooth scrolling with navbar offset
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', (e) => {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const target = document.querySelector(anchor.getAttribute('href'));
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const navbarHeight = 75;
+          const targetPosition = target.getBoundingClientRect().top + window.scrollY - navbarHeight;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+          // Close mobile menu
+          navLinks.classList.remove('active');
+          mobileBtn.setAttribute('aria-expanded', 'false');
         }
       });
+    });
+
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 100);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+      observer.observe(card);
+    });
+
+    // Close mobile menu on outside click
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !mobileBtn.contains(e.target)) {
+        navLinks.classList.remove('active');
+        mobileBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   </script>
 </body>
