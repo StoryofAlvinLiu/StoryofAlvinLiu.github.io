@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Office of Alvin Liu</title>
+<meta name="description" content="Portfolio of Alvin Liu specializing in Computer Science & Engineering, Management & Business Economics, and Marketing.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{
+  background:black;
+  color:#00ff88;
+  font-family:Consolas,monospace;
+  height:100%;
+  overflow:hidden;
+}
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  transition:.8s;
+  
+}
+.active{opacity:1}
+
+#logo img{
+  width:320px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:.4}
+  50%{opacity:1}
+}
+.cursor {
+  display:inline-block;
+  width:10px;
+  animation: blink 1s steps(2,start) infinite;
+}
+
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+.boot{
+  text-align:left;
+  border:1px solid #00ff88;
+  padding:30px;
+  width:600px;
+}
+.option{
+  border:1px solid #00ff88;
+  padding:12px;
+  margin-top:20px;
+  cursor:pointer;
+}
+.option.active{
+  background:#00ff88;
+  color:black;
+}
+.screen{
+  pointer-events:none;
+}
+
+.screen.active{
+  pointer-events:auto;
+}
+
+.option{
+  user-select:none;
+}
+
+#console{
+  align-items:flex-start;
+  justify-content:flex-start;
+}
+.console{
+  width:100%;
+  padding:40px;
+}
+.line{margin:6px 0}
+input{
+  background:none;
+  border:none;
+  color:#00ff88;
+  outline:none;
+  font-family:inherit;
+}
+.fadeout{
+  animation:fadeout 1s forwards;
+}
+@keyframes fadeout{
+  to{opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div id="logo" class="screen active">
+<img src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png" alt="AlvinOS logo">
+  
+</div>
+
+<div id="boot" class="screen">
+  <div class="boot">
+    <h2>ALVIN OS BOOT MANAGER</h2><br>
+    Choose an operating system to start.<br>
+    (Use arrow keys then ENTER)<br><br>
+
+    <div class="option active" id="bootOption">ALVIN OS v1.0 STABLE</div>
+
+    <br>
+    To specify an advanced option press "~" Coming soon! <br><br>
+    Seconds until start: <span id="timer">12</span>
+  </div>
+</div>
+
+<div id="console" class="screen">
+  <div class="console" id="terminal"></div>
+</div>
+<script>
+let screens=["logo","boot","console"];
+let booted=false;
+let locked=false;
+let t=12;
+let timer;
+
+const show=i=>{
+  screens.forEach(s=>document.getElementById(s).classList.remove("active"));
+  document.getElementById(screens[i]).classList.add("active");
+};
+
+setTimeout(()=>{show(1); startTimer();},2500);
+
+function startTimer(){
+  timer=setInterval(()=>{
+    t--;
+    timerEl.textContent=t;
+    if(t<=0) boot();
+  },1000);
+}
+
+const timerEl=document.getElementById("timer");
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter" && !booted) boot();
+});
+
+document.getElementById("bootOption").onclick=()=>boot();
+
+function boot(){
+  if(booted) return;
+  booted=true;
+  clearInterval(timer);
+  show(2);
+  startConsole();
+}
+
+const terminal=document.getElementById("terminal");
+
+/* ---------- TERMINAL thing magigs ---------- */
+function typeLine(text, delay=0, speed=18){
+  return new Promise(res=>{
+    if(text === "") { res(); return; }
+
+    setTimeout(()=>{
+      const div=document.createElement("div");
+      div.className="line";
+      terminal.appendChild(div);
+
+      let i=0;
+      const typer=setInterval(()=>{
+        div.textContent += text[i++] || "";
+        terminal.scrollTop=terminal.scrollHeight;
+        if(i>=text.length){
+          clearInterval(typer);
+          res();
+        }
+      },speed);
+    },delay);
+  });
+}
+
+function instantLine(text){
+  return new Promise(res=>{
+    const div=document.createElement("div");
+    div.className="line";
+    div.textContent=text;
+    terminal.appendChild(div);
+    res();
+  });
+}
+
+function progressLine(prefix){
+  return new Promise(res=>{
+    const div=document.createElement("div");
+    div.className="line";
+    terminal.appendChild(div);
+    let p=0;
+    const run=setInterval(()=>{
+      p++;
+      div.textContent = prefix + p + "%";
+      if(p>=100){
+        clearInterval(run);
+        res();
+      }
+    },15);
+  });
+}
+
+async function startConsole() {
+  if (locked) return;
+  locked = true;
+  terminal.innerHTML = '';
+  let now = new Date();
+
+  const cores = navigator.hardwareConcurrency || 0;
+  let ramDisplay = (navigator.deviceMemory === 0.5 || navigator.deviceMemory === 8 || !navigator.deviceMemory) 
+    ? 'UNKNOWN / UNAUTHORIZED' : `${navigator.deviceMemory || 0}GB`;
+  let bluetoothDisplay = 'UNKNOWN / UNAUTHORIZED';
+  let location = 'UNKNOWN / UNAUTHORIZED';
+  try {
+    location = `Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+  } catch (e) {}
+
+  const touchscreen = window.matchMedia('(pointer:coarse)').matches ? 'true' : 'false';
+
+  let powerLevel = 'N/A (Desktop)';
+  if ('getBattery' in navigator) {
+    try {
+      const battery = await navigator.getBattery();
+      powerLevel = `${Math.round(battery.level * 100)}% (${battery.charging ? 'Charging' : 'Discharging'})`;
+    } catch (e) {}
+  }
+
+  let gpu = 'None';
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (gl) gpu = gl.getParameter(gl.RENDERER);
+  } catch (e) {}
+
+  const resolution = `${screen.width}x${screen.height}`;
+
+  await instantLine(`ALVINLIU R @2005 Office of Alvin Liu, Inc.`);
+
+  await typeLine(`OS: Windows (Win32)`, 200);
+  await typeLine(`Cores: ${cores}`, 0);
+  await typeLine(`RAM: ${ramDisplay}`, 0);
+  await typeLine(`GPU: ${gpu}`, 0);
+  await typeLine(`Resolution: ${resolution}`, 0);
+  await typeLine(`Bluetooth: ${bluetoothDisplay}`, 0);
+  await typeLine(`Touchscreen: ${touchscreen}`, 0);
+  await typeLine(`Power Level: ${powerLevel}`, 0);
+  await typeLine(`Date: ${now.toISOString()}`, 0);
+  await typeLine(`Location: ${location}`, 0);
+
+  await typeLine(`Attempting to establish connection...`, 200);
+  await progressLine(`Connection: `);
+  await instantLine(`Connection Established`);
+  await typeLine(`Verifying...`, 200);
+  await typeLine(`Failed to verify unknown client.`, 200);
+  await typeLine(`Please enter applicable protocol number`, 200);
+  await typeLine(`1. Recruiter`, 150);
+  await typeLine(`2. Casual Viewer`, 0);
+  await typeLine(`3. Player (coming soon!)`, 0);
+
+  inputPrompt();
+}
+
+
+
+function inputPrompt(){
+  const wrap=document.createElement("div");
+  wrap.className="line";
+  wrap.innerHTML=`> <span id="typed"></span><span class="cursor">|</span>`;
+  terminal.appendChild(wrap);
+
+  let buffer="";
+
+  document.onkeydown=e=>{
+    if(e.key==="Backspace"){
+      buffer=buffer.slice(0,-1);
+    } 
+    else if(e.key==="Enter"){
+      document.onkeydown=null;
+      verify(buffer);
+      return;
+    } 
+    else if(e.key.length===1){
+      buffer+=e.key;
+    }
+
+    document.getElementById("typed").textContent=buffer;
+  };
+}
+
+
+function verify(val){
+  typeLine("Verifying...",100).then(()=>{
+    setTimeout(()=>{
+      typeLine("Access Granted. Welcome to the Office of Alvin Liu.",0).then(()=>{
+        setTimeout(()=>{
+          document.body.classList.add("fadeout");
+          setTimeout(()=>{
+            window.location.href="https://www.officeofalvinliu.com/home";
+          },900);
+        },1800);
+      });
+    },600);
+  });
+}
+
+</script>
+
+</body>
+</html>
