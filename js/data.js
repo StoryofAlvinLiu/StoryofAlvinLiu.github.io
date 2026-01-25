@@ -9,16 +9,16 @@ window.portfolioData = {
       previewImage: "https://framerusercontent.com/images/KCShtRMn8b25jNyVf9qKP9yNuQ.jpg",
       projects: [
         {
-          title: "Portfolio Website",
+          title: "My Portfolio Website",
           url: "projects.html#portfolio"
         },
         {
-          title: "E-Commerce Platform",
-          url: "projects.html#ecommerce"
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         },
         {
-          title: "API Integration System",
-          url: "projects.html#api"
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     },
@@ -30,16 +30,16 @@ window.portfolioData = {
       previewImage: "https://framerusercontent.com/images/9C7xItOHRG0L79ZudqgVQYETmYc.png",
       projects: [
         {
-          title: "Operations Dashboard",
-          url: "projects.html#dashboard"
+          title: "LinkedIn",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         },
         {
-          title: "Process Optimization",
-          url: "projects.html#process"
+          title: "Merced2Market",
+          url: "https://ucmerced.app.box.com/s/rjncxvfoffo1otjh1yvrw6g6annj5hy7"
         },
         {
-          title: "Business Analytics",
-          url: "projects.html#analytics"
+          title: "More coming soon!",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     },
@@ -51,16 +51,16 @@ window.portfolioData = {
       previewImage: "https://framerusercontent.com/images/kmClzKxYesYCxXUqXzAt5JUtUj8.jpg",
       projects: [
         {
-          title: "Brand Campaign",
-          url: "projects.html#brand"
+          title: "Innovation Plan CommUnity",
+          url: "https://www.canva.com/design/DAFdDTj0MAk/_ZTPRoR-LAyl9fURGo5hnQ/edit"
         },
         {
-          title: "Digital Marketing Strategy",
-          url: "projects.html#digital"
+          title: "More coming soon!",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         },
         {
-          title: "Content Creation",
-          url: "projects.html#content"
+          title: "More coming soon!",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     },
@@ -72,8 +72,8 @@ window.portfolioData = {
       previewImage: "https://framerusercontent.com/images/3pb2YIZPlXR8xzUjDbjVaEeNJmc.png",
       projects: [
         {
-          title: "Sustainability Tracker",
-          url: "projects.html#sustainability"
+          title: "United States Marine Corps Officer Candidate School (OCS)",
+          url: "https://www.marines.com/become-a-marine/process-to-join/become-an-officer.html?utm_source=google&utm_medium=cpc&utm_campaign=18376476214&utm_term=us%20marine%20ocs&gad_source=1&gad_campaignid=18376476214&gclid=Cj0KCQiAm9fLBhCQARIsAJoNOcttNJ6YaT3jJfFkk3HzqYL5Lw5TJCE5wKgSdgOfzpDg6qG09jVkaLsaAtleEALw_wcB"
         },
         {
           title: "Yosemite Facelift Volunteer 2024, 2025",
