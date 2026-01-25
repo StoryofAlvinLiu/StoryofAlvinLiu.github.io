@@ -1,4 +1,4 @@
-// Boot Sequence JavaScript - FIXED
+// Boot Sequence JavaScript - REVISED
 
 let screens = ['logo', 'boot', 'console'];
 let booted = false;
@@ -11,10 +11,28 @@ const show = (i) => {
   document.getElementById(screens[i]).classList.add('active');
 };
 
+// Wait 0.5s, then show logo with fade in/out for 2.5s
 setTimeout(() => {
-  show(1);
-  startTimer();
-}, 2500);
+  const logoEl = document.getElementById('logo');
+  logoEl.classList.add('active');
+  
+  // Fade in
+  setTimeout(() => {
+    logoEl.style.transition = 'opacity 0.8s';
+    logoEl.style.opacity = '1';
+  }, 50);
+  
+  // Fade out after 1.7s (leaving time for fade animation)
+  setTimeout(() => {
+    logoEl.style.opacity = '0';
+  }, 1700);
+  
+  // After fade out completes, show boot screen
+  setTimeout(() => {
+    show(1);
+    startTimer();
+  }, 2500);
+}, 500);
 
 function startTimer() {
   timer = setInterval(() => {

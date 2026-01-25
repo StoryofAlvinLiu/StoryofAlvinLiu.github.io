@@ -6,7 +6,7 @@ window.portfolioData = {
       icons: ["💻", "⚙️", "🔧", "📱", "🌐"],
       description: "Proficient in full-stack development with expertise in JavaScript, Python, and additional programming languages. Winner of a first-place hackathon award for innovative software development. Industry experience through an internship with Northrop Grumman, contributing to 3D CAD design and CubeSat satellite engineering projects.",
       tools: ["VS Code", "GitHub", "Full stack development", "3D CAD Designing", "UI UX Design", "KKCF Coding Fellowship Alumni", "Graduated Northrop Grumman 2 year internship "],
-      previewImage: "images/projects/software-preview.jpg",
+      previewImage: "https://framerusercontent.com/images/KCShtRMn8b25jNyVf9qKP9yNuQ.jpg",
       projects: [
         {
           title: "Portfolio Website",
@@ -25,9 +25,9 @@ window.portfolioData = {
     {
       name: "Skilled in: Business & Operations",
       icons: ["📊", "📈", "💼", "🎯", "📋"],
-      description: "Experienced in intellectual property management in a Tech Transfer office and the application of economic principles. Collaborated with the Small Business Development Center to support business growth and strategic development.",
-      tools: ["Excel", "Business Development", "Former Board Member of Da Vinci Schools", "USMC Officer Candidate School 2023 - 2025", "DECA Alumni", "Management"],
-      previewImage: "images/projects/business-preview.jpg",
+      description: "Experienced in intellectual property management in a Tech Transfer office and the application of economic principles. Collaborated with the Small Business Development Center to support business growth and strategic development. Outgoing, approachable, and highly personable, with a proven ability to connect with diverse audiences. Delivered speeches to audiences of thousands, including graduation addresses, motivational talks, and end-of-year banquets for clubs and organizations.",
+      tools: ["Excel", "Business Development", "Former Board Member of Da Vinci Schools", "USMC Officer Candidate School 2023 - 2025", "Public Speaking", "Management"],
+      previewImage: "https://framerusercontent.com/images/9C7xItOHRG0L79ZudqgVQYETmYc.png",
       projects: [
         {
           title: "Operations Dashboard",
@@ -48,7 +48,7 @@ window.portfolioData = {
       icons: ["📢", "🎨", "📸", "✍️", "🎬"],
       description: "Creating compelling campaigns, building brand presence, and driving engagement through strategic marketing initiatives.",
       tools: ["Canva", "Google Analytics", "Social Media", "SEO", "Content Strategy"],
-      previewImage: "images/projects/marketing-preview.jpg",
+      previewImage: "https://framerusercontent.com/images/kmClzKxYesYCxXUqXzAt5JUtUj8.jpg",
       projects: [
         {
           title: "Brand Campaign",
@@ -69,19 +69,19 @@ window.portfolioData = {
       icons: ["🌱", "♻️", "🌍", "⚡", "🌿"],
       description: "Developing sustainable solutions and promoting environmental responsibility through technology and strategic initiatives.",
       tools: ["Sustainability Metrics", "Carbon Tracking", "Green Tech", "Impact Assessment"],
-      previewImage: "images/projects/sustainability-preview.jpg",
+      previewImage: "https://framerusercontent.com/images/3pb2YIZPlXR8xzUjDbjVaEeNJmc.png",
       projects: [
         {
           title: "Sustainability Tracker",
           url: "projects.html#sustainability"
         },
         {
-          title: "Green Initiative",
-          url: "projects.html#green"
+          title: "Yosemite Facelift Volunteer 2024, 2025",
+          url: "https://www.yosemiteclimbing.org/facelift"
         },
         {
-          title: "Environmental Impact Study",
-          url: "projects.html#impact"
+          title: "US Department of Veteran Affairs - Volunteer Staff",
+          url: "https://www.va.gov/"
         }
       ]
     }
