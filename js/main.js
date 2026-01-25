@@ -7,7 +7,15 @@ let progressAnimationFrame = null;
 let recommendationScrollAnimation = null;
 let recommendationScrollPaused = false;
 const ROTATE_DURATION = 8000; // 8 seconds
-const REC_SCROLL_SPEED = 0.5; // pixels per frame for smooth continuous scroll
+const REC_SCROLL_SPEED = 1; // pixels per frame for smooth continuous scroll
+
+// Google Analytics Event Tracking Helper Function
+function trackEvent(eventName, eventParams = {}) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventName, eventParams);
+    console.log('GA4 Event tracked:', eventName, eventParams);
+  }
+}
 
 // Mobile Menu Toggle
 const mobileToggle = document.getElementById('mobileToggle');
@@ -68,6 +76,51 @@ if (bgGradient) {
   });
 }
 
+// Track Resume Button Click
+document.addEventListener('DOMContentLoaded', () => {
+  const resumeBtn = document.querySelector('.resume-btn');
+  if (resumeBtn) {
+    resumeBtn.addEventListener('click', () => {
+      trackEvent('download_resume', {
+        button_location: 'hero_section',
+        file_name: 'AlvinLiuResume.pdf'
+      });
+    });
+  }
+
+  // Track Contact Buttons
+  const emailBtn = document.querySelector('.contact-btn.primary');
+  if (emailBtn) {
+    emailBtn.addEventListener('click', () => {
+      trackEvent('contact_click', {
+        button_type: 'email',
+        button_location: 'contact_section'
+      });
+    });
+  }
+
+  const contactPageBtn = document.querySelector('.contact-btn.secondary');
+  if (contactPageBtn) {
+    contactPageBtn.addEventListener('click', () => {
+      trackEvent('contact_click', {
+        button_type: 'contact_page',
+        button_location: 'contact_section'
+      });
+    });
+  }
+
+  // Track "Get in touch" navbar button
+  const navContactBtn = document.querySelector('.get-in-touch');
+  if (navContactBtn) {
+    navContactBtn.addEventListener('click', () => {
+      trackEvent('contact_click', {
+        button_type: 'navbar_contact',
+        button_location: 'navigation'
+      });
+    });
+  }
+});
+
 // Skills Carousel
 function initializeSkillsCarousel() {
   if (!window.portfolioData || !window.portfolioData.categories) return;
@@ -83,6 +136,12 @@ function initializeSkillsCarousel() {
       currentCategory = (currentCategory - 1 + categories.length) % categories.length;
       updateCategory(currentCategory);
       resetAutoRotate();
+
+      // Track carousel navigation
+      trackEvent('skills_carousel_navigate', {
+        direction: 'previous',
+        category: categories[currentCategory].name
+      });
     });
   }
 
@@ -91,6 +150,12 @@ function initializeSkillsCarousel() {
       currentCategory = (currentCategory + 1) % categories.length;
       updateCategory(currentCategory);
       resetAutoRotate();
+
+      // Track carousel navigation
+      trackEvent('skills_carousel_navigate', {
+        direction: 'next',
+        category: categories[currentCategory].name
+      });
     });
   }
 
@@ -130,9 +195,20 @@ function updateCategory(index) {
 
   const projectsEl = document.getElementById('featuredProjects');
   if (projectsEl && category.projects) {
-    projectsEl.innerHTML = category.projects.map(project => 
-      `<a href="${project.url}">${project.title}</a>`
+    projectsEl.innerHTML = category.projects.map((project, idx) => 
+      `<a href="${project.url}" class="project-link" data-project="${project.title}" data-category="${category.name}">${project.title}</a>`
     ).join('');
+
+    // Track project link clicks
+    projectsEl.querySelectorAll('.project-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        trackEvent('project_click', {
+          project_name: e.target.dataset.project,
+          category: e.target.dataset.category,
+          link_url: e.target.href
+        });
+      });
+    });
   }
 
   updateDots('categoryDots', index, window.portfolioData.categories.length);
@@ -201,12 +277,22 @@ function initializeRecommendations() {
 
   // Add LinkedIn card at the end
   carouselEl.innerHTML += `
-    <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener" class="linkedin-card">
+    <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener" class="linkedin-card" id="linkedinRecsCard">
       <div>
         <h3>See more<br>recommendations<br>on LinkedIn →</h3>
       </div>
     </a>
   `;
+
+  // Track LinkedIn recommendations link click
+  const linkedinCard = document.getElementById('linkedinRecsCard');
+  if (linkedinCard) {
+    linkedinCard.addEventListener('click', () => {
+      trackEvent('view_linkedin_recommendations', {
+        button_location: 'recommendations_section'
+      });
+    });
+  }
 
   // Scroll arrows with pause functionality
   const scrollLeft = document.getElementById('scrollLeft');
@@ -218,7 +304,11 @@ function initializeRecommendations() {
         left: -370,
         behavior: 'smooth'
       });
-      pauseAutoScroll();
+      pauseAutoScroll(5000);
+
+      trackEvent('recommendations_scroll', {
+        direction: 'left'
+      });
     });
   }
 
@@ -228,7 +318,11 @@ function initializeRecommendations() {
         left: 370,
         behavior: 'smooth'
       });
-      pauseAutoScroll();
+      pauseAutoScroll(5000);
+
+      trackEvent('recommendations_scroll', {
+        direction: 'right'
+      });
     });
   }
 
@@ -243,7 +337,9 @@ function initializeRecommendations() {
 
   // Pause on user manual scroll
   let userScrollTimeout;
-  carouselEl.addEventListener('scroll', () => {
+  carouselEl.addEventListener('scroll', (e) => {
+    if (!recommendationScrollAnimation) return;
+
     recommendationScrollPaused = true;
     clearTimeout(userScrollTimeout);
     userScrollTimeout = setTimeout(() => {
@@ -260,11 +356,11 @@ function startRecommendationAutoScroll() {
   if (!carouselEl) return;
 
   function smoothScroll() {
-    if (!recommendationScrollPaused) {
+    if (!recommendationScrollPaused && carouselEl) {
       carouselEl.scrollLeft += REC_SCROLL_SPEED;
 
-      // Loop back to start when reaching the end
-      if (carouselEl.scrollLeft >= carouselEl.scrollWidth - carouselEl.clientWidth - 10) {
+      const maxScroll = carouselEl.scrollWidth - carouselEl.clientWidth;
+      if (carouselEl.scrollLeft >= maxScroll - 5) {
         carouselEl.scrollLeft = 0;
       }
     }
@@ -272,16 +368,15 @@ function startRecommendationAutoScroll() {
     recommendationScrollAnimation = requestAnimationFrame(smoothScroll);
   }
 
-  smoothScroll();
+  recommendationScrollAnimation = requestAnimationFrame(smoothScroll);
 }
 
-function pauseAutoScroll() {
+function pauseAutoScroll(duration = 5000) {
   recommendationScrollPaused = true;
 
-  // Resume after 5 seconds
   setTimeout(() => {
     recommendationScrollPaused = false;
-  }, 5000);
+  }, duration);
 }
 
 function updateDots(containerId, activeIndex, totalDots) {
@@ -298,6 +393,14 @@ window.navigateTocategoryDots = (index) => {
   currentCategory = index;
   updateCategory(index);
   resetAutoRotate();
+
+  // Track dot navigation
+  if (window.portfolioData && window.portfolioData.categories[index]) {
+    trackEvent('skills_carousel_dot_click', {
+      category: window.portfolioData.categories[index].name,
+      index: index
+    });
+  }
 };
 
 // Smooth Scroll for Anchor Links
@@ -324,6 +427,14 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
+
+      // Track section views
+      const sectionId = entry.target.id;
+      if (sectionId) {
+        trackEvent('section_view', {
+          section_name: sectionId
+        });
+      }
     }
   });
 }, observerOptions);
@@ -347,7 +458,6 @@ setTimeout(() => {
 
 // Also initialize on DOMContentLoaded as fallback
 document.addEventListener('DOMContentLoaded', () => {
-  // Check if boot sequence completed
   const checkInterval = setInterval(() => {
     const portfolioContent = document.getElementById('portfolioContent');
     if (portfolioContent && portfolioContent.classList.contains('visible')) {
