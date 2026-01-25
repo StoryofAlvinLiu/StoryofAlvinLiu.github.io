@@ -19,6 +19,14 @@ window.portfolioData = {
         {
           title: "More coming soon...",
           url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     },
@@ -39,6 +47,14 @@ window.portfolioData = {
         },
         {
           title: "More coming soon!",
+          url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
           url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
@@ -61,6 +77,14 @@ window.portfolioData = {
         {
           title: "More coming soon!",
           url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     },
@@ -82,6 +106,14 @@ window.portfolioData = {
         {
           title: "US Department of Veteran Affairs - Volunteer Staff",
           url: "https://www.va.gov/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
+        },
+        {
+          title: "More coming soon...",
+          url: "https://www.linkedin.com/in/alvinliusa/"
         }
       ]
     }

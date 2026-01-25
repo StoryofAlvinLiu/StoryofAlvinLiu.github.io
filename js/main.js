@@ -4,10 +4,10 @@
 let currentCategory = 0;
 let autoRotateInterval = null;
 let progressAnimationFrame = null;
-let recommendationAutoScrollInterval = null;
+let recommendationScrollAnimation = null;
 let recommendationScrollPaused = false;
 const ROTATE_DURATION = 8000; // 8 seconds
-const REC_SCROLL_INTERVAL = 3000; // 3 seconds per scroll
+const REC_SCROLL_SPEED = 0.5; // pixels per frame for smooth continuous scroll
 
 // Mobile Menu Toggle
 const mobileToggle = document.getElementById('mobileToggle');
@@ -173,7 +173,7 @@ function resetAutoRotate() {
   startAutoRotate();
 }
 
-// Recommendations Auto-Scroll with Looping
+// Recommendations Smooth Continuous Auto-Scroll
 function initializeRecommendations() {
   if (!window.portfolioData || !window.portfolioData.recommendations) return;
 
@@ -232,35 +232,47 @@ function initializeRecommendations() {
     });
   }
 
-  // Start auto-scroll
+  // Pause on hover
+  carouselEl.addEventListener('mouseenter', () => {
+    recommendationScrollPaused = true;
+  });
+
+  carouselEl.addEventListener('mouseleave', () => {
+    recommendationScrollPaused = false;
+  });
+
+  // Pause on user manual scroll
+  let userScrollTimeout;
+  carouselEl.addEventListener('scroll', () => {
+    recommendationScrollPaused = true;
+    clearTimeout(userScrollTimeout);
+    userScrollTimeout = setTimeout(() => {
+      recommendationScrollPaused = false;
+    }, 3000);
+  }, { passive: true });
+
+  // Start smooth continuous auto-scroll
   startRecommendationAutoScroll();
 }
 
 function startRecommendationAutoScroll() {
-  if (recommendationAutoScrollInterval) clearInterval(recommendationAutoScrollInterval);
-
   const carouselEl = document.getElementById('recommendationsCarousel');
   if (!carouselEl) return;
 
-  recommendationAutoScrollInterval = setInterval(() => {
-    if (recommendationScrollPaused) return;
+  function smoothScroll() {
+    if (!recommendationScrollPaused) {
+      carouselEl.scrollLeft += REC_SCROLL_SPEED;
 
-    const maxScroll = carouselEl.scrollWidth - carouselEl.clientWidth;
-    const currentScroll = carouselEl.scrollLeft;
-
-    // Loop back to start if at the end
-    if (currentScroll >= maxScroll - 10) {
-      carouselEl.scrollTo({
-        left: 0,
-        behavior: 'smooth'
-      });
-    } else {
-      carouselEl.scrollBy({
-        left: 370,
-        behavior: 'smooth'
-      });
+      // Loop back to start when reaching the end
+      if (carouselEl.scrollLeft >= carouselEl.scrollWidth - carouselEl.clientWidth - 10) {
+        carouselEl.scrollLeft = 0;
+      }
     }
-  }, REC_SCROLL_INTERVAL);
+
+    recommendationScrollAnimation = requestAnimationFrame(smoothScroll);
+  }
+
+  smoothScroll();
 }
 
 function pauseAutoScroll() {
@@ -349,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   if (autoRotateInterval) clearTimeout(autoRotateInterval);
   if (progressAnimationFrame) cancelAnimationFrame(progressAnimationFrame);
-  if (recommendationAutoScrollInterval) clearInterval(recommendationAutoScrollInterval);
+  if (recommendationScrollAnimation) cancelAnimationFrame(recommendationScrollAnimation);
 }
 
 // Keyboard Navigation

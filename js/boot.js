@@ -16,13 +16,15 @@ setTimeout(() => {
   const logoEl = document.getElementById('logo');
   logoEl.classList.add('active');
   
-  // Fade in
-  setTimeout(() => {
-    logoEl.style.transition = 'opacity 0.8s';
-    logoEl.style.opacity = '1';
-  }, 50);
+  // Double requestAnimationFrame ensures browser has painted before animating
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      logoEl.style.transition = 'opacity 0.8s';
+      logoEl.style.opacity = '1';
+    });
+  });
   
-  // Fade out after 1.7s (leaving time for fade animation)
+  // Fade out after 1.7s
   setTimeout(() => {
     logoEl.style.opacity = '0';
   }, 1700);
@@ -33,6 +35,7 @@ setTimeout(() => {
     startTimer();
   }, 2500);
 }, 500);
+
 
 function startTimer() {
   timer = setInterval(() => {
@@ -180,11 +183,19 @@ function inputPrompt() {
   terminal.appendChild(wrap);
 
   let buffer = '';
+  let cursorVisible = true;
+  const cursorElement = wrap.querySelector('.cursor');
+  
+  const blinkInterval = setInterval(() => {
+    cursorVisible = !cursorVisible;
+    cursorElement.style.opacity = cursorVisible ? '1' : '0';
+  }, 530);
 
   document.onkeydown = (e) => {
     if (e.key == 'Backspace') {
       buffer = buffer.slice(0, -1);
     } else if (e.key == 'Enter') {
+      clearInterval(blinkInterval); // Stop blinking
       document.onkeydown = null;
       verify(buffer);
       return;
