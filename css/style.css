@@ -1,4 +1,5 @@
 /* Reset & Base Styles */
+
 * {
   margin: 0;
   padding: 0;
@@ -51,6 +52,42 @@ body {
   z-index: 10000;
   color: #00ff88;
   font-family: 'Consolas', 'Courier New', monospace;
+  overflow: hidden;
+}
+
+/* SKIP LOADING BUTTON - NEW! */
+.skip-loading-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10001;
+  padding: 12px 24px;
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid #00ff88;
+  border-radius: 8px;
+  color: #00ff88;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skip-loading-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.skip-loading-btn:hover {
+  background: rgba(0, 255, 136, 0.4);
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.skip-loading-btn:active {
+  transform: scale(0.98);
 }
 
 .screen {
@@ -75,7 +112,6 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 0;
-
 }
 
 #logo img {
@@ -96,11 +132,11 @@ body {
 }
 
 @keyframes pulse {
-  0%, 100% { 
+  0%, 100% {
     opacity: 0.6;
     transform: scale(1);
   }
-  50% { 
+  50% {
     opacity: 1;
     transform: scale(1.02);
   }
@@ -133,23 +169,50 @@ body {
   background: rgba(0, 255, 136, 0.2);
 }
 
-/* Console Screen - TOP LEFT ALIGNED */
+/* Console Screen - MOBILE FRIENDLY */
 #console {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   padding: 40px;
+  overflow: hidden;
+  height: 100%;
 }
 
 .console {
   width: 100%;
   max-width: 100%;
   text-align: left;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #00ff88 transparent;
+}
+
+.console::-webkit-scrollbar {
+  width: 8px;
+}
+
+.console::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.console::-webkit-scrollbar-thumb {
+  background: #00ff88;
+  border-radius: 4px;
+}
+
+.console::-webkit-scrollbar-thumb:hover {
+  background: #00cc6f;
 }
 
 .line {
   margin: 6px 0;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 /* Blinking Cursor */
@@ -173,6 +236,9 @@ input {
   outline: none;
   font-family: inherit;
   font-size: inherit;
+  width: auto;
+  max-width: 100%;
+  display: inline-block;
 }
 
 .fadeout {
@@ -183,6 +249,10 @@ input {
   to {
     opacity: 0;
   }
+}
+
+#terminal {
+  scroll-behavior: smooth;
 }
 
 /* Portfolio Content (Initially Hidden) */
@@ -777,7 +847,6 @@ input {
   overflow: hidden;
 }
 
-
 .rec-text {
   color: var(--text-secondary);
   line-height: 1.6;
@@ -789,7 +858,6 @@ input {
   overflow: hidden;
   flex: 1;
 }
-
 
 .linkedin-card {
   min-width: 350px;
@@ -1030,7 +1098,24 @@ input {
   #console {
     padding: 20px;
   }
+
+  .console {
+    font-size: 0.85rem;
+    padding-right: 5px;
+  }
+
+  .line {
+    word-break: break-word;
+  }
+
+  .skip-loading-btn {
+    top: 10px;
+    right: 10px;
+    padding: 10px 18px;
+    font-size: 0.8rem;
+  }
 }
+
 /* Spacer between sections to prevent jitter */
 .section-spacer {
   height: 80px;

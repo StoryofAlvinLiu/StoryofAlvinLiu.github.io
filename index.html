@@ -28,10 +28,12 @@
 <body>
   <!-- Boot Sequence -->
   <div class="boot-sequence" id="bootSequence">
+    
     <div id="logo" class="screen active">
       <img src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png" alt="AlvinOS logo">
     </div>
 
+<button class="skip-loading-btn" id="skipLoadingBtn" style="position:fixed;top:20px;right:20px;z-index:10001;padding:12px 24px;background:rgba(0,255,136,0.2);border:1px solid #00ff88;border-radius:8px;color:#00ff88;font-family:'Consolas','Courier New',monospace;font-size:0.9rem;cursor:pointer;backdrop-filter:blur(10px);transition:all 0.3s;opacity:0;pointer-events:none;" onclick="skipLoading()">Skip Loading →</button>
 
     <div id="boot" class="screen">
       <div class="boot">
