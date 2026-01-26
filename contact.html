@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alvin Liu - Cross-disciplinary Software Engineer & Business Strategist</title>
-  <meta name="description" content="Alvin Liu builds software, strategies, and sustainable solutions. Software Engineering, Business Operations, Marketing & Advertising, Environment & Sustainability.">
+  <title>Contact - Alvin Liu</title>
+  <meta name="description" content="Get in touch with Alvin Liu. Let's discuss your next project, collaboration opportunities, or just connect.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="shortcut icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
 
   <!-- Google Analytics G-P3BT6ENHW2 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BT6ENHW2"></script>
@@ -16,207 +21,291 @@
   </script>
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/contact.css">
 </head>
 <body>
-  <!-- Boot Sequence -->
-  <div class="boot-sequence" id="bootSequence">
-    <div id="logo" class="screen active">
-      <img src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png" alt="AlvinOS logo">
-    </div>
-
-    <div id="boot" class="screen">
-      <div class="boot">
-        <h2>ALVIN OS BOOT MANAGER</h2><br>
-        Choose an operating system to start.<br>
-        Use arrow keys, then ENTER<br><br>
-        <div class="option active" id="bootOption">ALVIN OS v1.0 (STABLE)</div>
-        <br>
-        To specify an advanced option, press Coming soon!
-        <br><br>
-        Seconds until start: <span id="timer">12</span>
-      </div>
-    </div>
-
-    <div id="console" class="screen">
-      <div class="console" id="terminal"></div>
-    </div>
+  <!-- Background Effects -->
+  <div class="bg-gradient" id="bgGradient"></div>
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
-  <!-- Portfolio Content (Hidden initially) -->
-  <div class="portfolio-content" id="portfolioContent" style="display: none;">
-    <!-- Background Effects -->
-    <div class="bg-gradient" id="bgGradient"></div>
-
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-      <a href="/" class="logo-link">
-        <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
-      </a>
-      <div class="nav-links desktop-nav">
-        <div class="dropdown">
-          <button class="dropbtn">More about me ▼</button>
-          <div class="dropdown-content">
-            <a href="projects.html">Projects</a>
-            <a href="story.html">My Story</a>
-            <a href="certifications.html">Certifications & Tools</a>
-            <a href="recommendations.html">Recommendations</a>
-          </div>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="logo-link">
+      <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
+    </a>
+    <div class="nav-links desktop-nav">
+      <div class="dropdown">
+        <button class="dropbtn">More about me ▼</button>
+        <div class="dropdown-content">
+          <a href="projects.html">Projects</a>
+          <a href="story.html">My Story</a>
+          <a href="certifications.html">Certifications & Tools</a>
+          <a href="recommendations.html">Recommendations</a>
         </div>
-        <a href="contact.html" class="get-in-touch">Get in touch</a>
       </div>
-      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="/" class="mobile-link">Home</a>
-      <a href="projects.html" class="mobile-link">Projects</a>
-      <a href="story.html" class="mobile-link">My Story</a>
-      <a href="certifications.html" class="mobile-link">Certifications & Tools</a>
-      <a href="recommendations.html" class="mobile-link">Recommendations</a>
-      <a href="contact.html" class="mobile-link">Get in touch</a>
+      <a href="contact.html" class="get-in-touch active">Get in touch</a>
     </div>
+    <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
 
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="mobile-link">Home</a>
+    <a href="projects.html" class="mobile-link">Projects</a>
+    <a href="story.html" class="mobile-link">My Story</a>
+    <a href="certifications.html" class="mobile-link">Certifications & Tools</a>
+    <a href="recommendations.html" class="mobile-link">Recommendations</a>
+    <a href="contact.html" class="mobile-link active">Get in touch</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="contact-page">
     <!-- Hero Section -->
-    <section class="hero parallax-section" id="hero">
-      <div class="hero-container">
-        <div class="hero-image parallax-layer" data-speed="0.5">
-          <img src="images/2026.01_ALVINHEROBODY.png" alt="Alvin Liu - Software Engineer & Business Strategist" loading="eager">
-        </div>
-        <div class="hero-text parallax-layer" data-speed="0.3">
-          <h1 class="hero-title">ALVIN LIU</h1>
-          <p class="hero-subtitle">Cross-disciplinary Software Engineer<br>& Business Strategist</p>
-          <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download Resume
+    <section class="contact-hero fade-in">
+      <div class="container">
+        <h1 class="hero-title">Let's Create Something<br><span class="gradient-text">Amazing Together</span></h1>
+        <p class="hero-subtitle">Whether you're looking to collaborate, hire, or just say hello — I'd love to hear from you.</p>
+      </div>
+    </section>
+
+    <!-- Contact Methods Grid -->
+    <section class="contact-methods">
+      <div class="container">
+        <div class="methods-grid">
+
+          <!-- Email Card -->
+          <a href="mailto:alvinliu@officeofalvinliu.com" class="contact-card" data-card="email">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </div>
+            <h3>Email Me</h3>
+            <p>alvinliu@officeofalvinliu.com</p>
+            <span class="card-arrow">→</span>
           </a>
+
+          <!-- LinkedIn Card -->
+          <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener noreferrer" class="contact-card" data-card="linkedin">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </div>
+            <h3>Connect on LinkedIn</h3>
+            <p>Professional network & updates</p>
+            <span class="card-arrow">→</span>
+          </a>
+
+          <!-- GitHub Card -->
+          <a href="https://github.com/StoryofAlvinLiu" target="_blank" rel="noopener noreferrer" class="contact-card" data-card="github">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </div>
+            <h3>View My Code</h3>
+            <p>Open source contributions & projects</p>
+            <span class="card-arrow">→</span>
+          </a>
+
+          <!-- Calendar Card -->
+          <a href="https://calendly.com/alvinliusa" target="_blank" rel="noopener noreferrer" class="contact-card" data-card="calendar">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3>Schedule a Meeting</h3>
+            <p>Book a time that works for you</p>
+            <span class="card-arrow">→</span>
+          </a>
+
         </div>
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section class="skills-section scroll-animate" id="skills">
+    <!-- Contact Form Section -->
+    <section class="contact-form-section">
       <div class="container">
-        <h2 class="section-title">Take a look at what I can do for you!</h2>
-        <p class="section-subtitle">Here are some of my skills and I'm always trying to learn more!</p>
+        <div class="form-wrapper">
+          <div class="form-header">
+            <h2>Send Me a Message</h2>
+            <p>Fill out the form below and I'll get back to you within 24 hours.</p>
+          </div>
 
-        <div class="skills-carousel">
-          <button class="carousel-arrow left" id="prevCategory" aria-label="Previous category">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div class="category-display">
-            <h3 class="category-title" id="categoryTitle">Software Engineering</h3>
-
-            <div class="icons-slider" id="iconsSlider"></div>
-
-            <div class="category-content">
-              <div class="content-left">
-                <div class="project-preview" id="projectPreview">
-                  <img src="" alt="Project preview" id="previewImage">
-                </div>
-                <div class="featured-projects" id="featuredProjects"></div>
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Your Name *</label>
+                <input type="text" id="name" name="name" required placeholder="John Doe">
               </div>
-
-              <div class="content-right">
-                <p class="category-description" id="categoryDescription"></p>
-                <div class="tools-list" id="toolsList"></div>
-                <a href="projects.html" class="cta-btn">Learn what I can do for you here →</a>
+              <div class="form-group">
+                <label for="email">Your Email *</label>
+                <input type="email" id="email" name="email" required placeholder="john@example.com">
               </div>
             </div>
 
-            <div class="carousel-progress">
-              <div class="progress-bar" id="progressBar"></div>
+            <div class="form-group">
+              <label for="subject">Subject *</label>
+              <input type="text" id="subject" name="subject" required placeholder="Project inquiry, collaboration, etc.">
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message *</label>
+              <textarea id="message" name="message" rows="6" required placeholder="Tell me about your project or idea..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="budget">Project Budget (Optional)</label>
+              <select id="budget" name="budget">
+                <option value="">Select a range</option>
+                <option value="<5k">Less than $5,000</option>
+                <option value="5k-10k">$5,000 - $10,000</option>
+                <option value="10k-25k">$10,000 - $25,000</option>
+                <option value="25k+">$25,000+</option>
+                <option value="ongoing">Ongoing/Retainer</option>
+              </select>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <span class="btn-text">Send Message</span>
+              <span class="btn-loader"></span>
+              <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+
+            <div class="form-message" id="formMessage"></div>
+          </form>
+        </div>
+
+        <!-- Info Sidebar -->
+        <div class="contact-info">
+          <div class="info-card">
+            <h3>Response Time</h3>
+            <p>I typically respond within 24 hours on business days.</p>
+          </div>
+
+          <div class="info-card">
+            <h3>Location</h3>
+            <p>Based in Merced, California<br>Available for remote work worldwide</p>
+          </div>
+
+          <div class="info-card">
+            <h3>Open To</h3>
+            <ul>
+              <li>Full-time opportunities</li>
+              <li>Freelance projects</li>
+              <li>Consulting</li>
+              <li>Speaking engagements</li>
+              <li>Collaborations</li>
+            </ul>
+          </div>
+
+          <div class="info-card social-links-card">
+            <h3>Follow Me</h3>
+            <div class="social-icons">
+              <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener" aria-label="LinkedIn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="https://github.com/StoryofAlvinLiu" target="_blank" rel="noopener" aria-label="GitHub">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+
+        <div class="faq-grid">
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>What's your typical project timeline?</span>
+              <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>Project timelines vary based on scope and complexity. Small projects typically take 2-4 weeks, while larger projects can span 2-3 months. I'll provide a detailed timeline during our initial consultation.</p>
             </div>
           </div>
 
-          <button class="carousel-arrow right" id="nextCategory" aria-label="Next category">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Do you work with startups?</span>
+              <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>Absolutely! I love working with startups and early-stage companies. I understand the unique challenges and can help bring your vision to life with scalable solutions.</p>
+            </div>
+          </div>
 
-        <div class="carousel-dots" id="categoryDots"></div>
-      </div>
-    </section>
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>What's your hourly rate?</span>
+              <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>My rates vary depending on the project scope and requirements. I offer both hourly and project-based pricing. Let's discuss your needs and I'll provide a custom quote.</p>
+            </div>
+          </div>
 
-    <!-- Recommendations -->
-    <section class="recommendations-section scroll-animate" id="recommendations">
-      <div class="container">
-        <h2 class="section-title">What others say</h2>
-
-        <div class="recommendations-scroll-container">
-          <button class="scroll-arrow left" id="scrollLeft" aria-label="Scroll left">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div class="recommendations-carousel-horizontal" id="recommendationsCarousel"></div>
-
-          <button class="scroll-arrow right" id="scrollRight" aria-label="Scroll right">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact-section scroll-animate" id="contact">
-      <div class="container">
-        <h2 class="section-title">Let's work together</h2>
-        <p class="contact-subtitle">Ready to bring your ideas to life? Get in touch!</p>
-
-        <div class="contact-buttons">
-          <a href="mailto:alvinliu@officeofalvinliu.com" class="contact-btn primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            Email me
-          </a>
-          <a href="contact.html" class="contact-btn secondary">
-            Visit contact page →
-          </a>
+          <div class="faq-item">
+            <button class="faq-question">
+              <span>Are you available for remote work?</span>
+              <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="faq-answer">
+              <p>Yes! I work with clients globally and am experienced in remote collaboration. I'm comfortable with various time zones and communication tools.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
+  </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
-        <div class="social-links">
-          <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-            </svg>
-          </a>
-          <a href="https://github.com/StoryofAlvinLiu" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
-        </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="story.html">Story</a>
+        <a href="contact.html">Contact</a>
       </div>
-    </footer>
-  </div>
+    </div>
+  </footer>
 
-  <script src="js/data.js"></script>
-  <script src="js/boot.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/contact.js"></script>
 </body>
 </html>
