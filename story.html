@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Story - Alvin Liu</title>
+  <meta name="description" content="Follow Alvin Liu's journey from curious student to cross-disciplinary engineer and strategist. A timeline of growth, learning, and innovation.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="shortcut icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+
+  <!-- Google Analytics G-P3BT6ENHW2 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BT6ENHW2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P3BT6ENHW2');
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/story.css">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-gradient" id="bgGradient"></div>
+  <div class="timeline-stars" id="timelineStars"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="logo-link">
+      <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
+    </a>
+    <div class="nav-links desktop-nav">
+      <div class="dropdown">
+        <button class="dropbtn">More about me ▼</button>
+        <div class="dropdown-content">
+          <a href="projects.html">Projects</a>
+          <a href="story.html" class="active">My Story</a>
+          <a href="certifications.html">Certifications & Tools</a>
+          <a href="recommendations.html">Recommendations</a>
+        </div>
+      </div>
+      <a href="contact.html" class="get-in-touch">Get in touch</a>
+    </div>
+    <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="mobile-link">Home</a>
+    <a href="projects.html" class="mobile-link">Projects</a>
+    <a href="story.html" class="mobile-link active">My Story</a>
+    <a href="certifications.html" class="mobile-link">Certifications & Tools</a>
+    <a href="recommendations.html" class="mobile-link">Recommendations</a>
+    <a href="contact.html" class="mobile-link">Get in touch</a>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress-indicator" id="progressIndicator">
+    <div class="progress-bar-vertical" id="progressBarVertical"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="story-page">
+    <!-- Hero Section -->
+    <section class="story-hero">
+      <div class="container">
+        <div class="hero-content fade-in">
+          <h1 class="hero-title">My <span class="gradient-text">Journey</span></h1>
+          <p class="hero-subtitle">From curious tinkerer to cross-disciplinary engineer and strategist.<br>This is the story of how I got here.</p>
+          <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+      <div class="timeline-line"></div>
+
+      <div class="container">
+        <!-- Timeline Item 1 - Childhood -->
+        <article class="timeline-item left" data-year="2003">
+          <div class="timeline-content">
+            <div class="timeline-icon">🌱</div>
+            <div class="timeline-year">2003</div>
+            <h3 class="timeline-title">The Beginning</h3>
+            <p class="timeline-description">Born in California, I grew up surrounded by technology and innovation. Early fascination with how things work led me to take apart (and occasionally break) every gadget I could find.</p>
+            <div class="timeline-tags">
+              <span class="tag">Curiosity</span>
+              <span class="tag">Exploration</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 2 - High School -->
+        <article class="timeline-item right" data-year="2017">
+          <div class="timeline-content">
+            <div class="timeline-icon">📚</div>
+            <div class="timeline-year">2017</div>
+            <h3 class="timeline-title">High School Adventures</h3>
+            <p class="timeline-description">Discovered a passion for computer science and design. Built my first website, joined robotics club, and started learning about business through DECA competitions.</p>
+            <div class="timeline-tags">
+              <span class="tag">Web Development</span>
+              <span class="tag">Robotics</span>
+              <span class="tag">Business</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 3 - UC Merced -->
+        <article class="timeline-item left" data-year="2021">
+          <div class="timeline-content">
+            <div class="timeline-icon">🎓</div>
+            <div class="timeline-year">2021</div>
+            <h3 class="timeline-title">UC Merced Begins</h3>
+            <p class="timeline-description">Started my journey in Computer Science and Engineering at UC Merced. Dove deep into algorithms, data structures, and discovered the intersection of technology and business strategy.</p>
+            <div class="timeline-tags">
+              <span class="tag">Computer Science</span>
+              <span class="tag">Engineering</span>
+              <span class="tag">University</span>
+            </div>
+            <div class="timeline-highlight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>GPA: 3.8+</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 4 - First Internship -->
+        <article class="timeline-item right" data-year="2022">
+          <div class="timeline-content">
+            <div class="timeline-icon">💼</div>
+            <div class="timeline-year">2022</div>
+            <h3 class="timeline-title">First Professional Experience</h3>
+            <p class="timeline-description">Landed internship opportunities focusing on business analysis and operations. Learned to bridge technical skills with business strategy, analyzing market trends and operational efficiency.</p>
+            <div class="timeline-tags">
+              <span class="tag">Internship</span>
+              <span class="tag">Business Analysis</span>
+              <span class="tag">Operations</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 5 - Northrop Grumman -->
+        <article class="timeline-item left" data-year="2023">
+          <div class="timeline-content">
+            <div class="timeline-icon">🚀</div>
+            <div class="timeline-year">2023</div>
+            <h3 class="timeline-title">Northrop Grumman - Aerospace Engineering</h3>
+            <p class="timeline-description">Joined Northrop Grumman as a CubeSat engineering intern. Worked on 3D CAD design, structural analysis, and contributed to satellite component development. This experience solidified my engineering foundations.</p>
+            <div class="timeline-tags">
+              <span class="tag">Aerospace</span>
+              <span class="tag">CAD Design</span>
+              <span class="tag">Systems Engineering</span>
+            </div>
+            <div class="timeline-highlight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Contributed to CubeSat satellite design</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 6 - Leadership -->
+        <article class="timeline-item right" data-year="2024">
+          <div class="timeline-content">
+            <div class="timeline-icon">👥</div>
+            <div class="timeline-year">2024</div>
+            <h3 class="timeline-title">Leadership & Research</h3>
+            <p class="timeline-description">Led the Merced2Market research initiative, analyzing technology commercialization opportunities for UC Merced. Managed a team, conducted comprehensive market research, and presented findings to stakeholders.</p>
+            <div class="timeline-tags">
+              <span class="tag">Leadership</span>
+              <span class="tag">Research</span>
+              <span class="tag">Strategy</span>
+            </div>
+            <div class="timeline-highlight">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>6-month research project completed</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 7 - Full Stack -->
+        <article class="timeline-item left" data-year="2025">
+          <div class="timeline-content">
+            <div class="timeline-icon">💻</div>
+            <div class="timeline-year">2025</div>
+            <h3 class="timeline-title">Full-Stack Development Mastery</h3>
+            <p class="timeline-description">Deepened my software engineering skills by building full-stack applications. Mastered React, Node.js, databases, and modern web technologies. Created projects that combined technical excellence with user experience design.</p>
+            <div class="timeline-tags">
+              <span class="tag">JavaScript</span>
+              <span class="tag">React</span>
+              <span class="tag">Full-Stack</span>
+              <span class="tag">UI/UX</span>
+            </div>
+          </div>
+          <div class="timeline-dot"></div>
+        </article>
+
+        <!-- Timeline Item 8 - Present -->
+        <article class="timeline-item right present" data-year="2026">
+          <div class="timeline-content">
+            <div class="timeline-icon">⭐</div>
+            <div class="timeline-year">2026</div>
+            <h3 class="timeline-title">Today & Tomorrow</h3>
+            <p class="timeline-description">Now a senior at UC Merced, I'm focused on building innovative solutions that bridge technology, business, and design. Actively seeking full-time opportunities where I can make a meaningful impact.</p>
+            <div class="timeline-tags">
+              <span class="tag">Innovation</span>
+              <span class="tag">Growth</span>
+              <span class="tag">Impact</span>
+            </div>
+            <div class="timeline-cta">
+              <a href="contact.html" class="timeline-btn">Let's Connect</a>
+            </div>
+          </div>
+          <div class="timeline-dot pulse"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Skills Evolution -->
+    <section class="skills-evolution-section">
+      <div class="container">
+        <h2 class="section-title">Skills Evolution Over Time</h2>
+        <div class="skills-timeline">
+          <div class="skill-track">
+            <div class="skill-label">Software Engineering</div>
+            <div class="skill-bar">
+              <div class="skill-progress" data-progress="90" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="skill-track">
+            <div class="skill-label">Business Strategy</div>
+            <div class="skill-bar">
+              <div class="skill-progress" data-progress="85" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="skill-track">
+            <div class="skill-label">Design & UX</div>
+            <div class="skill-bar">
+              <div class="skill-progress" data-progress="80" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="skill-track">
+            <div class="skill-label">Leadership</div>
+            <div class="skill-bar">
+              <div class="skill-progress" data-progress="75" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="skill-track">
+            <div class="skill-label">Research & Analysis</div>
+            <div class="skill-bar">
+              <div class="skill-progress" data-progress="85" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="philosophy-section">
+      <div class="container">
+        <div class="philosophy-card">
+          <h2>My Philosophy</h2>
+          <blockquote>
+            "The best solutions come from understanding both the technical possibilities and the human needs. I believe in building things that not only work well, but make a real difference in people's lives."
+          </blockquote>
+          <div class="philosophy-grid">
+            <div class="philosophy-item">
+              <div class="philosophy-icon">🎯</div>
+              <h3>Purpose-Driven</h3>
+              <p>Every project should solve a real problem and create meaningful value.</p>
+            </div>
+            <div class="philosophy-item">
+              <div class="philosophy-icon">🔄</div>
+              <h3>Continuous Learning</h3>
+              <p>Technology evolves rapidly. Staying curious and adaptable is essential.</p>
+            </div>
+            <div class="philosophy-item">
+              <div class="philosophy-icon">🤝</div>
+              <h3>Collaborative Spirit</h3>
+              <p>The best work happens when diverse perspectives come together.</p>
+            </div>
+            <div class="philosophy-item">
+              <div class="philosophy-icon">✨</div>
+              <h3>Excellence in Execution</h3>
+              <p>Attention to detail and quality separates good work from great work.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Want to be part of my story?</h2>
+        <p>I'm always excited to connect with people who share my passion for innovation and making an impact.</p>
+        <div class="cta-buttons">
+          <a href="contact.html" class="cta-btn primary">Get in Touch</a>
+          <a href="projects.html" class="cta-btn secondary">View My Work</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="story.html">Story</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/story.js"></script>
+</body>
+</html>

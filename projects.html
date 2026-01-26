@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alvin Liu - Cross-disciplinary Software Engineer & Business Strategist</title>
-  <meta name="description" content="Alvin Liu builds software, strategies, and sustainable solutions. Software Engineering, Business Operations, Marketing & Advertising, Environment & Sustainability.">
+  <title>Projects - Alvin Liu</title>
+  <meta name="description" content="Explore Alvin Liu's portfolio of software engineering, business strategy, and creative projects. Full-stack development, UI/UX design, and innovative solutions.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="shortcut icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
 
   <!-- Google Analytics G-P3BT6ENHW2 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BT6ENHW2"></script>
@@ -16,207 +21,390 @@
   </script>
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/projects.css">
 </head>
 <body>
-  <!-- Boot Sequence -->
-  <div class="boot-sequence" id="bootSequence">
-    <div id="logo" class="screen active">
-      <img src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png" alt="AlvinOS logo">
-    </div>
+  <!-- Background Effects -->
+  <div class="bg-gradient" id="bgGradient"></div>
+  <div class="particles-container" id="particlesContainer"></div>
 
-    <div id="boot" class="screen">
-      <div class="boot">
-        <h2>ALVIN OS BOOT MANAGER</h2><br>
-        Choose an operating system to start.<br>
-        Use arrow keys, then ENTER<br><br>
-        <div class="option active" id="bootOption">ALVIN OS v1.0 (STABLE)</div>
-        <br>
-        To specify an advanced option, press Coming soon!
-        <br><br>
-        Seconds until start: <span id="timer">12</span>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="logo-link">
+      <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
+    </a>
+    <div class="nav-links desktop-nav">
+      <div class="dropdown">
+        <button class="dropbtn">More about me ▼</button>
+        <div class="dropdown-content">
+          <a href="projects.html" class="active">Projects</a>
+          <a href="story.html">My Story</a>
+          <a href="certifications.html">Certifications & Tools</a>
+          <a href="recommendations.html">Recommendations</a>
+        </div>
       </div>
+      <a href="contact.html" class="get-in-touch">Get in touch</a>
     </div>
+    <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
 
-    <div id="console" class="screen">
-      <div class="console" id="terminal"></div>
-    </div>
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="mobile-link">Home</a>
+    <a href="projects.html" class="mobile-link active">Projects</a>
+    <a href="story.html" class="mobile-link">My Story</a>
+    <a href="certifications.html" class="mobile-link">Certifications & Tools</a>
+    <a href="recommendations.html" class="mobile-link">Recommendations</a>
+    <a href="contact.html" class="mobile-link">Get in touch</a>
   </div>
 
-  <!-- Portfolio Content (Hidden initially) -->
-  <div class="portfolio-content" id="portfolioContent" style="display: none;">
-    <!-- Background Effects -->
-    <div class="bg-gradient" id="bgGradient"></div>
-
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-      <a href="/" class="logo-link">
-        <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
-      </a>
-      <div class="nav-links desktop-nav">
-        <div class="dropdown">
-          <button class="dropbtn">More about me ▼</button>
-          <div class="dropdown-content">
-            <a href="projects.html">Projects</a>
-            <a href="story.html">My Story</a>
-            <a href="certifications.html">Certifications & Tools</a>
-            <a href="recommendations.html">Recommendations</a>
-          </div>
-        </div>
-        <a href="contact.html" class="get-in-touch">Get in touch</a>
-      </div>
-      <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-      <a href="/" class="mobile-link">Home</a>
-      <a href="projects.html" class="mobile-link">Projects</a>
-      <a href="story.html" class="mobile-link">My Story</a>
-      <a href="certifications.html" class="mobile-link">Certifications & Tools</a>
-      <a href="recommendations.html" class="mobile-link">Recommendations</a>
-      <a href="contact.html" class="mobile-link">Get in touch</a>
-    </div>
-
+  <!-- Main Content -->
+  <main class="projects-page">
     <!-- Hero Section -->
-    <section class="hero parallax-section" id="hero">
-      <div class="hero-container">
-        <div class="hero-image parallax-layer" data-speed="0.5">
-          <img src="images/2026.01_ALVINHEROBODY.png" alt="Alvin Liu - Software Engineer & Business Strategist" loading="eager">
-        </div>
-        <div class="hero-text parallax-layer" data-speed="0.3">
-          <h1 class="hero-title">ALVIN LIU</h1>
-          <p class="hero-subtitle">Cross-disciplinary Software Engineer<br>& Business Strategist</p>
-          <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download Resume
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section class="skills-section scroll-animate" id="skills">
+    <section class="projects-hero">
       <div class="container">
-        <h2 class="section-title">Take a look at what I can do for you!</h2>
-        <p class="section-subtitle">Here are some of my skills and I'm always trying to learn more!</p>
-
-        <div class="skills-carousel">
-          <button class="carousel-arrow left" id="prevCategory" aria-label="Previous category">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div class="category-display">
-            <h3 class="category-title" id="categoryTitle">Software Engineering</h3>
-
-            <div class="icons-slider" id="iconsSlider"></div>
-
-            <div class="category-content">
-              <div class="content-left">
-                <div class="project-preview" id="projectPreview">
-                  <img src="" alt="Project preview" id="previewImage">
-                </div>
-                <div class="featured-projects" id="featuredProjects"></div>
-              </div>
-
-              <div class="content-right">
-                <p class="category-description" id="categoryDescription"></p>
-                <div class="tools-list" id="toolsList"></div>
-                <a href="projects.html" class="cta-btn">Learn what I can do for you here →</a>
-              </div>
+        <div class="hero-content fade-in">
+          <h1 class="hero-title">My <span class="gradient-text">Projects</span></h1>
+          <p class="hero-subtitle">A collection of work spanning software engineering, business strategy, design, and innovation. Each project tells a story of problem-solving and creative thinking.</p>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-number" data-count="15">0</span>
+              <span class="stat-label">Projects Completed</span>
             </div>
-
-            <div class="carousel-progress">
-              <div class="progress-bar" id="progressBar"></div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="8">0</span>
+              <span class="stat-label">Technologies Mastered</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" data-count="5">0</span>
+              <span class="stat-label">Awards & Recognition</span>
             </div>
           </div>
-
-          <button class="carousel-arrow right" id="nextCategory" aria-label="Next category">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-        </div>
-
-        <div class="carousel-dots" id="categoryDots"></div>
-      </div>
-    </section>
-
-    <!-- Recommendations -->
-    <section class="recommendations-section scroll-animate" id="recommendations">
-      <div class="container">
-        <h2 class="section-title">What others say</h2>
-
-        <div class="recommendations-scroll-container">
-          <button class="scroll-arrow left" id="scrollLeft" aria-label="Scroll left">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div class="recommendations-carousel-horizontal" id="recommendationsCarousel"></div>
-
-          <button class="scroll-arrow right" id="scrollRight" aria-label="Scroll right">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
         </div>
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section scroll-animate" id="contact">
+    <!-- Filter Section -->
+    <section class="filter-section">
       <div class="container">
-        <h2 class="section-title">Let's work together</h2>
-        <p class="contact-subtitle">Ready to bring your ideas to life? Get in touch!</p>
-
-        <div class="contact-buttons">
-          <a href="mailto:alvinliu@officeofalvinliu.com" class="contact-btn primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            Email me
-          </a>
-          <a href="contact.html" class="contact-btn secondary">
-            Visit contact page →
-          </a>
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">
+            <span class="filter-icon">✨</span>
+            All Projects
+          </button>
+          <button class="filter-btn" data-filter="software">
+            <span class="filter-icon">💻</span>
+            Software Engineering
+          </button>
+          <button class="filter-btn" data-filter="business">
+            <span class="filter-icon">📊</span>
+            Business & Strategy
+          </button>
+          <button class="filter-btn" data-filter="design">
+            <span class="filter-icon">🎨</span>
+            Design & Creative
+          </button>
+          <button class="filter-btn" data-filter="research">
+            <span class="filter-icon">🔬</span>
+            Research & Innovation
+          </button>
+        </div>
+        <div class="search-bar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="projectSearch" placeholder="Search projects...">
         </div>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
+    <!-- Projects Grid -->
+    <section class="projects-grid-section">
       <div class="container">
-        <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
-        <div class="social-links">
-          <a href="https://www.linkedin.com/in/alvinliusa/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-            </svg>
-          </a>
-          <a href="https://github.com/StoryofAlvinLiu" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-            </svg>
-          </a>
+        <div class="projects-grid" id="projectsGrid">
+
+          <!-- Project Card 1 -->
+          <article class="project-card" data-category="software design">
+            <div class="project-preview">
+              <img src="https://framerusercontent.com/images/KCShtRMn8b25jNyVf9qKP9yNuQ.jpg" alt="Personal Portfolio Website" loading="lazy">
+              <div class="preview-overlay">
+                <button class="quick-view-btn" data-project="portfolio">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Quick View
+                </button>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="tag">React</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">UI/UX</span>
+              </div>
+              <h3 class="project-title">Personal Portfolio Website</h3>
+              <p class="project-description">A modern, animated portfolio showcasing my work with a unique boot sequence experience, smooth animations, and responsive design.</p>
+              <div class="project-meta">
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  2026
+                </span>
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  3 months
+                </span>
+              </div>
+              <div class="project-links">
+                <a href="/" class="project-link primary">
+                  <span>View Live</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+                <a href="https://github.com/StoryofAlvinLiu" class="project-link secondary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project Card 2 -->
+          <article class="project-card" data-category="business research">
+            <div class="project-preview">
+              <img src="https://framerusercontent.com/images/9C7xItOHRG0L79ZudqgVQYETmYc.png" alt="Merced2Market Analysis" loading="lazy">
+              <div class="preview-overlay">
+                <button class="quick-view-btn" data-project="merced2market">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Quick View
+                </button>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="tag">Research</span>
+                <span class="tag">Business Strategy</span>
+                <span class="tag">Analytics</span>
+              </div>
+              <h3 class="project-title">Merced2Market Business Analysis</h3>
+              <p class="project-description">Comprehensive market research and strategic analysis for UC Merced's technology commercialization initiative, identifying opportunities for university innovations.</p>
+              <div class="project-meta">
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  2024
+                </span>
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  6 months
+                </span>
+              </div>
+              <div class="project-links">
+                <a href="https://ucmerced.app.box.com/s/rjncxvfoffo1otjh1yvrw6g6annj5hy7" class="project-link primary" target="_blank">
+                  <span>View Report</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project Card 3 -->
+          <article class="project-card" data-category="design business">
+            <div class="project-preview">
+              <img src="https://framerusercontent.com/images/kmClzKxYesYCxXUqXzAt5JUtUj8.jpg" alt="CommUnity Innovation Plan" loading="lazy">
+              <div class="preview-overlay">
+                <button class="quick-view-btn" data-project="community">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Quick View
+                </button>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="tag">Strategy</span>
+                <span class="tag">Design</span>
+                <span class="tag">Marketing</span>
+              </div>
+              <h3 class="project-title">CommUnity Innovation Plan</h3>
+              <p class="project-description">Strategic innovation plan and branding for a community-focused initiative, featuring comprehensive market analysis and visual identity design.</p>
+              <div class="project-meta">
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  2023
+                </span>
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  4 months
+                </span>
+              </div>
+              <div class="project-links">
+                <a href="https://www.canva.com/design/DAFdDTj0MAk/_ZTPRoR-LAyl9fURGo5hnQ/edit" class="project-link primary" target="_blank">
+                  <span>View Design</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project Card 4 -->
+          <article class="project-card" data-category="software">
+            <div class="project-preview">
+              <img src="https://framerusercontent.com/images/3pb2YIZPlXR8xzUjDbjVaEeNJmc.png" alt="CubeSat Engineering Project" loading="lazy">
+              <div class="preview-overlay">
+                <button class="quick-view-btn" data-project="cubesat">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Quick View
+                </button>
+              </div>
+            </div>
+            <div class="project-info">
+              <div class="project-tags">
+                <span class="tag">CAD Design</span>
+                <span class="tag">Engineering</span>
+                <span class="tag">Aerospace</span>
+              </div>
+              <h3 class="project-title">CubeSat Satellite Engineering</h3>
+              <p class="project-description">Contributed to 3D CAD design and engineering of CubeSat satellite components during Northrop Grumman internship, focusing on structural integrity and manufacturability.</p>
+              <div class="project-meta">
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  2023-2025
+                </span>
+                <span class="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                  2 years
+                </span>
+              </div>
+              <div class="project-links">
+                <a href="https://www.northropgrumman.com/" class="project-link primary" target="_blank">
+                  <span>Learn More</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- More projects can be added here -->
+
+        </div>
+
+        <!-- Empty State (shown when no results) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <h3>No projects found</h3>
+          <p>Try adjusting your filters or search terms</p>
         </div>
       </div>
-    </footer>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-card">
+          <h2>Interested in working together?</h2>
+          <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+          <div class="cta-buttons">
+            <a href="contact.html" class="cta-btn primary">Start a Conversation</a>
+            <a href="https://calendly.com/alvinliusa" target="_blank" class="cta-btn secondary">Schedule a Meeting</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content" id="modalContent">
+      <button class="modal-close" id="modalClose">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="modal-body" id="modalBody">
+        <!-- Content will be dynamically inserted -->
+      </div>
+    </div>
   </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/boot.js"></script>
-  <script src="js/main.js"></script>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="story.html">Story</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/projects.js"></script>
 </body>
 </html>

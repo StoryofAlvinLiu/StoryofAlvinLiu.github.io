@@ -1,0 +1,691 @@
+/* Recommendations Page Specific Styles */
+
+/* Floating Quote Marks Background */
+.floating-quotes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.quote-mark {
+  position: absolute;
+  font-size: 4rem;
+  color: rgba(102, 126, 234, 0.05);
+  font-family: Georgia, serif;
+  font-weight: bold;
+  animation: float-quote 20s ease-in-out infinite;
+}
+
+@keyframes float-quote {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.05; }
+  25% { transform: translate(30px, -30px) rotate(10deg); opacity: 0.08; }
+  50% { transform: translate(-20px, 20px) rotate(-5deg); opacity: 0.05; }
+  75% { transform: translate(40px, 10px) rotate(15deg); opacity: 0.08; }
+}
+
+/* Recommendations Page Main */
+.recommendations-page {
+  position: relative;
+  z-index: 1;
+  padding-top: 80px;
+}
+
+/* Hero Section */
+.recommendations-hero {
+  padding: 6rem 0 4rem;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+/* Stats Row */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Recommendations Grid */
+.recommendations-grid-section {
+  padding: 3rem 0 5rem;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+/* Recommendation Card */
+.recommendation-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  backdrop-filter: blur(20px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  animation: slideInCard 0.6s ease forwards;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+@keyframes slideInCard {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Stagger animation delays */
+.recommendation-card:nth-child(1) { animation-delay: 0.1s; }
+.recommendation-card:nth-child(2) { animation-delay: 0.2s; }
+.recommendation-card:nth-child(3) { animation-delay: 0.3s; }
+.recommendation-card:nth-child(4) { animation-delay: 0.4s; }
+.recommendation-card:nth-child(5) { animation-delay: 0.5s; }
+.recommendation-card:nth-child(6) { animation-delay: 0.6s; }
+.recommendation-card:nth-child(7) { animation-delay: 0.7s; }
+.recommendation-card:nth-child(8) { animation-delay: 0.8s; }
+.recommendation-card:nth-child(9) { animation-delay: 0.9s; }
+
+.recommendation-card::before {
+  content: '"';
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  font-size: 6rem;
+  color: rgba(102, 126, 234, 0.1);
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(102, 126, 234, 0.5);
+  box-shadow: 0 24px 60px rgba(102, 126, 234, 0.15);
+}
+
+/* Card Header */
+.rec-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.rec-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.recommendation-card:hover .rec-avatar {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+}
+
+.rec-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.rec-info {
+  flex: 1;
+}
+
+.rec-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.rec-title {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.rec-relationship {
+  display: inline-block;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: #a5b4fc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
+}
+
+/* Recommendation Text */
+.rec-text {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1rem;
+}
+
+/* Read More Indicator */
+.rec-read-more {
+  color: #667eea;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.recommendation-card:hover .rec-read-more {
+  gap: 0.75rem;
+  color: #764ba2;
+}
+
+/* Featured Recommendation */
+.recommendation-card.featured {
+  grid-column: span 2;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.recommendation-card.featured .rec-text {
+  font-size: 1.05rem;
+}
+
+/* Modal Styles */
+.rec-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.rec-modal.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.rec-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.rec-modal-content {
+  position: relative;
+  background: var(--bg-dark);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  max-width: 700px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 3rem;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.rec-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.rec-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+  color: var(--text-primary);
+}
+
+.rec-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.rec-modal-header .rec-avatar {
+  width: 80px;
+  height: 80px;
+  font-size: 2.2rem;
+}
+
+.rec-modal-info h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.rec-modal-info p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.rec-modal-body {
+  margin-bottom: 2rem;
+}
+
+.rec-modal-body p {
+  font-size: 1.1rem;
+  line-height: 1.9;
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+.rec-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--glass-border);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.rec-modal-date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.view-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #0a66c2;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-profile-btn:hover {
+  background: #004182;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(10, 102, 194, 0.4);
+}
+
+/* LinkedIn CTA Section */
+.linkedin-cta-section {
+  padding: 5rem 0;
+}
+
+.linkedin-cta-card {
+  background: linear-gradient(135deg, rgba(10, 102, 194, 0.1) 0%, rgba(0, 119, 181, 0.1) 100%);
+  border: 1px solid rgba(10, 102, 194, 0.3);
+  border-radius: 32px;
+  padding: 4rem 3rem;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.linkedin-cta-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(10, 102, 194, 0.1) 0%, transparent 70%);
+  animation: pulse-linkedin 4s ease-in-out infinite;
+}
+
+@keyframes pulse-linkedin {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.linkedin-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: #0a66c2;
+  color: white;
+  box-shadow: 0 8px 32px rgba(10, 102, 194, 0.3);
+  position: relative;
+  z-index: 1;
+  animation: float-icon 3s ease-in-out infinite;
+}
+
+@keyframes float-icon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.linkedin-cta-card h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.linkedin-cta-card p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+.linkedin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #0a66c2;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 16px rgba(10, 102, 194, 0.3);
+}
+
+.linkedin-btn:hover {
+  background: #004182;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(10, 102, 194, 0.5);
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 5rem 0 6rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn {
+  padding: 1rem 2.5rem;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.cta-btn.primary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.4);
+}
+
+.cta-btn.secondary {
+  background: var(--accent);
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+}
+
+.cta-btn.secondary:hover {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Fade In Animation */
+.fade-in {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .recommendation-card.featured {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-row {
+    gap: 2rem;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+  }
+
+  .linkedin-cta-card {
+    padding: 3rem 2rem;
+  }
+
+  .linkedin-cta-card h2 {
+    font-size: 2rem;
+  }
+
+  .rec-modal-content {
+    padding: 2rem;
+    width: 95%;
+  }
+
+  .rec-modal-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .rec-modal-footer {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .recommendation-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .rec-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem;
+  }
+
+  .rec-name {
+    font-size: 1.1rem;
+  }
+
+  .recommendation-card::before {
+    font-size: 4rem;
+  }
+
+  .rec-modal-content {
+    padding: 1.5rem;
+  }
+
+  .rec-modal-header .rec-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 1.8rem;
+  }
+}
+
+/* Active Nav Link */
+.dropdown-content a.active {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.mobile-link.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certifications & Tools - Alvin Liu</title>
+  <meta name="description" content="View Alvin Liu's professional certifications, credentials, and technical tools. Verified certifications from Deloitte, Goldman Sachs, HubSpot, and more.">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="shortcut icon" type="image/avif" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/FAVICON.avif">
+
+  <!-- Google Analytics G-P3BT6ENHW2 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BT6ENHW2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P3BT6ENHW2');
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/certifications.css">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-gradient" id="bgGradient"></div>
+  <div class="floating-badges" id="floatingBadges"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="logo-link">
+      <img src="images/2026.01_ALVINMAINLOGO.png" alt="Alvin Liu" class="logo" loading="lazy">
+    </a>
+    <div class="nav-links desktop-nav">
+      <div class="dropdown">
+        <button class="dropbtn">More about me ▼</button>
+        <div class="dropdown-content">
+          <a href="projects.html">Projects</a>
+          <a href="story.html">My Story</a>
+          <a href="certifications.html" class="active">Certifications & Tools</a>
+          <a href="recommendations.html">Recommendations</a>
+        </div>
+      </div>
+      <a href="contact.html" class="get-in-touch">Get in touch</a>
+    </div>
+    <button class="mobile-menu-toggle" id="mobileToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/" class="mobile-link">Home</a>
+    <a href="projects.html" class="mobile-link">Projects</a>
+    <a href="story.html" class="mobile-link">My Story</a>
+    <a href="certifications.html" class="mobile-link active">Certifications & Tools</a>
+    <a href="recommendations.html" class="mobile-link">Recommendations</a>
+    <a href="contact.html" class="mobile-link">Get in touch</a>
+  </div>
+
+  <!-- Main Content -->
+  <main class="certifications-page">
+    <!-- Hero Section -->
+    <section class="cert-hero">
+      <div class="container">
+        <div class="hero-content fade-in">
+          <h1 class="hero-title">Certifications & <span class="gradient-text">Tools</span></h1>
+          <p class="hero-subtitle">Professional credentials, verified certifications, and the technology stack I use to build amazing things.</p>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-number" id="totalCerts">0</span>
+              <span class="stat-label">Certifications</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="totalTools">0</span>
+              <span class="stat-label">Tools & Apps</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">100%</span>
+              <span class="stat-label">Verified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="certifications-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Professional Certifications</h2>
+          <p class="section-subtitle">Verified credentials from leading organizations and institutions</p>
+        </div>
+        <div class="certifications-grid" id="certificationsGrid">
+          <!-- Certifications will be dynamically inserted here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="tools-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Tools & Applications</h2>
+          <p class="section-subtitle">My technology stack for development, design, and productivity</p>
+        </div>
+
+        <div class="tools-categories">
+          <button class="tool-filter active" data-category="all">All Tools</button>
+          <button class="tool-filter" data-category="development">Development</button>
+          <button class="tool-filter" data-category="design">Design</button>
+          <button class="tool-filter" data-category="productivity">Productivity</button>
+          <button class="tool-filter" data-category="data">Data & Analytics</button>
+        </div>
+
+        <div class="tools-grid" id="toolsGrid">
+          <!-- Tools will be dynamically inserted here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="container">
+        <h2>Interested in working together?</h2>
+        <p>I'm always learning and expanding my skillset. Let's connect and build something amazing.</p>
+        <div class="cta-buttons">
+          <a href="contact.html" class="cta-btn primary">Get in Touch</a>
+          <a href="projects.html" class="cta-btn secondary">View My Projects</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Alvin Liu. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="story.html">Story</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/certifications.js"></script>
+</body>
+</html>
