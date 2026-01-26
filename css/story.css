@@ -45,6 +45,8 @@
 
 .hero-content {
   max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .hero-title {
@@ -52,6 +54,7 @@
   font-weight: 900;
   margin-bottom: 1.5rem;
   line-height: 1;
+  text-align: center;
 }
 
 .gradient-text {
@@ -73,6 +76,7 @@
   color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: 3rem;
+  text-align: center;
 }
 
 /* Scroll Indicator */
@@ -84,6 +88,7 @@
   color: var(--text-secondary);
   font-size: 0.9rem;
   animation: bounce 2s infinite;
+  margin: 0 auto;
 }
 
 @keyframes bounce {
@@ -149,19 +154,28 @@
   position: relative;
 }
 
-/* Vertical Timeline Line */
+/* Vertical Timeline Line - FIXED */
 .timeline-line {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  top: 0;
+  bottom: 0;
   width: 3px;
-  height: 100%;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    var(--glass-border) 10%, 
-    var(--glass-border) 90%, 
-    transparent 100%);
+  background: var(--glass-border);
   z-index: 1;
+}
+
+/* Animated Progress Line */
+.timeline-line-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  transition: height 0.3s ease;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
 }
 
 /* Timeline Items */
