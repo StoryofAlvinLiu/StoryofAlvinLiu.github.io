@@ -3,13 +3,37 @@
   <head>
     <title>Hello, World!</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .download-btn {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .download-btn:hover {
+        background-color: #45a049;
+      }
+    </style>
   </head>
   <body>
-      <h1 class="title">Hello World!</h1>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/suRl-qnEhUw?si=S9fFhHmxaXKokurg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/suRl-qnEhUw?si=X4FttuoSJkb0YSI2&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-      
-      <p id="currentTime"></p>
-      <script src="script.js"></script>
+    <h1 class="title">Hello World!</h1>
+    
+    <a href="TEMPHOSTFILES/course_files_export.zip" download="course_files_export.zip" style="text-decoration: none;">
+      <button class="download-btn">Download Course Files</button>
+    </a>
+    
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/suRl-qnEhUw?si=S9fFhHmxaXKokurg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/suRl-qnEhUw?si=X4FttuoSJkb0YSI2&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    
+    <p id="currentTime"></p>
+    <script src="script.js"></script>
   </body>
 </html>
