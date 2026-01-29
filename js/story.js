@@ -6,15 +6,14 @@
 // ============================================================================
 // 🎯 YOUR REAL JOURNEY - EASY TO EDIT!
 // ============================================================================
-
 const timelineData = [
   {
     year: "2005",
     age: 0,
     icon: "🌱",
     title: "The Beginning",
-    description: "Born in California! The journey begins.",
-    tags: ["Origin Story"],
+    description: "Born in California. The journey begins.",
+    tags: ["Origins"],
     side: "left"
   },
   {
@@ -22,7 +21,8 @@ const timelineData = [
     age: 11,
     icon: "🔧",
     title: "First Mentor & PLTW",
-    description: "First encounter with PLTW - Project Lead The Way, got my first mentor. Created my first platformer on Scratch using block coding.",
+    description:
+      "Introduced to Project Lead The Way (PLTW) and gained my first mentor. Built my first platformer game on Scratch using block-based programming.",
     tags: ["Education", "Mentorship", "Coding"],
     side: "right"
   },
@@ -30,8 +30,9 @@ const timelineData = [
     year: "2017",
     age: 12,
     icon: "🎨",
-    title: "3D CAD & Deep Dive into Engineering",
-    description: "Took more PLTW classes, started learning 3D CAD with AutoDesk. Dedicated 2 hours after school to studying and experimenting with engineering concepts. Created my first games and programs in Khan Academy using JavaScript (w/ ProcessingJS), SQL, and Python.",
+    title: "CAD & Engineering Foundations",
+    description:
+      "Continued PLTW coursework and began learning 3D CAD with AutoDesk. Dedicated two hours daily after school to engineering exploration. Built early projects using JavaScript (ProcessingJS), Python, and SQL through Khan Academy.",
     tags: ["Engineering", "CAD", "JavaScript", "Python"],
     side: "left"
   },
@@ -39,19 +40,21 @@ const timelineData = [
     year: "2018",
     age: 13,
     icon: "🚀",
-    title: "Research & Competition Success",
-    description: "Participated in The AeroSpace Corporation Herndon Team Competition. Assisted in teaching and moderating PLTW classes in middle school. First place solo design & first place overall mousetrap powered car. Conducted research in Artificial Intelligence (Computer Vision & Reinforcement Learning) and water filtration systems.",
+    title: "Research & Competitive Success",
+    description:
+      "Competed in The Aerospace Corporation Herndon Team Competition. Assisted in teaching and moderating PLTW courses. Earned first place in both solo design and overall categories for a mousetrap-powered car. Conducted early research in artificial intelligence (computer vision, reinforcement learning) and water filtration systems.",
     tags: ["Research", "AI", "Competition", "Teaching"],
-    highlights: ["1st Place Mousetrap Car", "AI Research"],
+    highlights: ["1st Place – Mousetrap Car", "AI Research"],
     side: "right"
   },
   {
     year: "2019",
     age: 14,
     icon: "👥",
-    title: "Community Building & Programming",
-    description: "Community Manager for half a thousand individuals hosting daily events for those passionate in tactical hobbies & engagement. Created my first games and programs in Khan Academy using JavaScript (w/ ProcessingJS), SQL, and Python.",
-    tags: ["Community Management", "JavaScript", "Leadership"],
+    title: "Community Leadership & Programming",
+    description:
+      "Served as a community manager for a 500+ member group, hosting daily events around tactical and technical interests. Continued building projects in JavaScript, Python, and SQL via Khan Academy.",
+    tags: ["Community Management", "Leadership", "Programming"],
     side: "left"
   },
   {
@@ -59,18 +62,20 @@ const timelineData = [
     age: 15,
     icon: "🌍",
     title: "Founded Clubhouse 512",
-    description: "Created an international initiative organization focused on uniting students across 10 countries to mutually study and support each other in STEM topics (K-12+). Obtained metrics of half a thousand members in the first year. First experience with Marketing and Business Development Concepts.",
-    tags: ["Founder", "International", "STEM", "Marketing"],
-    highlights: ["500+ Members in Year 1"],
+    description:
+      "Founded Clubhouse 512, an international STEM initiative connecting students across 10 countries (K–12+). Reached 500+ members in the first year and gained early exposure to marketing and business development.",
+    tags: ["Founder", "STEM", "International", "Marketing"],
+    highlights: ["500+ Members in Year One"],
     side: "right"
   },
   {
     year: "2021",
     age: 16,
     icon: "🎮",
-    title: "Game Development & DECA Begins",
-    description: "General Chapter Member of California DVC DECA. Increased membership of Clubhouse 512 to several hundred individuals in academia. Created my first game using LUA and uploaded into Roblox Studio. Learned basic blender rendering techniques.",
-    tags: ["DECA", "Game Development", "LUA", "3D Design"],
+    title: "Game Development & DECA",
+    description:
+      "Became a general member of California DVC DECA. Expanded Clubhouse 512 membership. Developed and published a game using Lua in Roblox Studio and learned foundational Blender rendering techniques.",
+    tags: ["DECA", "Game Development", "Lua", "3D Design"],
     side: "left"
   },
   {
@@ -78,19 +83,21 @@ const timelineData = [
     age: 17,
     icon: "💼",
     title: "Professional Experience & Leadership",
-    description: "Advertising Intern at The Woo Agency + Supergoop!. Board Member of Da Vinci High Schools. Northrop Grumman High School Internship Program (Year 1). KKCF - The Karim Kharbouch Coding Fellowship (Year 1). Community Engagement + Community Manager at Data 360. Los Angeles Student Clerk at LA County Registrar-Recorder/County Clerk. Vice President of Career Development for California DVC DECA.",
-    tags: ["Internship", "Board Member", "VP Career Dev", "Northrop Grumman"],
-    highlights: ["Hackathon Pitch & Design Winner - Data 360"],
+    description:
+      "Advertising Intern at The Woo Agency and Supergoop!. Board Member at Da Vinci High Schools. Participant in the Northrop Grumman High School Internship Program (Year 1) and the Karim Kharbouch Coding Fellowship (Year 1). Community Manager at Data 360. Student Clerk at the LA County Registrar-Recorder/County Clerk. Vice President of Career Development for California DVC DECA.",
+    tags: ["Internships", "Leadership", "Northrop Grumman", "DECA"],
+    highlights: ["Hackathon Pitch & Design Winner – Data 360"],
     side: "right"
   },
   {
     year: "2023",
     age: 18,
     icon: "🎓",
-    title: "UC Merced & Expanding Horizons",
-    description: "Started Double Major at UC Merced (Computer Science & Engineering + Management & Business Economics). Officer Candidate at USMC Officer Candidate School. Intellectual Property & Innovation Assistant at Tech Transfer Office. Chair of Professional Development for Merced SACNAS. Class President + Student Speaker of Da Vinci Communication High School Class of 2023. Northrop Grumman Internship Program (Year 2 Graduate). KKCF Coding Fellowship (Year 2 Graduate). General Member of Business Society. LA County Student Clerk. National Science Foundation Innovation Corps.",
-    tags: ["UC Merced", "USMC OCS", "IP Assistant", "Class President"],
-    highlights: ["DECA Chapter Leader of the Year - CA Statewide", "Student Speaker"],
+    title: "UC Merced & Academic Expansion",
+    description:
+      "Began a double major at UC Merced in Computer Science & Engineering and Management & Business Economics. Officer Candidate at USMC Officer Candidate School. Intellectual Property & Innovation Assistant at the Tech Transfer Office. Chair of Professional Development for Merced SACNAS. Class President and Student Speaker for Da Vinci Communication High School (Class of 2023). Completed Year 2 of both the Northrop Grumman Internship Program and the Karim Kharbouch Coding Fellowship. General member of the Business Society. LA County Student Clerk. Participant in NSF Innovation Corps.",
+    tags: ["UC Merced", "USMC OCS", "Leadership", "IP & Innovation"],
+    highlights: ["DECA Chapter Leader of the Year (CA)", "Student Speaker"],
     side: "left"
   },
   {
@@ -98,23 +105,26 @@ const timelineData = [
     age: 19,
     icon: "📈",
     title: "Leadership & Innovation",
-    description: "Officer Candidate at USMC Officer Candidate School. Intellectual Property & Innovation Assistant at UC Merced Tech Transfer Office. Vice President of Merced SACNAS Chapter. General Body Member of Delta Sigma Pi - Tau Chi Chapter. Chief Operating Officer of Business Society. Blackstone Launchpad Talent Outreach & Acquisitions Assistant. National Science Foundation Innovation Corps. Attended multiple Engineering Hackathons.",
-    tags: ["VP SACNAS", "COO", "Blackstone Launchpad", "NSF I-Corps"],
-    highlights: ["Multiple Leadership Positions"],
+    description:
+      "Continued as an Officer Candidate at USMC OCS and Intellectual Property & Innovation Assistant at UC Merced. Served as Vice President of Merced SACNAS, COO of the Business Society, and a member of Delta Sigma Pi (Tau Chi Chapter). Worked as a Talent Outreach & Acquisitions Assistant with Blackstone Launchpad. Participated in NSF Innovation Corps and multiple engineering hackathons.",
+    tags: ["Leadership", "SACNAS", "COO", "Innovation"],
+    highlights: ["Multiple Concurrent Leadership Roles"],
     side: "right"
   },
   {
     year: "2025",
     age: 20,
     icon: "⭐",
-    title: "Current - Building the Future",
-    description: "Vice President of Marketing for Delta Sigma Pi Professional Fraternity. Intellectual Property & Innovation Assistant at Office of Technology, Innovation, and Industry Relations (Tech Transfer Office). Officer Candidate at USMC Officer Candidate School. Continuing to build, learn, and make an impact.",
-    tags: ["VP Marketing", "Tech Transfer", "USMC OCS"],
-    highlights: ["Active Leadership in Multiple Organizations"],
+    title: "Current – Building the Future",
+    description:
+      "Vice President of Marketing for Delta Sigma Pi Professional Fraternity. Intellectual Property & Innovation Assistant at the Office of Technology, Innovation, and Industry Relations. Officer Candidate at USMC Officer Candidate School. Actively building, learning, and creating impact across technology, leadership, and business.",
+    tags: ["Marketing", "Tech Transfer", "Leadership"],
+    highlights: ["Active Leadership Across Multiple Organizations"],
     side: "left",
     current: true
   }
 ];
+
 
 // ============================================================================
 // END OF DATA SECTION
