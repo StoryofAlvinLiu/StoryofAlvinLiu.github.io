@@ -352,11 +352,11 @@
   function m2m2025UpdateBanner() {
     const banner = document.getElementById("m2m2025-banner");
     const now = new Date();
-    const eventStart = new Date("2026-04-16T09:00:00-07:00");
+    const eventStart = new Date("2026-04-16T10:00:00-07:00");
     const eventEnd = new Date("2026-04-16T18:00:00-07:00");
 
     if (now >= eventStart && now <= eventEnd) {
-      banner.textContent = "Merced 2 Market 2026 is LIVE! Come join us!";
+      banner.textContent = "Merced 2 Market 2026 is LIVE! Come join us in the ballroom!";
     } else if (now > eventEnd) {
       banner.textContent = "Thank you for coming! See you again next year!";
     } else {
@@ -364,7 +364,7 @@
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      banner.textContent = `Starts in ${days} days, ${hours} hours, ${minutes} minutes`;
+      banner.textContent = `Starts in ${days} days, ${hours} hours, ${minutes} minutes on April 16, 2026!`;
     }
   }
 
