@@ -1,0 +1,294 @@
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<style type="text/css">.m2m2025-body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .m2m2025-header {
+    position: relative;
+    width: 100%;
+  }
+
+  .m2m2025-hero {
+    background-image: url('/sites/g/files/ufvvjh1376/f/images/join_our.png');
+    background-size: cover;
+    background-position: center;
+    height: 375px;
+  }
+
+  .m2m2025-banner {
+    background-color: #0077cc;
+    color: white;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .m2m2025-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .m2m2025-button,
+  .m2m2025-button:visited,
+  .m2m2025-button:hover,
+  .m2m2025-button:active {
+    display: inline-block;
+    margin: 0 auto 1rem auto;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+    background-color: #0077cc;
+    color: #ffffff !important;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none !important;
+  }
+
+  .m2m2025-dropdown {
+    max-width: 700px;
+    margin: 1rem auto;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    overflow: hidden;
+  }
+
+  .m2m2025-dropdown-header {
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+    background-color: #eaeaea;
+    user-select: none;
+  }
+
+  .m2m2025-dropdown-content {
+    display: block;
+    padding: 1rem;
+  }
+
+  .m2m2025-dropdown-content.active {
+    display: block;
+  }
+
+  .m2m2025-subdropdown {
+    margin-top: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .m2m2025-subdropdown-header {
+    padding: 0.85rem 1rem;
+    background: #f2f2f2;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .m2m2025-subdropdown-content {
+    display: none;
+    padding: 1rem;
+    background: #fff;
+  }
+
+  .m2m2025-subdropdown-content.active {
+    display: block;
+  }
+
+  .m2m2025-agenda-image {
+    width: 100%;
+    max-width: 650px;
+    height: auto;
+    display: block;
+    margin: 0 auto 1rem auto;
+  }
+
+  .m2m2025-center {
+    text-align: center;
+  }
+</style>
+<div class="m2m2025-header">
+	<div class="m2m2025-hero">&nbsp;</div>
+
+	<div class="m2m2025-banner" id="m2m2025-banner">Starts in DAYS, HOURS on April 16th, 2026!</div>
+
+	<p>&nbsp;</p>
+</div>
+
+<h3 class="m2m2025-container" style="text-align: center;"><strong><a class="m2m2025-button" href="https://ucmerced.az1.qualtrics.com/jfe/form/SV_2c5oF0BVn8vuDQy" rel="noopener noreferrer" target="_blank">Register for Merced 2 Market here! </a> </strong></h3>
+
+<div class="m2m2025-dropdown">
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('agenda')">Agenda</div>
+
+	<div class="m2m2025-dropdown-content active" id="m2m2025-agenda">
+		<div class="m2m2025-center"><img alt="Merced to Market Agenda" class="m2m2025-agenda-image" src="/sites/g/files/ufvvjh1376/f/documents/merced_to_market_agenda-1.png" /> <a class="m2m2025-button" download="2026.M2M.Agenda.pdf" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/8db81e1e7387d6a4f2f1442cadef15d10778f9de/Alvin.Services/2026%204th%20Annual%20M2M%20Agenda.pdf" rel="noopener noreferrer" target="_blank"> Download Agenda Here (PDF) </a></div>
+
+		<p>Location: UC Merced Conference Center, 5200 N Lake Rd, Merced, CA 95340</p>
+
+		<ul>
+			<li>09:30 AM - 10:00 AM || Registration</li>
+			<li>10:00 AM - 10:30 AM || Opening Remarks</li>
+			<li>10:30 AM - 12:00 PM || UC Merced Innovators Showcase</li>
+			<li>12:00 PM - 01:00 PM || Networking Lunch</li>
+			<li>01:00 PM - 02:00 PM || Bridging Academic Innovation and Industry: Understanding Industry Needs</li>
+			<li>02:00 PM - 03:00 PM || Local Resources for Research Partnerships, Startups &amp; Tech Commercialization</li>
+			<li>03:00 PM - 04:00 PM || Closing Reception</li>
+		</ul>
+
+		<p>&nbsp;</p>
+	</div>
+</div>
+<!-- Panel 1 -->
+
+<div class="m2m2025-dropdown">
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel1')">Bridging Academic Innovation and Industry: Understanding Industry Needs Panelist at 1:00 PM!</div>
+
+	<div class="m2m2025-dropdown-content" id="m2m2025-panel1">
+		<p>&nbsp;</p>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1JonathanAyutsede')">Jonathan Ayutsede</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1JonathanAyutsede">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/jonathan.png" style="width: 630px; border-width: 1px; border-style: solid; height: 735px;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1EmilyDouglas')">Emily Douglas</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1EmilyDouglas">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/emily_douglasv2.png" style="width: 630px; border-width: 1px; border-style: solid; height: 630px;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden')">Michelle A. Brooden</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1MichelleBooden">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/michelle_a._boodenv2.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Guangwei')">Guangwei Huang</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Guangwei">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/guangwei_huang.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Mufit')">Mufit Ferman</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Mufit">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/mufit_fermanv2.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Panel 2 -->
+
+<div class="m2m2025-dropdown">
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel2')">Local Resources for Research Partnerships, Startups &amp; Tech Commercialization Panelist at 2:00 PM</div>
+
+	<div class="m2m2025-dropdown-content" id="m2m2025-panel2">
+		<p>&nbsp;</p>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SpencerGunlund')">Spencer Gunland</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SpencerGunlund">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/spencer_gunlandv3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2ErickSerrato')">Erick Serrato</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2ErickSerrato">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/erick_serrato_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SusiePryor')">Susie Pryor</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SusiePryor">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/susie_pryor_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2CharlesEason')">Charles Eason</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2CharlesEason">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/charles_eason_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Stavros')">Stavros G. Karakalos</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Stavros">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/stavros_g._karakalos_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+
+		<div class="m2m2025-subdropdown">
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Omar')">Omar Qarshi</div>
+
+			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Omar">
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/omar_qarshi_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="m2m2025-dropdown">
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('whereToStay')">Where to stay?</div>
+
+	<div class="m2m2025-dropdown-content" id="m2m2025-whereToStay">
+		<p><strong>Where to stay information:</strong><br />
+			<a href="https://www.ucmerced.edu/where-to-stay" rel="noopener noreferrer" target="_blank">https://www.ucmerced.edu/where-to-stay </a></p>
+	</div>
+</div>
+<script>
+  function m2m2025Toggle(id) {
+    const content = document.getElementById('m2m2025-' + id);
+    if (content) content.classList.toggle('active');
+  }
+
+  function m2m2025UpdateBanner() {
+    const banner = document.getElementById("m2m2025-banner");
+    const now = new Date();
+    const eventStart = new Date("2026-04-16T09:00:00-07:00");
+    const eventEnd = new Date("2026-04-16T18:00:00-07:00");
+
+    if (now >= eventStart && now <= eventEnd) {
+      banner.textContent = "Merced 2 Market 2026 is LIVE! Come join us!";
+    } else if (now > eventEnd) {
+      banner.textContent = "Thank you for coming! See you again next year!";
+    } else {
+      const diff = eventStart - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      banner.textContent = `Starts in ${days} days, ${hours} hours, ${minutes} minutes`;
+    }
+  }
+
+  m2m2025UpdateBanner();
+  setInterval(m2m2025UpdateBanner, 60 * 1000);
+</script>
+
+<p>&nbsp;</p>
