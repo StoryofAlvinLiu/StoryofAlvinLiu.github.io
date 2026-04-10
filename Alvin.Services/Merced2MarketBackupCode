@@ -56,7 +56,7 @@
     transform: translateY(-1px);
   }
 
-  /* ── Outer dropdown card ── */
+  /* ── Outer dropdown card thingy── */
   .m2m2025-dropdown {
     max-width: 700px;
     margin: 1rem auto;
@@ -64,7 +64,7 @@
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: left;
-    overflow: hidden;
+    /* overflow: hidden REMOVED — was clipping tall images and cutting off sub-dropdowns */
     transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
 
@@ -73,7 +73,7 @@
     transform: translateY(-1px);
   }
 
-  /* ── Outer dropdown header ── */
+  /* ── Outer dropdown header thingy ── */
   .m2m2025-dropdown-header {
     padding: 1rem 1rem 1rem 1.2rem;
     font-size: 1.2rem;
@@ -86,13 +86,14 @@
     justify-content: space-between;
     align-items: center;
     transition: background-color 0.2s ease;
+    border-radius: 5px 5px 0 0;
   }
 
   .m2m2025-dropdown-header:hover {
     background-color: #dcdcdc;
   }
 
-  /* Chevron icon for outer headers */
+  /* thingy thingy */
   .m2m2025-dropdown-header::after {
     content: '▸';
     font-size: 1rem;
@@ -116,7 +117,7 @@
   }
 
   .m2m2025-dropdown-content.active {
-    max-height: 4000px;  /* large enough for any content */
+    max-height: 15000px; /* increased to safely fit all speaker images */
     opacity: 1;
     padding: 1rem;
   }
@@ -236,7 +237,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1JonathanAyutsede', this)">Jonathan Ayutsede</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1JonathanAyutsede">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/jonathan.png" style="width: 630px; border-width: 1px; border-style: solid; height: 735px;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1jonathanayutsede.png" style="width: 630px; border-width: 1px; border-style: solid; height: 735px;" /></p>
 			</div>
 		</div>
 
@@ -244,7 +245,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1EmilyDouglas', this)">Emily Douglas</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1EmilyDouglas">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/emily_douglasv2.png" style="width: 630px; border-width: 1px; border-style: solid; height: 630px;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1emilydouglas.png" style="width: 630px; border-width: 1px; border-style: solid; height: 630px;" /></p>
 			</div>
 		</div>
 
@@ -252,7 +253,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden', this)">Michelle A. Brooden</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1MichelleBooden">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/michelle_a._boodenv2.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1michelleabooden.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -260,7 +261,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Guangwei', this)">Guangwei Huang</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Guangwei">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/guangwei_huang.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1guangweihuang.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -268,7 +269,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Mufit', this)">Mufit Ferman</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Mufit">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/mufit_fermanv2.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1mufitferman.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 	</div>
@@ -285,7 +286,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SpencerGunlund', this)">Spencer Gunland</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SpencerGunlund">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/spencer_gunlandv3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1spencergunland.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -293,7 +294,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2ErickSerrato', this)">Erick Serrato</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2ErickSerrato">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/erick_serrato_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1erickserrato.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -301,7 +302,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SusiePryor', this)">Susie Pryor</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SusiePryor">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/susie_pryor_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1susiepryor.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -309,7 +310,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2CharlesEason', this)">Charles Eason</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2CharlesEason">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/charles_eason_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1charleseason.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -317,7 +318,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Stavros', this)">Stavros G. Karakalos</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Stavros">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/stavros_g._karakalos_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1stavrosgkarakalos.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 
@@ -325,7 +326,7 @@
 			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Omar', this)">Omar Qarshi</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Omar">
-				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/omar_qarshi_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
+				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1omarqarshi.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
 			</div>
 		</div>
 	</div>
@@ -370,5 +371,7 @@
   m2m2025UpdateBanner();
   setInterval(m2m2025UpdateBanner, 60 * 1000);
 </script>
+
+<p>&nbsp;</p>
 
 <p>&nbsp;</p>
