@@ -48,8 +48,15 @@
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none !important;
+    transition: background-color 0.2s ease, transform 0.15s ease;
   }
 
+  .m2m2025-button:hover {
+    background-color: #005fa3 !important;
+    transform: translateY(-1px);
+  }
+
+  /* ── Outer dropdown card ── */
   .m2m2025-dropdown {
     max-width: 700px;
     margin: 1rem auto;
@@ -58,32 +65,73 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     text-align: left;
     overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
 
+  .m2m2025-dropdown:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  /* ── Outer dropdown header ── */
   .m2m2025-dropdown-header {
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 1.2rem;
     font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
     border-bottom: 1px solid #ccc;
     background-color: #eaeaea;
     user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
   }
 
+  .m2m2025-dropdown-header:hover {
+    background-color: #dcdcdc;
+  }
+
+  /* Chevron icon for outer headers */
+  .m2m2025-dropdown-header::after {
+    content: '▸';
+    font-size: 1rem;
+    color: #555;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 0.75rem;
+  }
+
+  .m2m2025-dropdown-header.open::after {
+    transform: rotate(90deg);
+  }
+
+  /* ── Outer dropdown content (animated) ── */
   .m2m2025-dropdown-content {
-    display: block;
-    padding: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.35s ease, padding 0.3s ease;
+    padding: 0 1rem;
   }
 
   .m2m2025-dropdown-content.active {
-    display: block;
+    max-height: 4000px;  /* large enough for any content */
+    opacity: 1;
+    padding: 1rem;
   }
 
+  /* ── Sub-dropdown ── */
   .m2m2025-subdropdown {
     margin-top: 1rem;
     border: 1px solid #ddd;
     border-radius: 5px;
     overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .m2m2025-subdropdown:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .m2m2025-subdropdown-header {
@@ -92,16 +140,44 @@
     font-weight: bold;
     cursor: pointer;
     user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
   }
 
+  .m2m2025-subdropdown-header:hover {
+    background-color: #e6e6e6;
+  }
+
+  /* Chevron icon for sub-headers */
+  .m2m2025-subdropdown-header::after {
+    content: '▸';
+    font-size: 0.9rem;
+    color: #666;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+
+  .m2m2025-subdropdown-header.open::after {
+    transform: rotate(90deg);
+  }
+
+  /* ── Sub-dropdown content (animated) ── */
   .m2m2025-subdropdown-content {
-    display: none;
-    padding: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.25s ease;
+    padding: 0 1rem;
     background: #fff;
   }
 
   .m2m2025-subdropdown-content.active {
-    display: block;
+    max-height: 2000px;
+    opacity: 1;
+    padding: 1rem;
   }
 
   .m2m2025-agenda-image {
@@ -124,13 +200,14 @@
 	<p>&nbsp;</p>
 </div>
 
-<h3 class="m2m2025-container" style="text-align: center;"><strong><a class="m2m2025-button" href="https://ucmerced.az1.qualtrics.com/jfe/form/SV_2c5oF0BVn8vuDQy" rel="noopener noreferrer" target="_blank">Register for Merced 2 Market here! </a> </strong></h3>
+<h3 class="m2m2025-container" style="text-align: center;"><strong><a class="m2m2025-button" href="https://ucmerced.az1.qualtrics.com/jfe/form/SV_2c5oF0BVn8vuDQy" rel="noopener noreferrer" target="_blank">Register for Merced 2 Market here!</a> </strong></h3>
+<!-- Agenda -->
 
 <div class="m2m2025-dropdown">
-	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('agenda')">Agenda</div>
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('agenda', this)">Agenda</div>
 
-	<div class="m2m2025-dropdown-content active" id="m2m2025-agenda">
-		<div class="m2m2025-center"><img alt="Merced to Market Agenda" class="m2m2025-agenda-image" src="/sites/g/files/ufvvjh1376/f/documents/merced_to_market_agenda-1.png" /> <a class="m2m2025-button" download="2026.M2M.Agenda.pdf" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/8db81e1e7387d6a4f2f1442cadef15d10778f9de/Alvin.Services/2026%204th%20Annual%20M2M%20Agenda.pdf" rel="noopener noreferrer" target="_blank"> Download Agenda Here (PDF) </a></div>
+	<div class="m2m2025-dropdown-content" id="m2m2025-agenda">
+		<div class="m2m2025-center"><img alt="Merced to Market Agenda" class="m2m2025-agenda-image" src="/sites/g/files/ufvvjh1376/f/documents/merced_to_market_agenda-1.png" /> <a class="m2m2025-button" download="2026.M2M.Agenda.pdf" href="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/8db81e1e7387d6a4f2f1442cadef15d10778f9de/Alvin.Services/2026%204th%20Annual%20M2M%20Agenda.pdf" rel="noopener noreferrer" target="_blank">Download Agenda Here (PDF)</a></div>
 
 		<p>Location: UC Merced Conference Center, 5200 N Lake Rd, Merced, CA 95340</p>
 
@@ -150,13 +227,13 @@
 <!-- Panel 1 -->
 
 <div class="m2m2025-dropdown">
-	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel1')">Bridging Academic Innovation and Industry: Understanding Industry Needs Panelist at 1:00 PM!</div>
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel1', this)">Bridging Academic Innovation and Industry: Understanding Industry Needs Panelist at 1:00 PM!</div>
 
 	<div class="m2m2025-dropdown-content" id="m2m2025-panel1">
 		<p>&nbsp;</p>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1JonathanAyutsede')">Jonathan Ayutsede</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1JonathanAyutsede', this)">Jonathan Ayutsede</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1JonathanAyutsede">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/jonathan.png" style="width: 630px; border-width: 1px; border-style: solid; height: 735px;" /></p>
@@ -164,7 +241,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1EmilyDouglas')">Emily Douglas</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1EmilyDouglas', this)">Emily Douglas</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1EmilyDouglas">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/emily_douglasv2.png" style="width: 630px; border-width: 1px; border-style: solid; height: 630px;" /></p>
@@ -172,7 +249,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden')">Michelle A. Brooden</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden', this)">Michelle A. Brooden</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1MichelleBooden">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/michelle_a._boodenv2.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
@@ -180,7 +257,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Guangwei')">Guangwei Huang</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Guangwei', this)">Guangwei Huang</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Guangwei">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/guangwei_huang.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
@@ -188,7 +265,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Mufit')">Mufit Ferman</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1Mufit', this)">Mufit Ferman</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1Mufit">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/mufit_fermanv2.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
@@ -199,13 +276,13 @@
 <!-- Panel 2 -->
 
 <div class="m2m2025-dropdown">
-	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel2')">Local Resources for Research Partnerships, Startups &amp; Tech Commercialization Panelist at 2:00 PM</div>
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('panel2', this)">Local Resources for Research Partnerships, Startups &amp; Tech Commercialization Panelist at 2:00 PM</div>
 
 	<div class="m2m2025-dropdown-content" id="m2m2025-panel2">
 		<p>&nbsp;</p>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SpencerGunlund')">Spencer Gunland</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SpencerGunlund', this)">Spencer Gunland</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SpencerGunlund">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/spencer_gunlandv3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
@@ -213,7 +290,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2ErickSerrato')">Erick Serrato</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2ErickSerrato', this)">Erick Serrato</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2ErickSerrato">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/erick_serrato_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
@@ -221,7 +298,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SusiePryor')">Susie Pryor</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2SusiePryor', this)">Susie Pryor</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2SusiePryor">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/susie_pryor_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
@@ -229,7 +306,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2CharlesEason')">Charles Eason</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2CharlesEason', this)">Charles Eason</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2CharlesEason">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/charles_eason_v3.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
@@ -237,7 +314,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Stavros')">Stavros G. Karakalos</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Stavros', this)">Stavros G. Karakalos</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Stavros">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/stavros_g._karakalos_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
@@ -245,7 +322,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Omar')">Omar Qarshi</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel2Omar', this)">Omar Qarshi</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel2Omar">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/omar_qarshi_v3.png" style="width: 630px; height: 630px; border-width: 1px; border-style: solid;" /></p>
@@ -253,19 +330,22 @@
 		</div>
 	</div>
 </div>
+<!-- Where to Stay -->
 
 <div class="m2m2025-dropdown">
-	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('whereToStay')">Where to stay?</div>
+	<div class="m2m2025-dropdown-header" onclick="m2m2025Toggle('whereToStay', this)">Where to stay?</div>
 
 	<div class="m2m2025-dropdown-content" id="m2m2025-whereToStay">
 		<p><strong>Where to stay information:</strong><br />
-			<a href="https://www.ucmerced.edu/where-to-stay" rel="noopener noreferrer" target="_blank">https://www.ucmerced.edu/where-to-stay </a></p>
+			<a href="https://www.ucmerced.edu/where-to-stay" rel="noopener noreferrer" target="_blank">https://www.ucmerced.edu/where-to-stay</a></p>
 	</div>
 </div>
 <script>
-  function m2m2025Toggle(id) {
+  function m2m2025Toggle(id, headerEl) {
     const content = document.getElementById('m2m2025-' + id);
-    if (content) content.classList.toggle('active');
+    if (!content) return;
+    const isActive = content.classList.toggle('active');
+    if (headerEl) headerEl.classList.toggle('open', isActive);
   }
 
   function m2m2025UpdateBanner() {
