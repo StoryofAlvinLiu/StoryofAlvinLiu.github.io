@@ -250,7 +250,7 @@
 		</div>
 
 		<div class="m2m2025-subdropdown">
-			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden', this)">Michelle A. Brooden</div>
+			<div class="m2m2025-subdropdown-header" onclick="m2m2025Toggle('panel1MichelleBooden', this)">Michelle A. Booden</div>
 
 			<div class="m2m2025-subdropdown-content" id="m2m2025-panel1MichelleBooden">
 				<p><img alt="" src="/sites/g/files/ufvvjh1376/f/event/M2M3/M2M4/Speakers/1michelleabooden.png" style="width: 630px; height: 735px; border-width: 1px; border-style: solid;" /></p>
