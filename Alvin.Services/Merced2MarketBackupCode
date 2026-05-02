@@ -9,7 +9,7 @@
   }
 
   .m2m2025-header {
-    position: relative;
+    position: relative; 
     width: 100%;
   }
 

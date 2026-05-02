@@ -1,0 +1,250 @@
+
+<style>
+  .page-wrap{display:flex;justify-content:center;align-items:center;padding:40px;min-height:420px;background:#111;width:100%;box-sizing:border-box;}
+  .instrument-housing{position:relative;width:360px;height:360px;border-radius:28px;background:#1c1c1c;box-shadow:inset 0 2px 8px rgba(255,255,255,0.08),0 8px 40px rgba(0,0,0,0.8);display:flex;justify-content:center;align-items:center;border:1.5px solid #2e2e2e;flex-shrink:0;}
+  .mount-screw{position:absolute;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#555,#222);border:1px solid #444;}
+  .mount-screw.tl{top:16px;left:16px;}.mount-screw.tr{top:16px;right:16px;}.mount-screw.br{bottom:16px;right:16px;}.mount-screw.bl{bottom:26px;left:26px;}
+  .knob{position:absolute;bottom:18px;left:22px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#666,#2a2a2a);border:1px solid #444;}
+  .dial-rim{width:318px;height:318px;border-radius:50%;background:#252525;box-shadow:inset 0 3px 10px rgba(0,0,0,0.7);border:2px solid #333;display:flex;justify-content:center;align-items:center;position:relative;}
+  .dial-face{width:296px;height:296px;border-radius:50%;background:#1e1e1e;position:relative;overflow:hidden;}
+  .center-label{position:absolute;top:36%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;z-index:10;}
+  .label-alt{font-family:'Arial Narrow',Arial,sans-serif;font-weight:700;font-size:13px;letter-spacing:3px;color:#e8e8e0;text-transform:uppercase;}
+  .label-cal{font-family:Arial,sans-serif;font-size:6px;color:#aaa;letter-spacing:0.5px;margin-top:3px;line-height:1.5;}
+  .nameplate{position:absolute;bottom:26%;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Arial Narrow',Arial,sans-serif;font-size:7px;letter-spacing:1.8px;color:#888;text-transform:uppercase;pointer-events:none;z-index:10;}
+  .hands-layer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:15;}
+  .center-pivot{position:absolute;width:10px;height:10px;border-radius:50%;background:#222;border:1.5px solid #ccc;top:50%;left:50%;transform:translate(-50%,-50%);z-index:25;}
+</style>
+
+<div class="page-wrap">
+  <div class="instrument-housing">
+    <div class="mount-screw tl"></div><div class="mount-screw tr"></div>
+    <div class="mount-screw br"></div><div class="mount-screw bl"></div>
+    <div class="knob"></div>
+    <div class="dial-rim">
+      <div class="dial-face">
+        <canvas id="dialCanvas" width="296" height="296" style="position:absolute;top:0;left:0;z-index:1;"></canvas>
+        <canvas id="overlayCanvas" width="296" height="296" style="position:absolute;top:0;left:0;z-index:20;pointer-events:none;"></canvas>
+        <div class="center-label">
+          <div class="label-alt">Altimeter</div>
+          <div class="label-cal">CALIBRATED<br>TO 20,000FT</div>
+        </div>
+        <div class="nameplate">Office of Alvin Liu</div>
+        <svg class="hands-layer" viewBox="0 0 296 296" xmlns="http://www.w3.org/2000/svg" style="z-index:15;">
+          <defs><filter id="hg"><feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#999" flood-opacity="0.35"/></filter></defs>
+          <g id="minuteHand"><polygon points="148,28 144,148 148,160 152,148" fill="#e8e8e0" filter="url(#hg)"/><polygon points="148,170 144,202 148,212 152,202" fill="#e8e8e0"/></g>
+          <g id="hourHand"><polygon points="148,70 143,148 148,162 153,148" fill="#e8e8e0" filter="url(#hg)"/></g>
+          <g id="secondHand"><line x1="148" y1="33" x2="148" y2="178" stroke="#fff" stroke-width="1.2"/><circle cx="148" cy="148" r="3" fill="#222" stroke="#bbb" stroke-width="1"/></g>
+        </svg>
+        <div class="center-pivot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const CX=148, CY=148, R=148;
+
+  const BARO_MID_DEG = 90;
+  const BARO_HALF    = 18;
+  const BARO_S_DEG   = BARO_MID_DEG - BARO_HALF;
+  const BARO_E_DEG   = BARO_MID_DEG + BARO_HALF;
+  const baroSRad     = (BARO_S_DEG - 90)*Math.PI/180;
+  const baroERad     = (BARO_E_DEG - 90)*Math.PI/180;
+  const baroMRad     = (BARO_MID_DEG - 90)*Math.PI/180;
+  const BARO_OUTER   = R - 20;  // 128
+  const BARO_INNER   = R - 58;  // 90
+  const BARO_MID_R   = (BARO_OUTER + BARO_INNER) / 2; // 109
+
+  // Screen coords of baro window center (at 3-o'clock, so x=CX+109, y=CY)
+  const WIN_CX = CX + Math.cos(baroMRad) * BARO_MID_R;
+  const WIN_CY = CY + Math.sin(baroMRad) * BARO_MID_R;
+  const WIN_H  = BARO_OUTER - BARO_INNER; // ~38px — vertical extent in screen space
+
+  // Row spacing: fit ~5 rows visibly, with a couple extra for scroll bleed
+  const ROW_H = 7.2;
+
+  // Number of small ticks between each labelled row
+  // Each row = 1 second. We'll draw 4 sub-ticks between rows (every 0.2s visually)
+  const SUB_TICKS = 4;
+
+  function drawDial(){
+    const c=document.getElementById('dialCanvas'), ctx=c.getContext('2d');
+    ctx.clearRect(0,0,296,296);
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2); ctx.fillStyle='#1e1e1e'; ctx.fill();
+
+    for(let i=0;i<60;i++){
+      const angle=(i/60)*Math.PI*2-Math.PI/2;
+      const is5=i%5===0;
+      ctx.beginPath();
+      ctx.moveTo(CX+Math.cos(angle)*(R-4),   CY+Math.sin(angle)*(R-4));
+      ctx.lineTo(CX+Math.cos(angle)*(is5?R-19:R-11), CY+Math.sin(angle)*(is5?R-19:R-11));
+      ctx.strokeStyle='#ddd'; ctx.lineWidth=is5?2.5:1.2; ctx.stroke();
+    }
+
+    ctx.fillStyle='#e8e8e0'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font='bold 17px Arial';
+    for(let n=1;n<=12;n++){
+      if(n===3||n===5) continue;
+      const ar=((n/12)*360-90)*Math.PI/180;
+      ctx.fillText(String(n), CX+Math.cos(ar)*(R-32), CY+Math.sin(ar)*(R-32));
+    }
+
+    ctx.save();
+    ctx.translate(CX, CY-(R-45));
+    ctx.beginPath(); ctx.moveTo(0,-5); ctx.lineTo(4.5,0); ctx.lineTo(0,5); ctx.lineTo(-4.5,0); ctx.closePath();
+    ctx.fillStyle='#e8e8e0'; ctx.fill(); ctx.restore();
+  }
+
+  // Map a screenY inside the baro window → angle along the arc
+  // WIN_CY - WIN_H/2 = top of window → BARO_S_DEG
+  // WIN_CY + WIN_H/2 = bottom         → BARO_E_DEG
+  function yToArcAngleRad(screenY){
+    const frac = (screenY - (WIN_CY - WIN_H*0.5)) / WIN_H; // 0=top, 1=bottom
+    const deg  = BARO_S_DEG + frac * (BARO_E_DEG - BARO_S_DEG);
+    return (deg - 90) * Math.PI / 180;
+  }
+
+  function drawOverlay(s, ms){
+    const c=document.getElementById('overlayCanvas'), ctx=c.getContext('2d');
+    ctx.clearRect(0,0,296,296);
+
+    // Background
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX,CY,BARO_OUTER,baroSRad,baroERad);
+    ctx.arc(CX,CY,BARO_INNER,baroERad,baroSRad,true);
+    ctx.closePath();
+    ctx.fillStyle='#0c0c0c'; ctx.fill();
+    ctx.restore();
+
+    // Clip region for scrolling content
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX,CY,BARO_OUTER,baroSRad,baroERad);
+    ctx.arc(CX,CY,BARO_INNER,baroERad,baroSRad,true);
+    ctx.closePath();
+    ctx.clip();
+
+    const progress = ms / 1000; // 0→1 within current second
+
+    // Anchor: row index 0 (current second s) sits near bottom of window
+    // As progress increases rows scroll upward
+    const baseY = WIN_CY + WIN_H * 0.3;
+
+    // --- Draw sub-ticks (small arc ticks, no labels) ---
+    // Between every two labelled rows there are SUB_TICKS evenly spaced ticks
+    // Total items per row: (SUB_TICKS+1) steps
+    const totalSteps = SUB_TICKS + 1;
+    const subH = ROW_H / totalSteps;
+
+    // Draw from row -5 to +3, and sub-ticks within each
+    for(let row = -6; row <= 4; row++){
+      for(let sub = 0; sub < totalSteps; sub++){
+        const screenY = baseY - (row + sub/totalSteps + progress) * ROW_H;
+        if(screenY < WIN_CY - WIN_H*0.62 || screenY > WIN_CY + WIN_H*0.62) continue;
+
+        const aRad = yToArcAngleRad(screenY);
+        const isMajor = (sub === 0);
+
+        const tickLen = isMajor ? 5 : 3;
+        const tx1 = CX + Math.cos(aRad)*(BARO_OUTER - 1);
+        const ty1 = CY + Math.sin(aRad)*(BARO_OUTER - 1);
+        const tx2 = CX + Math.cos(aRad)*(BARO_OUTER - 1 - tickLen);
+        const ty2 = CY + Math.sin(aRad)*(BARO_OUTER - 1 - tickLen);
+
+        const distFromCenter = Math.abs(screenY - (WIN_CY));
+        const alpha = Math.max(0.05, 1 - (distFromCenter / (WIN_H * 0.52)) * 0.9);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.moveTo(tx1, ty1);
+        ctx.lineTo(tx2, ty2);
+        ctx.strokeStyle = isMajor ? '#c8c8b8' : '#888880';
+        ctx.lineWidth = isMajor ? 1.1 : 0.8;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // --- Draw labelled rows (integer seconds only, no decimals) ---
+    for(let row = -6; row <= 4; row++){
+      const screenY = baseY - (row + progress) * ROW_H;
+      if(screenY < WIN_CY - WIN_H*0.62 || screenY > WIN_CY + WIN_H*0.62) continue;
+
+      // Label is fixed — it does NOT change as it scrolls
+      // row 0 = current second s, row 1 = s+1 (above, past), row -1 = s-1 (below, future arriving)
+      // scrolling upward: future seconds come from bottom
+      const secVal = ((s + row) % 60 + 60) % 60;
+      const label  = String(secVal).padStart(2,'0');
+
+      const distFromCenter = Math.abs(screenY - WIN_CY);
+      const alpha = Math.max(0.05, 1 - (distFromCenter / (WIN_H * 0.52)) * 0.85);
+
+      const textX = WIN_CX - WIN_H*0.5 + 3; // left-aligned, small left padding from inner edge
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.font = '7.5px "Courier New",monospace';
+      ctx.fillStyle = '#d8d8c8';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, textX, screenY);
+      ctx.restore();
+    }
+
+    // Top & bottom fade
+    const gT = ctx.createLinearGradient(0, WIN_CY-WIN_H*0.5, 0, WIN_CY-WIN_H*0.5+9);
+    gT.addColorStop(0,'rgba(12,12,12,1)'); gT.addColorStop(1,'rgba(12,12,12,0)');
+    ctx.fillStyle=gT; ctx.fillRect(0,0,296,296);
+    const gB = ctx.createLinearGradient(0, WIN_CY+WIN_H*0.5-9, 0, WIN_CY+WIN_H*0.5);
+    gB.addColorStop(0,'rgba(12,12,12,0)'); gB.addColorStop(1,'rgba(12,12,12,1)');
+    ctx.fillStyle=gB; ctx.fillRect(0,0,296,296);
+
+    ctx.restore();
+
+    // Border
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(CX,CY,BARO_OUTER,baroSRad,baroERad);
+    ctx.arc(CX,CY,BARO_INNER,baroERad,baroSRad,true);
+    ctx.closePath();
+    ctx.strokeStyle='#666'; ctx.lineWidth=1.3; ctx.stroke();
+    ctx.restore();
+
+    // Center tick (white)
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(CX+Math.cos(baroMRad)*BARO_OUTER,   CY+Math.sin(baroMRad)*BARO_OUTER);
+    ctx.lineTo(CX+Math.cos(baroMRad)*(BARO_OUTER-8), CY+Math.sin(baroMRad)*(BARO_OUTER-8));
+    ctx.strokeStyle='#ddd'; ctx.lineWidth=2; ctx.stroke();
+    ctx.restore();
+
+    // Yellow flanking ticks
+    [-(BARO_HALF*0.55), +(BARO_HALF*0.55)].forEach(od=>{
+      const yr=((BARO_MID_DEG+od)-90)*Math.PI/180;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(CX+Math.cos(yr)*BARO_OUTER,   CY+Math.sin(yr)*BARO_OUTER);
+      ctx.lineTo(CX+Math.cos(yr)*(BARO_OUTER-7), CY+Math.sin(yr)*(BARO_OUTER-7));
+      ctx.strokeStyle='#e8c800'; ctx.lineWidth=2; ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function tick(){
+    const now=new Date();
+    const h=now.getHours()%12, m=now.getMinutes(), s=now.getSeconds(), ms=now.getMilliseconds();
+    const sf=s+ms/1000, mf=m+sf/60, hf=h+mf/60;
+    document.getElementById('minuteHand').setAttribute('transform',`rotate(${(mf/60)*360},148,148)`);
+    document.getElementById('hourHand').setAttribute('transform',`rotate(${(hf/12)*360},148,148)`);
+    document.getElementById('secondHand').setAttribute('transform',`rotate(${(sf/60)*360},148,148)`);
+    drawOverlay(s,ms);
+    requestAnimationFrame(tick);
+  }
+
+  drawDial();
+  tick();
+})();
+</script>
