@@ -24,6 +24,7 @@
       --space-8: 2rem;
       --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
     [data-theme="dark"] {
       --bg: #171614;
@@ -101,7 +102,7 @@
       gap: 0.35rem;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: background 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+      transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform 120ms ease;
     }
     .pill:hover {
       background: var(--surface-alt);
@@ -155,10 +156,25 @@
       display: flex;
       flex-direction: column;
       min-height: 100%;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity var(--transition-interactive), transform var(--transition-interactive);
+    }
+    .card--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
     }
     .card img {
       width: 100%;
-      height: 190px;
+      aspect-ratio: 1 / 1;
+      height: auto;
       object-fit: cover;
       background: var(--surface-alt);
     }
@@ -234,7 +250,7 @@
       animation: shimmer 1.4s infinite;
     }
     .skeleton-img {
-      height: 190px;
+      aspect-ratio: 1 / 1;
       background: var(--surface-alt);
     }
     .skeleton-body {
@@ -254,6 +270,10 @@
     @keyframes shimmer {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
+    }
+    #sentinel {
+      width: 100%;
+      height: 1px;
     }
     @media (max-width: 600px) {
       .header-inner { flex-direction: column; align-items: flex-start; }
@@ -308,9 +328,7 @@
 
     <section id="grid" class="grid" aria-label="Observation list"></section>
 
-    <div class="load-more">
-      <button id="loadMoreBtn" class="pill hidden" type="button">Load more observations</button>
-    </div>
+    <div id="sentinel" aria-hidden="true"></div>
   </main>
 
   <script>
@@ -334,13 +352,14 @@
     const gridEl = document.getElementById('grid');
     const obsCountEl = document.getElementById('obsCount');
     const pageInfoEl = document.getElementById('pageInfo');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
     const qualityFilter = document.getElementById('qualityFilter');
+    const sentinel = document.getElementById('sentinel');
 
     let currentPage = 1;
     let totalResults = 0;
     let observations = [];
     let isLoading = false;
+    let reachedEnd = false;
 
     function createSkeletonCards(count = 6) {
       gridEl.innerHTML = '';
@@ -390,7 +409,7 @@
       const taxon = obs.taxon || {};
       const commonName = taxon.preferred_common_name || taxon.common_name || '';
       const sciName = taxon.name || '';
-      const observedOn = obs.time_observed_at || obs.observed_on_details?.date || obs.observed_on || null;
+      const observedOn = obs.time_observed_at || (obs.observed_on_details && obs.observed_on_details.date) || obs.observed_on || null;
       const observedDate = obs.observed_on || null;
       const place = obs.place_guess || '';
       let coords = null;
@@ -403,6 +422,7 @@
 
       const article = document.createElement('article');
       article.className = 'card';
+      article.dataset.obsId = obs.id;
 
       if (imgUrl) {
         const img = document.createElement('img');
@@ -473,19 +493,25 @@
         msg.textContent = 'No observations match the selected filters yet.';
         gridEl.appendChild(msg);
       } else {
+        const fragment = document.createDocumentFragment();
         for (const obs of filtered) {
-          gridEl.appendChild(buildCard(obs));
+          const card = buildCard(obs);
+          fragment.appendChild(card);
         }
+        gridEl.appendChild(fragment);
       }
 
       if (totalResults) {
         obsCountEl.textContent = `${filtered.length} of ${totalResults} observations shown`;
-        pageInfoEl.textContent = `Loaded page ${currentPage}`;
+        pageInfoEl.textContent = `Loaded up to page ${currentPage}`;
       }
+
+      // After rendering, hook up scroll reveal
+      setupCardObserver();
     }
 
     async function fetchPage(page) {
-      if (isLoading) return;
+      if (isLoading || reachedEnd) return;
       isLoading = true;
       if (observations.length === 0) {
         createSkeletonCards();
@@ -496,22 +522,20 @@
         if (!res.ok) throw new Error('Request failed');
         const data = await res.json();
         totalResults = data.total_results || totalResults;
-        if (Array.isArray(data.results)) {
+        if (Array.isArray(data.results) && data.results.length > 0) {
           observations = observations.concat(data.results);
         }
         render();
         const totalPages = Math.ceil((data.total_results || 0) / PER_PAGE);
-        if (page < totalPages) {
-          loadMoreBtn.classList.remove('hidden');
-        } else {
-          loadMoreBtn.classList.add('hidden');
+        if (page >= totalPages || !data.results || data.results.length === 0) {
+          reachedEnd = true;
         }
       } catch (err) {
         console.error(err);
         gridEl.innerHTML = '<p>Failed to load observations from iNaturalist. Please try again later.</p>';
         obsCountEl.textContent = 'Could not load observations';
         pageInfoEl.textContent = '';
-        loadMoreBtn.classList.add('hidden');
+        reachedEnd = true;
       } finally {
         isLoading = false;
       }
@@ -521,10 +545,44 @@
       render();
     });
 
-    loadMoreBtn.addEventListener('click', () => {
-      currentPage += 1;
-      fetchPage(currentPage);
+    // Infinite scroll with IntersectionObserver
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !isLoading && !reachedEnd) {
+          currentPage += 1;
+          fetchPage(currentPage);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '200px',
+      threshold: 0
     });
+    io.observe(sentinel);
+
+    // Scroll reveal for cards
+    let cardObserver;
+    function setupCardObserver() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => card.classList.add('card--visible'));
+        return;
+      }
+      if (!cardObserver) {
+        cardObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('card--visible');
+              cardObserver.unobserve(entry.target);
+            }
+          });
+        }, {
+          threshold: 0.15
+        });
+      }
+      const cards = document.querySelectorAll('.card:not(.card--visible)');
+      cards.forEach(card => cardObserver.observe(card));
+    }
 
     fetchPage(currentPage);
   </script>
