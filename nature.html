@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iNaturalist Observations – officeofalvinliu</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f6f2;
+      --surface: #fbfbf9;
+      --surface-alt: #edeae5;
+      --text: #28251d;
+      --text-muted: #7a7974;
+      --accent: #01696f;
+      --accent-soft: #cedcd8;
+      --border-subtle: rgba(0,0,0,0.08);
+      --radius-md: 10px;
+      --radius-full: 999px;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    [data-theme="dark"] {
+      --bg: #171614;
+      --surface: #1c1b19;
+      --surface-alt: #22211f;
+      --text: #cdccca;
+      --text-muted: #797876;
+      --accent: #4f98a3;
+      --accent-soft: #313b3b;
+      --border-subtle: rgba(255,255,255,0.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(14px);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 40%;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #9ccfd3 35%, #01696f 70%, #013133 100%);
+      box-shadow: var(--shadow-sm);
+    }
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    .brand-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    button {
+      font: inherit;
+    }
+    .pill {
+      border-radius: var(--radius-full);
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--border-subtle);
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: background 180ms ease, box-shadow 180ms ease, transform 120ms ease;
+    }
+    .pill:hover {
+      background: var(--surface-alt);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+    .pill:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-sm);
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-6) var(--space-4) var(--space-8);
+    }
+    .intro {
+      margin-bottom: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .intro h2 { font-size: 1.4rem; }
+    .intro p { color: var(--text-muted); font-size: 0.95rem; }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+      align-items: center;
+    }
+    select {
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-4);
+      align-items: stretch;
+    }
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    .card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: var(--surface-alt);
+    }
+    .card-body {
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .species {
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+    .scientific {
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .meta {
+      margin-top: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .meta span { display: block; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+    .chip {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      background: var(--surface-alt);
+      color: var(--text-muted);
+    }
+    .chip--research {
+      border-color: rgba(0, 128, 0, 0.35);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-3);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .status-bar strong { color: var(--text); }
+    .load-more {
+      margin-top: var(--space-6);
+      display: flex;
+      justify-content: center;
+    }
+    .hidden { display: none; }
+    .skeleton-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-sm);
+    }
+    .skeleton-shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 1.4s infinite;
+    }
+    .skeleton-img {
+      height: 190px;
+      background: var(--surface-alt);
+    }
+    .skeleton-body {
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .sk-line {
+      height: 0.7rem;
+      border-radius: 999px;
+      background: var(--surface-alt);
+    }
+    .sk-line.short { width: 55%; }
+    .sk-line.medium { width: 75%; }
+    .sk-line.tiny { width: 30%; }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    @media (max-width: 600px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .status-bar { align-items: flex-start; flex-direction: column; gap: 0.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <h1>iNaturalist Observations</h1>
+          <p>officeofalvinliu • live from api.inaturalist.org</p>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="pill" type="button" data-theme-toggle aria-label="Toggle color theme">
+          <span aria-hidden="true">🌓</span>
+          <span>Theme</span>
+        </button>
+        <a class="pill" href="https://www.inaturalist.org/observations?user_id=officeofalvinliu" target="_blank" rel="noopener noreferrer">
+          <span aria-hidden="true">↗</span>
+          <span>View on iNaturalist</span>
+        </a>
+      </div>
+    </div>
+  </header>
+  <main>
+    <section class="intro">
+      <h2>Observation stream</h2>
+      <p>This page queries the public iNaturalist API for observations posted by <strong>officeofalvinliu</strong> and displays their photos with key metadata like research grade, taxon, date, time, and location.</p>
+    </section>
+
+    <section class="filters" aria-label="Filters">
+      <div>
+        <label for="qualityFilter" style="font-size:0.8rem; color:var(--text-muted); margin-right:0.25rem;">Quality grade</label>
+        <select id="qualityFilter">
+          <option value="all">All</option>
+          <option value="research">Research grade only</option>
+          <option value="needs_id">Needs ID</option>
+          <option value="casual">Casual</option>
+        </select>
+      </div>
+    </section>
+
+    <div class="status-bar" aria-live="polite">
+      <div><strong id="obsCount">Loading observations…</strong></div>
+      <div id="pageInfo"></div>
+    </div>
+
+    <section id="grid" class="grid" aria-label="Observation list"></section>
+
+    <div class="load-more">
+      <button id="loadMoreBtn" class="pill hidden" type="button">Load more observations</button>
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      const html = document.documentElement;
+      const toggle = document.querySelector('[data-theme-toggle]');
+      let current = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      html.setAttribute('data-theme', current);
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          current = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', current);
+        });
+      }
+    })();
+
+    const API_BASE = 'https://api.inaturalist.org/v1/observations';
+    const USER_LOGIN = 'officeofalvinliu';
+    const PER_PAGE = 50;
+
+    const gridEl = document.getElementById('grid');
+    const obsCountEl = document.getElementById('obsCount');
+    const pageInfoEl = document.getElementById('pageInfo');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const qualityFilter = document.getElementById('qualityFilter');
+
+    let currentPage = 1;
+    let totalResults = 0;
+    let observations = [];
+    let isLoading = false;
+
+    function createSkeletonCards(count = 6) {
+      gridEl.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        const card = document.createElement('article');
+        card.className = 'skeleton-card';
+        card.innerHTML = `
+          <div class="skeleton-img"></div>
+          <div class="skeleton-body">
+            <div class="sk-line"></div>
+            <div class="sk-line medium"></div>
+            <div class="sk-line short"></div>
+            <div class="sk-line tiny"></div>
+          </div>
+          <div class="skeleton-shimmer" aria-hidden="true"></div>
+        `;
+        gridEl.appendChild(card);
+      }
+    }
+
+    function formatDateTime(isoString) {
+      if (!isoString) return 'Unknown';
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return isoString;
+      return d.toLocaleString(undefined, {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function formatDate(isoString) {
+      if (!isoString) return 'Unknown';
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return isoString;
+      return d.toLocaleDateString(undefined, {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+    }
+
+    function buildCard(obs) {
+      const photo = (obs.photos && obs.photos[0]) ? obs.photos[0] : null;
+      let imgUrl = '';
+      if (photo && photo.url) {
+        imgUrl = photo.url.replace('square', 'medium');
+      }
+      const quality = obs.quality_grade || 'unknown';
+      const taxon = obs.taxon || {};
+      const commonName = taxon.preferred_common_name || taxon.common_name || '';
+      const sciName = taxon.name || '';
+      const observedOn = obs.time_observed_at || obs.observed_on_details?.date || obs.observed_on || null;
+      const observedDate = obs.observed_on || null;
+      const place = obs.place_guess || '';
+      let coords = null;
+      if (obs.geojson && Array.isArray(obs.geojson.coordinates)) {
+        const [lon, lat] = obs.geojson.coordinates;
+        if (typeof lat === 'number' && typeof lon === 'number') {
+          coords = { lat, lon };
+        }
+      }
+
+      const article = document.createElement('article');
+      article.className = 'card';
+
+      if (imgUrl) {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = commonName || sciName || 'Observation photo';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.onerror = () => {
+          img.alt = 'Photo unavailable';
+        };
+        article.appendChild(img);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'card-body';
+
+      const title = document.createElement('div');
+      title.className = 'species';
+      title.textContent = commonName || sciName || 'Unknown taxon';
+      body.appendChild(title);
+
+      if (sciName && commonName && sciName !== commonName) {
+        const sci = document.createElement('div');
+        sci.className = 'scientific';
+        sci.textContent = sciName;
+        body.appendChild(sci);
+      }
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.innerHTML = `
+        <span><strong>Date:</strong> ${formatDate(observedDate || observedOn)}</span>
+        <span><strong>Observed:</strong> ${formatDateTime(observedOn || observedDate)}</span>
+        <span><strong>Location:</strong> ${place || (coords ? `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}` : 'Not public')}</span>
+      `;
+      body.appendChild(meta);
+
+      const chips = document.createElement('div');
+      chips.className = 'chips';
+
+      const qChip = document.createElement('span');
+      qChip.className = 'chip' + (quality === 'research' ? ' chip--research' : '');
+      qChip.textContent = `Quality: ${quality}`;
+      chips.appendChild(qChip);
+
+      if (obs.id) {
+        const linkChip = document.createElement('a');
+        linkChip.className = 'chip';
+        linkChip.href = `https://www.inaturalist.org/observations/${obs.id}`;
+        linkChip.target = '_blank';
+        linkChip.rel = 'noopener noreferrer';
+        linkChip.textContent = 'View on iNat';
+        chips.appendChild(linkChip);
+      }
+
+      body.appendChild(chips);
+      article.appendChild(body);
+      return article;
+    }
+
+    function render() {
+      gridEl.innerHTML = '';
+      const filterVal = qualityFilter.value;
+      const filtered = observations.filter(o => filterVal === 'all' || o.quality_grade === filterVal);
+
+      if (filtered.length === 0) {
+        const msg = document.createElement('p');
+        msg.textContent = 'No observations match the selected filters yet.';
+        gridEl.appendChild(msg);
+      } else {
+        for (const obs of filtered) {
+          gridEl.appendChild(buildCard(obs));
+        }
+      }
+
+      if (totalResults) {
+        obsCountEl.textContent = `${filtered.length} of ${totalResults} observations shown`;
+        pageInfoEl.textContent = `Loaded page ${currentPage}`;
+      }
+    }
+
+    async function fetchPage(page) {
+      if (isLoading) return;
+      isLoading = true;
+      if (observations.length === 0) {
+        createSkeletonCards();
+      }
+      try {
+        const url = `${API_BASE}?user_login=${encodeURIComponent(USER_LOGIN)}&per_page=${PER_PAGE}&page=${page}&order=desc&order_by=observed_on`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Request failed');
+        const data = await res.json();
+        totalResults = data.total_results || totalResults;
+        if (Array.isArray(data.results)) {
+          observations = observations.concat(data.results);
+        }
+        render();
+        const totalPages = Math.ceil((data.total_results || 0) / PER_PAGE);
+        if (page < totalPages) {
+          loadMoreBtn.classList.remove('hidden');
+        } else {
+          loadMoreBtn.classList.add('hidden');
+        }
+      } catch (err) {
+        console.error(err);
+        gridEl.innerHTML = '<p>Failed to load observations from iNaturalist. Please try again later.</p>';
+        obsCountEl.textContent = 'Could not load observations';
+        pageInfoEl.textContent = '';
+        loadMoreBtn.classList.add('hidden');
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    qualityFilter.addEventListener('change', () => {
+      render();
+    });
+
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage += 1;
+      fetchPage(currentPage);
+    });
+
+    fetchPage(currentPage);
+  </script>
+</body>
+</html>
