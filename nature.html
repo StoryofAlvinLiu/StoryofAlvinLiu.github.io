@@ -1,590 +1,686 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iNaturalist Observations – officeofalvinliu</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field Observations — Alvin Liu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --bg: #f7f6f2;
-      --surface: #fbfbf9;
-      --surface-alt: #edeae5;
-      --text: #28251d;
-      --text-muted: #7a7974;
-      --accent: #01696f;
-      --accent-soft: #cedcd8;
-      --border-subtle: rgba(0,0,0,0.08);
-      --radius-md: 10px;
-      --radius-full: 999px;
-      --space-2: 0.5rem;
-      --space-3: 0.75rem;
-      --space-4: 1rem;
-      --space-6: 1.5rem;
-      --space-8: 2rem;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-      --transition-interactive: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      --bg:        #f8f7f4;
+      --ink:       #111110;
+      --muted:     #8a8880;
+      --border:    #e0ddd5;
+      --serif:     'Libre Baskerville', Georgia, serif;
+      --mono:      'IBM Plex Mono', 'Courier New', monospace;
     }
-    [data-theme="dark"] {
-      --bg: #171614;
-      --surface: #1c1b19;
-      --surface-alt: #22211f;
-      --text: #cdccca;
-      --text-muted: #797876;
-      --accent: #4f98a3;
-      --accent-soft: #313b3b;
-      --border-subtle: rgba(255,255,255,0.08);
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
-    }
-    html { scroll-behavior: smooth; }
+
     body {
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--serif);
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      backdrop-filter: blur(14px);
-      background: color-mix(in srgb, var(--bg) 88%, transparent);
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    .header-inner {
-      max-width: 1100px;
+
+    /* ─── HEADER ─────────────────────────────── */
+    .site-header {
+      max-width: 1080px;
       margin: 0 auto;
-      padding: var(--space-3) var(--space-4);
+      padding: 3.5rem 2rem 2.25rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: var(--space-3);
+      align-items: flex-end;
+      border-bottom: 1px solid var(--border);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
+
+    .header-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
     }
-    .logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 40%;
-      background: radial-gradient(circle at 30% 20%, #ffffff, #9ccfd3 35%, #01696f 70%, #013133 100%);
-      box-shadow: var(--shadow-sm);
+
+    .header-name {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
     }
-    .brand-text h1 {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
-    .brand-text p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-    }
-    button {
-      font: inherit;
-    }
-    .pill {
-      border-radius: var(--radius-full);
-      padding: 0.35rem 0.9rem;
-      border: 1px solid var(--border-subtle);
-      background: var(--surface);
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      box-shadow: var(--shadow-sm);
-      cursor: pointer;
-      transition: background var(--transition-interactive), box-shadow var(--transition-interactive), transform 120ms ease;
-    }
-    .pill:hover {
-      background: var(--surface-alt);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-1px);
-    }
-    .pill:active {
-      transform: translateY(0);
-      box-shadow: var(--shadow-sm);
-    }
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: var(--space-6) var(--space-4) var(--space-8);
-    }
-    .intro {
-      margin-bottom: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-    }
-    .intro h2 { font-size: 1.4rem; }
-    .intro p { color: var(--text-muted); font-size: 0.95rem; }
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-2);
-      margin-bottom: var(--space-4);
-      align-items: center;
-    }
-    select {
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: var(--surface);
-      color: var(--text);
-      font-size: 0.9rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: var(--space-4);
-      align-items: stretch;
-    }
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      overflow: hidden;
-      border: 1px solid var(--border-subtle);
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity var(--transition-interactive), transform var(--transition-interactive);
-    }
-    .card--visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .card {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
-      }
-    }
-    .card img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      height: auto;
-      object-fit: cover;
-      background: var(--surface-alt);
-    }
-    .card-body {
-      padding: var(--space-3);
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    .species {
-      font-weight: 600;
-      font-size: 0.98rem;
-    }
-    .scientific {
-      font-style: italic;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-    .meta {
-      margin-top: 0.35rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-    .meta span { display: block; }
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
+
+    .header-bio {
       margin-top: 0.5rem;
-    }
-    .chip {
-      font-size: 0.72rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border-subtle);
-      background: var(--surface-alt);
-      color: var(--text-muted);
-    }
-    .chip--research {
-      border-color: rgba(0, 128, 0, 0.35);
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-    }
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--space-3);
       font-size: 0.85rem;
-      color: var(--text-muted);
+      font-style: italic;
+      color: var(--muted);
+      max-width: 38ch;
     }
-    .status-bar strong { color: var(--text); }
-    .load-more {
-      margin-top: var(--space-6);
+
+    .header-stats {
+      display: flex;
+      gap: 2.5rem;
+      text-align: right;
+      flex-shrink: 0;
+      margin-left: 2rem;
+    }
+
+    .stat-num {
+      display: block;
+      font-family: var(--mono);
+      font-size: 1.75rem;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* ─── FILTERS ─────────────────────────────── */
+    .filters-bar {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-prefix {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-right: 0.4rem;
+    }
+
+    .filter-btn {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.12s, color 0.12s, background 0.12s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
+    .filter-btn.active {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    /* ─── GRID ────────────────────────────────── */
+    .grid-wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1.75rem 2rem;
+    }
+
+    .obs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .obs-card {
+      cursor: pointer;
+    }
+
+    .obs-img-wrap {
+      overflow: hidden;
+      background: #e5e2da;
+      aspect-ratio: 1;
+    }
+
+    .obs-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease, opacity 0.2s;
+    }
+
+    .obs-card:hover .obs-img {
+      transform: scale(1.04);
+      opacity: 0.88;
+    }
+
+    .obs-meta {
+      padding: 0.55rem 0 0;
+    }
+
+    .obs-common {
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.3;
+    }
+
+    .obs-sci {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .obs-date {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ─── LOAD MORE ───────────────────────────── */
+    .load-more-area {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem 3.5rem;
       display: flex;
       justify-content: center;
     }
-    .hidden { display: none; }
-    .skeleton-card {
-      position: relative;
-      overflow: hidden;
-      background: var(--surface);
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      box-shadow: var(--shadow-sm);
+
+    .load-btn {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      padding: 0.65rem 2.25rem;
+      border: 1px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
     }
-    .skeleton-shimmer {
-      position: absolute;
+
+    .load-btn:hover { background: var(--ink); color: var(--bg); }
+    .load-btn:disabled { opacity: 0.4; cursor: default; }
+
+    /* ─── STATUS MESSAGE ──────────────────────── */
+    .status {
+      max-width: 1080px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ─── MODAL ───────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
       inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-      transform: translateX(-100%);
-      animation: shimmer 1.4s infinite;
+      background: rgba(10, 10, 9, 0.72);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
     }
-    .skeleton-img {
-      aspect-ratio: 1 / 1;
-      background: var(--surface-alt);
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
     }
-    .skeleton-body {
-      padding: var(--space-3);
+
+    .modal-box {
+      background: var(--bg);
+      width: 100%;
+      max-width: 860px;
+      max-height: 90dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      object-fit: cover;
+      display: block;
+      background: #e5e2da;
+    }
+
+    .modal-body {
+      padding: 2rem 1.75rem;
+      overflow-y: auto;
+      border-left: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 1.25rem;
     }
-    .sk-line {
-      height: 0.7rem;
-      border-radius: 999px;
-      background: var(--surface-alt);
+
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.85rem;
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--bg);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      z-index: 10;
+      padding: 0.2rem;
     }
-    .sk-line.short { width: 55%; }
-    .sk-line.medium { width: 75%; }
-    .sk-line.tiny { width: 30%; }
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+
+    .modal-common {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.2;
     }
-    #sentinel {
-      width: 100%;
+
+    .modal-sci {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .modal-rule {
       height: 1px;
+      background: var(--border);
     }
-    @media (max-width: 600px) {
-      .header-inner { flex-direction: column; align-items: flex-start; }
-      .status-bar { align-items: flex-start; flex-direction: column; gap: 0.25rem; }
+
+    .meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .meta-item {}
+
+    .meta-key {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .meta-val {
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border: 1px solid;
+    }
+
+    .badge-research  { border-color: #2d6a2d; color: #2d6a2d; }
+    .badge-needs_id  { border-color: #b06800; color: #b06800; }
+    .badge-casual    { border-color: var(--muted); color: var(--muted); }
+
+    .modal-link {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 0.12s, border-color 0.12s;
+      align-self: flex-start;
+    }
+
+    .modal-link:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    /* ─── FOOTER ──────────────────────────────── */
+    .site-footer {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 1.25rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+
+    .site-footer a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 0.12s;
+    }
+    .site-footer a:hover { color: var(--ink); }
+
+    /* ─── RESPONSIVE ──────────────────────────── */
+    @media (max-width: 860px) {
+      .obs-grid { grid-template-columns: repeat(3, 1fr); }
+      .header-stats { gap: 1.5rem; }
+    }
+
+    @media (max-width: 640px) {
+      .site-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.75rem;
+        padding: 2.5rem 1.25rem 1.75rem;
+      }
+      .header-stats { text-align: left; margin-left: 0; }
+      .obs-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-wrap { padding: 1.25rem; }
+      .filters-bar { padding: 0.85rem 1.25rem; }
+      .modal-box { grid-template-columns: 1fr; }
+      .modal-photo { min-height: 220px; }
+      .modal-body { border-left: none; border-top: 1px solid var(--border); }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div class="brand-text">
-          <h1>iNaturalist Observations</h1>
-          <p>officeofalvinliu • live from api.inaturalist.org</p>
-        </div>
+
+  <header class="site-header">
+    <div class="header-left">
+      <p class="header-eyebrow">iNaturalist · Field Observations</p>
+      <h1 class="header-name">Alvin Liu</h1>
+      <p class="header-bio" id="bio">Loading profile…</p>
+    </div>
+    <div class="header-stats" id="stats">
+      <div>
+        <span class="stat-num" id="stat-obs">—</span>
+        <span class="stat-label">Observations</span>
       </div>
-      <div class="controls">
-        <button class="pill" type="button" data-theme-toggle aria-label="Toggle color theme">
-          <span aria-hidden="true">🌓</span>
-          <span>Theme</span>
-        </button>
-        <a class="pill" href="https://www.inaturalist.org/observations?user_id=officeofalvinliu" target="_blank" rel="noopener noreferrer">
-          <span aria-hidden="true">↗</span>
-          <span>View on iNaturalist</span>
-        </a>
+      <div>
+        <span class="stat-num" id="stat-spp">—</span>
+        <span class="stat-label">Species</span>
+      </div>
+      <div>
+        <span class="stat-num" id="stat-id">—</span>
+        <span class="stat-label">IDs given</span>
       </div>
     </div>
   </header>
-  <main>
-    <section class="intro">
-      <h2>Observation stream</h2>
-      <p>This page queries the public iNaturalist API for observations posted by <strong>officeofalvinliu</strong> and displays their photos with key metadata like research grade, taxon, date, time, and location.</p>
-    </section>
 
-    <section class="filters" aria-label="Filters">
-      <div>
-        <label for="qualityFilter" style="font-size:0.8rem; color:var(--text-muted); margin-right:0.25rem;">Quality grade</label>
-        <select id="qualityFilter">
-          <option value="all">All</option>
-          <option value="research">Research grade only</option>
-          <option value="needs_id">Needs ID</option>
-          <option value="casual">Casual</option>
-        </select>
-      </div>
-    </section>
+  <nav class="filters-bar" aria-label="Filter by taxon">
+    <span class="filter-prefix">Filter</span>
+    <button class="filter-btn active" data-taxon="">All</button>
+    <button class="filter-btn" data-taxon="Aves">Birds</button>
+    <button class="filter-btn" data-taxon="Plantae">Plants</button>
+    <button class="filter-btn" data-taxon="Insecta">Insects</button>
+    <button class="filter-btn" data-taxon="Fungi">Fungi</button>
+    <button class="filter-btn" data-taxon="Mammalia">Mammals</button>
+    <button class="filter-btn" data-taxon="Reptilia">Reptiles</button>
+    <button class="filter-btn" data-taxon="Amphibia">Amphibians</button>
+  </nav>
 
-    <div class="status-bar" aria-live="polite">
-      <div><strong id="obsCount">Loading observations…</strong></div>
-      <div id="pageInfo"></div>
-    </div>
-
-    <section id="grid" class="grid" aria-label="Observation list"></section>
-
-    <div id="sentinel" aria-hidden="true"></div>
+  <main class="grid-wrap">
+    <div class="obs-grid" id="grid" aria-label="Observations"></div>
   </main>
 
+  <p class="status" id="status" aria-live="polite">Loading observations…</p>
+
+  <div class="load-more-area" id="load-more-area" style="display:none">
+    <button class="load-btn" id="load-btn">Load more</button>
+  </div>
+
+  <footer class="site-footer">
+    <span>Data via iNaturalist API</span>
+    <a href="https://www.inaturalist.org/people/officeofalvinliu" target="_blank" rel="noopener">
+      View full profile ↗
+    </a>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Observation detail">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+      <img class="modal-photo" id="modal-photo" src="" alt="">
+      <div class="modal-body">
+        <div>
+          <p class="modal-common" id="modal-common">—</p>
+          <p class="modal-sci"    id="modal-sci">—</p>
+        </div>
+        <div class="modal-rule"></div>
+        <div class="meta-list" id="modal-meta"></div>
+        <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener">
+          View on iNaturalist ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
   <script>
-    (function(){
-      const html = document.documentElement;
-      const toggle = document.querySelector('[data-theme-toggle]');
-      let current = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      html.setAttribute('data-theme', current);
-      if (toggle) {
-        toggle.addEventListener('click', () => {
-          current = current === 'dark' ? 'light' : 'dark';
-          html.setAttribute('data-theme', current);
-        });
-      }
-    })();
+    const USER     = 'officeofalvinliu';
+    const API      = 'https://api.inaturalist.org/v1';
+    const PER_PAGE = 24;
 
-    const API_BASE = 'https://api.inaturalist.org/v1/observations';
-    const USER_LOGIN = 'officeofalvinliu';
-    const PER_PAGE = 50;
+    let page        = 1;
+    let taxon       = '';
+    let loading     = false;
+    let exhausted   = false;
 
-    const gridEl = document.getElementById('grid');
-    const obsCountEl = document.getElementById('obsCount');
-    const pageInfoEl = document.getElementById('pageInfo');
-    const qualityFilter = document.getElementById('qualityFilter');
-    const sentinel = document.getElementById('sentinel');
+    const grid      = document.getElementById('grid');
+    const status    = document.getElementById('status');
+    const loadArea  = document.getElementById('load-more-area');
+    const loadBtn   = document.getElementById('load-btn');
+    const overlay   = document.getElementById('modal-overlay');
 
-    let currentPage = 1;
-    let totalResults = 0;
-    let observations = [];
-    let isLoading = false;
-    let reachedEnd = false;
-
-    function createSkeletonCards(count = 6) {
-      gridEl.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const card = document.createElement('article');
-        card.className = 'skeleton-card';
-        card.innerHTML = `
-          <div class="skeleton-img"></div>
-          <div class="skeleton-body">
-            <div class="sk-line"></div>
-            <div class="sk-line medium"></div>
-            <div class="sk-line short"></div>
-            <div class="sk-line tiny"></div>
-          </div>
-          <div class="skeleton-shimmer" aria-hidden="true"></div>
-        `;
-        gridEl.appendChild(card);
-      }
-    }
-
-    function formatDateTime(isoString) {
-      if (!isoString) return 'Unknown';
-      const d = new Date(isoString);
-      if (isNaN(d.getTime())) return isoString;
-      return d.toLocaleString(undefined, {
-        year: 'numeric', month: 'short', day: 'numeric',
-        hour: '2-digit', minute: '2-digit'
-      });
-    }
-
-    function formatDate(isoString) {
-      if (!isoString) return 'Unknown';
-      const d = new Date(isoString);
-      if (isNaN(d.getTime())) return isoString;
-      return d.toLocaleDateString(undefined, {
-        year: 'numeric', month: 'short', day: 'numeric'
-      });
-    }
-
-    function buildCard(obs) {
-      const photo = (obs.photos && obs.photos[0]) ? obs.photos[0] : null;
-      let imgUrl = '';
-      if (photo && photo.url) {
-        imgUrl = photo.url.replace('square', 'medium');
-      }
-      const quality = obs.quality_grade || 'unknown';
-      const taxon = obs.taxon || {};
-      const commonName = taxon.preferred_common_name || taxon.common_name || '';
-      const sciName = taxon.name || '';
-      const observedOn = obs.time_observed_at || (obs.observed_on_details && obs.observed_on_details.date) || obs.observed_on || null;
-      const observedDate = obs.observed_on || null;
-      const place = obs.place_guess || '';
-      let coords = null;
-      if (obs.geojson && Array.isArray(obs.geojson.coordinates)) {
-        const [lon, lat] = obs.geojson.coordinates;
-        if (typeof lat === 'number' && typeof lon === 'number') {
-          coords = { lat, lon };
-        }
-      }
-
-      const article = document.createElement('article');
-      article.className = 'card';
-      article.dataset.obsId = obs.id;
-
-      if (imgUrl) {
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.alt = commonName || sciName || 'Observation photo';
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.onerror = () => {
-          img.alt = 'Photo unavailable';
-        };
-        article.appendChild(img);
-      }
-
-      const body = document.createElement('div');
-      body.className = 'card-body';
-
-      const title = document.createElement('div');
-      title.className = 'species';
-      title.textContent = commonName || sciName || 'Unknown taxon';
-      body.appendChild(title);
-
-      if (sciName && commonName && sciName !== commonName) {
-        const sci = document.createElement('div');
-        sci.className = 'scientific';
-        sci.textContent = sciName;
-        body.appendChild(sci);
-      }
-
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      meta.innerHTML = `
-        <span><strong>Date:</strong> ${formatDate(observedDate || observedOn)}</span>
-        <span><strong>Observed:</strong> ${formatDateTime(observedOn || observedDate)}</span>
-        <span><strong>Location:</strong> ${place || (coords ? `${coords.lat.toFixed(4)}, ${coords.lon.toFixed(4)}` : 'Not public')}</span>
-      `;
-      body.appendChild(meta);
-
-      const chips = document.createElement('div');
-      chips.className = 'chips';
-
-      const qChip = document.createElement('span');
-      qChip.className = 'chip' + (quality === 'research' ? ' chip--research' : '');
-      qChip.textContent = `Quality: ${quality}`;
-      chips.appendChild(qChip);
-
-      if (obs.id) {
-        const linkChip = document.createElement('a');
-        linkChip.className = 'chip';
-        linkChip.href = `https://www.inaturalist.org/observations/${obs.id}`;
-        linkChip.target = '_blank';
-        linkChip.rel = 'noopener noreferrer';
-        linkChip.textContent = 'View on iNat';
-        chips.appendChild(linkChip);
-      }
-
-      body.appendChild(chips);
-      article.appendChild(body);
-      return article;
-    }
-
-    function render() {
-      gridEl.innerHTML = '';
-      const filterVal = qualityFilter.value;
-      const filtered = observations.filter(o => filterVal === 'all' || o.quality_grade === filterVal);
-
-      if (filtered.length === 0) {
-        const msg = document.createElement('p');
-        msg.textContent = 'No observations match the selected filters yet.';
-        gridEl.appendChild(msg);
-      } else {
-        const fragment = document.createDocumentFragment();
-        for (const obs of filtered) {
-          const card = buildCard(obs);
-          fragment.appendChild(card);
-        }
-        gridEl.appendChild(fragment);
-      }
-
-      if (totalResults) {
-        obsCountEl.textContent = `${filtered.length} of ${totalResults} observations shown`;
-        pageInfoEl.textContent = `Loaded up to page ${currentPage}`;
-      }
-
-      // After rendering, hook up scroll reveal
-      setupCardObserver();
-    }
-
-    async function fetchPage(page) {
-      if (isLoading || reachedEnd) return;
-      isLoading = true;
-      if (observations.length === 0) {
-        createSkeletonCards();
-      }
+    /* ── Profile ─────────────────────────────── */
+    async function loadProfile() {
       try {
-        const url = `${API_BASE}?user_login=${encodeURIComponent(USER_LOGIN)}&per_page=${PER_PAGE}&page=${page}&order=desc&order_by=observed_on`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Request failed');
-        const data = await res.json();
-        totalResults = data.total_results || totalResults;
-        if (Array.isArray(data.results) && data.results.length > 0) {
-          observations = observations.concat(data.results);
-        }
-        render();
-        const totalPages = Math.ceil((data.total_results || 0) / PER_PAGE);
-        if (page >= totalPages || !data.results || data.results.length === 0) {
-          reachedEnd = true;
-        }
-      } catch (err) {
-        console.error(err);
-        gridEl.innerHTML = '<p>Failed to load observations from iNaturalist. Please try again later.</p>';
-        obsCountEl.textContent = 'Could not load observations';
-        pageInfoEl.textContent = '';
-        reachedEnd = true;
-      } finally {
-        isLoading = false;
+        const r = await fetch(`${API}/users/${USER}`);
+        const d = await r.json();
+        const u = d.results?.[0];
+        if (!u) return;
+
+        const fmt = n => (n ?? 0).toLocaleString();
+        document.getElementById('stat-obs').textContent = fmt(u.observations_count);
+        document.getElementById('stat-spp').textContent = fmt(u.species_count);
+        document.getElementById('stat-id').textContent  = fmt(u.identifications_count);
+
+        const raw = (u.description_html || '').replace(/<[^>]+>/g, '').trim();
+        document.getElementById('bio').textContent = raw || 'Naturalist & observer';
+      } catch {
+        document.getElementById('bio').textContent = 'Naturalist & observer';
       }
     }
 
-    qualityFilter.addEventListener('change', () => {
-      render();
-    });
+    /* ── Observations ─────────────────────────── */
+    async function loadObs(reset = false) {
+      if (loading || exhausted) return;
+      loading = true;
+      loadBtn.disabled = true;
+      loadBtn.textContent = 'Loading…';
+      if (reset) { status.textContent = 'Loading observations…'; status.style.display = 'block'; }
 
-    // Infinite scroll with IntersectionObserver
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !isLoading && !reachedEnd) {
-          currentPage += 1;
-          fetchPage(currentPage);
+      let url = `${API}/observations?user_id=${USER}&per_page=${PER_PAGE}&page=${page}&order_by=created_at&order=desc&photos=true`;
+      if (taxon) url += `&iconic_taxa[]=${taxon}`;
+
+      try {
+        const r = await fetch(url);
+        const d = await r.json();
+        const obs = d.results || [];
+        const total = d.total_results || 0;
+
+        status.style.display = 'none';
+        if (obs.length === 0 && reset) {
+          status.textContent = 'No observations found for this filter.';
+          status.style.display = 'block';
+          loadArea.style.display = 'none';
+          loading = false;
+          return;
         }
+
+        obs.forEach(renderCard);
+
+        const loaded = (page - 1) * PER_PAGE + obs.length;
+        exhausted = loaded >= total;
+        loadArea.style.display = exhausted ? 'none' : 'flex';
+        loadBtn.textContent  = 'Load more';
+        loadBtn.disabled = false;
+        page++;
+      } catch {
+        status.textContent = 'Failed to load. Please refresh.';
+        status.style.display = 'block';
+        loadBtn.disabled = false;
+        loadBtn.textContent = 'Try again';
+      }
+
+      loading = false;
+    }
+
+    /* ── Card ─────────────────────────────────── */
+    function renderCard(obs) {
+      const photo = obs.photos?.[0];
+      if (!photo) return;
+
+      const thumb  = photo.url;
+      const medium = photo.url?.replace('square', 'medium') || thumb;
+      const common = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      const sci    = obs.taxon?.name || '';
+      const date   = obs.observed_on ? fmtDate(obs.observed_on) : '';
+
+      const card = document.createElement('article');
+      card.className = 'obs-card';
+      card.innerHTML = `
+        <div class="obs-img-wrap">
+          <img class="obs-img" src="${thumb}" alt="${common}" loading="lazy">
+        </div>
+        <div class="obs-meta">
+          <p class="obs-common">${common}</p>
+          ${sci  ? `<p class="obs-sci">${sci}</p>` : ''}
+          ${date ? `<p class="obs-date">${date}</p>` : ''}
+        </div>
+      `;
+      card.addEventListener('click', () => openModal(obs, medium));
+      grid.appendChild(card);
+    }
+
+    /* ── Modal ────────────────────────────────── */
+    function openModal(obs, imgUrl) {
+      const common  = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      const sci     = obs.taxon?.name || '';
+      const date    = obs.observed_on ? fmtDate(obs.observed_on) : null;
+      const place   = obs.place_guess || null;
+      const quality = obs.quality_grade || null;
+      const notes   = obs.description   || null;
+      const tax     = buildTaxonomy(obs.taxon);
+
+      document.getElementById('modal-photo').src    = imgUrl;
+      document.getElementById('modal-photo').alt    = common;
+      document.getElementById('modal-common').textContent = common;
+      document.getElementById('modal-sci').textContent    = sci;
+      document.getElementById('modal-link').href          = `https://www.inaturalist.org/observations/${obs.id}`;
+
+      const meta = document.getElementById('modal-meta');
+      meta.innerHTML = '';
+
+      const rows = [
+        date    && { k: 'Observed',  v: date },
+        place   && { k: 'Location',  v: place },
+        quality && { k: 'Grade',     v: `<span class="badge badge-${quality}">${quality.replace('_',' ')}</span>` },
+        tax     && { k: 'Taxonomy',  v: tax },
+        notes   && { k: 'Notes',     v: notes },
+      ].filter(Boolean);
+
+      rows.forEach(({ k, v }) => {
+        const item = document.createElement('div');
+        item.className = 'meta-item';
+        item.innerHTML = `<p class="meta-key">${k}</p><p class="meta-val">${v}</p>`;
+        meta.appendChild(item);
       });
-    }, {
-      root: null,
-      rootMargin: '200px',
-      threshold: 0
-    });
-    io.observe(sentinel);
 
-    // Scroll reveal for cards
-    let cardObserver;
-    function setupCardObserver() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => card.classList.add('card--visible'));
-        return;
-      }
-      if (!cardObserver) {
-        cardObserver = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('card--visible');
-              cardObserver.unobserve(entry.target);
-            }
-          });
-        }, {
-          threshold: 0.15
-        });
-      }
-      const cards = document.querySelectorAll('.card:not(.card--visible)');
-      cards.forEach(card => cardObserver.observe(card));
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
 
-    fetchPage(currentPage);
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* ── Filters ──────────────────────────────── */
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        taxon     = btn.dataset.taxon;
+        page      = 1;
+        exhausted = false;
+        grid.innerHTML = '';
+        loadArea.style.display = 'none';
+        loadObs(true);
+      });
+    });
+
+    loadBtn.addEventListener('click', () => loadObs(false));
+
+    /* ── Utils ────────────────────────────────── */
+    function fmtDate(str) {
+      try {
+        const d = new Date(str + 'T00:00:00');
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch { return str; }
+    }
+
+    function buildTaxonomy(taxon) {
+      if (!taxon) return '';
+      const parts = [];
+      if (taxon.iconic_taxon_name) parts.push(taxon.iconic_taxon_name);
+      if (taxon.rank && taxon.name) {
+        const rank = taxon.rank.charAt(0).toUpperCase() + taxon.rank.slice(1);
+        parts.push(`${rank} ${taxon.name}`);
+      }
+      return parts.join(' · ');
+    }
+
+    /* ── Init ─────────────────────────────────── */
+    loadProfile();
+    loadObs(true);
   </script>
+
 </body>
 </html>
