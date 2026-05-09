@@ -3,239 +3,766 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Field Observations — Alvin Liu</title>
+  <title>Field Catalog — Alvin Liu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #f8f7f4;
-      --ink:       #111110;
-      --muted:     #8a8880;
-      --border:    #e0ddd5;
-      --serif:     'Libre Baskerville', Georgia, serif;
-      --mono:      'IBM Plex Mono', 'Courier New', monospace;
+      --bg:       #0e0e0c;
+      --s1:       #151512;
+      --s2:       #1c1c18;
+      --b1:       #282623;
+      --b2:       #363430;
+      --text:     #ddd8cb;
+      --muted:    #76746c;
+      --dim:      #4a4844;
+      --accent:   #8db83c;
+      --serif:    'Cormorant Garamond', Georgia, serif;
+      --mono:     'IBM Plex Mono', 'Courier New', monospace;
+      --rail:     230px;
+      --panel:    320px;
     }
 
-    body {
-      font-family: var(--serif);
+    html, body {
+      height: 100%;
+      overflow: hidden;
       background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--mono);
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── HEADER ─────────────────────────────── */
-    .site-header {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 3.5rem 2rem 2.25rem;
+    /* ─── TOPBAR ─────────────────────────────── */
+    #topbar {
+      height: 44px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--b1);
       display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      border-bottom: 1px solid var(--border);
+      align-items: center;
+      padding: 0 1rem;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
-    .header-eyebrow {
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: var(--text);
+      padding-right: 1rem;
+      border-right: 1px solid var(--b1);
+      margin-right: 0.5rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+      position: relative;
+      cursor: help;
+    }
+
+    .logo em { font-weight: 400; color: var(--muted); }
+
+    /* Logo hover tooltip with stats */
+    .logo-tip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--s2);
+      border: 1px solid var(--b2);
+      padding: 0.85rem 1rem;
+      min-width: 220px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
       font-family: var(--mono);
-      font-size: 0.65rem;
+    }
+    .logo:hover .logo-tip,
+    .logo:focus-within .logo-tip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .lt-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 4px 0;
+    }
+    .lt-row + .lt-row { border-top: 1px solid var(--b1); }
+    .lt-num {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .lt-lbl {
+      font-size: 0.55rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 0.6rem;
     }
 
-    .header-name {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-    }
+    .filters { display: flex; gap: 3px; flex: 1; flex-wrap: nowrap; overflow: visible; align-items: center; }
 
-    .header-bio {
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      font-style: italic;
-      color: var(--muted);
-      max-width: 38ch;
-    }
-
-    .header-stats {
-      display: flex;
-      gap: 2.5rem;
-      text-align: right;
-      flex-shrink: 0;
-      margin-left: 2rem;
-    }
-
-    .stat-num {
-      display: block;
+    button {
       font-family: var(--mono);
-      font-size: 1.75rem;
-      font-weight: 500;
-      line-height: 1;
-      letter-spacing: -0.02em;
+      cursor: pointer;
+      border: none;
+      background: none;
     }
 
-    .stat-label {
-      display: block;
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
+    .f-btn {
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
+      padding: 0.28rem 0.7rem;
+      border: 1px solid var(--b1);
       color: var(--muted);
-      margin-top: 5px;
+      white-space: nowrap;
+      transition: color 0.12s, border-color 0.12s, background 0.12s;
     }
-
-    /* ─── FILTERS ─────────────────────────────── */
-    .filters-bar {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-prefix {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-right: 0.4rem;
-    }
-
-    .filter-btn {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.04em;
-      padding: 0.3rem 0.8rem;
-      border: 1px solid var(--border);
+    .f-btn:hover { border-color: var(--b2); color: var(--text); }
+    .f-btn.on {
       background: transparent;
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .f-sep {
+      display: inline-block;
+      width: 1px;
+      height: 14px;
+      background: var(--b1);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .f-btn.f-grade.on {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: transparent;
+    }
+
+    /* Species filter — flat on wide screens, dropdown when crowded */
+    .species-wrap   { display: contents; }
+    .species-group  { display: contents; }
+    .species-trigger { display: none; }
+
+    @media (max-width: 1080px) {
+      .species-wrap   { display: inline-block; position: relative; flex-shrink: 0; }
+      .species-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .species-trigger.on {
+        background: var(--s2);
+        color: var(--text);
+        border-color: var(--b2);
+      }
+      .species-chev {
+        font-size: 0.55rem;
+        opacity: 0.7;
+        transition: transform 0.15s ease;
+      }
+      .species-wrap.open .species-chev { transform: rotate(180deg); }
+
+      .species-group {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        flex-direction: column;
+        gap: 1px;
+        background: var(--s2);
+        border: 1px solid var(--b2);
+        padding: 5px;
+        z-index: 9000;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.55);
+        min-width: 160px;
+      }
+      .species-wrap.open .species-group { display: flex; }
+      .species-group .f-btn {
+        border: 1px solid transparent;
+        background: transparent;
+        text-align: left;
+        padding: 7px 12px;
+        font-size: 0.6rem;
+        width: 100%;
+      }
+      .species-group .f-btn:hover {
+        background: var(--b1);
+        color: var(--text);
+        border-color: transparent;
+      }
+      .species-group .f-btn.on {
+        color: var(--accent);
+        background: transparent;
+        border-color: transparent;
+      }
+    }
+
+    .views { display: flex; gap: 3px; flex-shrink: 0; margin-left: auto; }
+    .v-btn {
+      font-size: 0.58rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.7rem;
+      border: 1px solid var(--b1);
       color: var(--muted);
-      cursor: pointer;
-      transition: border-color 0.12s, color 0.12s, background 0.12s;
+      transition: color 0.12s, border-color 0.12s;
+    }
+    .v-btn:hover { color: var(--text); }
+    .v-btn.on { color: var(--accent); border-color: var(--accent); }
+
+    /* ─── APP SHELL ──────────────────────────── */
+    #app {
+      height: calc(100vh - 44px);
+      display: flex;
     }
 
-    .filter-btn:hover {
-      border-color: var(--ink);
-      color: var(--ink);
+    /* ─── IMMERSIVE ──────────────────────────── */
+    #view-imm {
+      display: flex;
+      width: 100%;
+      height: 100%;
     }
 
-    .filter-btn.active {
-      background: var(--ink);
-      color: var(--bg);
-      border-color: var(--ink);
-    }
-
-    /* ─── GRID ────────────────────────────────── */
-    .grid-wrap {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 1.75rem 2rem;
-    }
-
-    .obs-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-    }
-
-    .obs-card {
-      cursor: pointer;
-    }
-
-    .obs-img-wrap {
+    /* RAIL */
+    #rail {
+      width: var(--rail);
+      flex-shrink: 0;
+      border-right: 1px solid var(--b1);
+      position: relative;
       overflow: hidden;
-      background: #e5e2da;
-      aspect-ratio: 1;
+      cursor: grab;
+      user-select: none;
+      background: var(--bg);
+    }
+    #rail:active { cursor: grabbing; }
+
+    #rail-track {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 0;
+      perspective: 700px;
+      perspective-origin: center center;
     }
 
-    .obs-img {
+    .rc {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      height: 192px;
+      top: -96px;   /* center = top of track */
+      overflow: hidden;
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+      will-change: transform, opacity, filter;
+    }
+
+    .rc.active { border-color: var(--accent); }
+
+    .rc img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.35s ease, opacity 0.2s;
+      pointer-events: none;
     }
 
-    .obs-card:hover .obs-img {
-      transform: scale(1.04);
-      opacity: 0.88;
-    }
-
-    .obs-meta {
-      padding: 0.55rem 0 0;
-    }
-
-    .obs-common {
-      font-size: 0.78rem;
-      font-weight: 700;
+    .rc-name {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 5px 8px;
+      background: rgba(0,0,0,0.65);
+      font-size: 0.57rem;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.8);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .rc.active .rc-name { opacity: 1; }
+
+    /* rail top/bottom mask */
+    #rail-mask {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      box-shadow: inset 0 80px 40px -20px var(--bg), inset 0 -80px 40px -20px var(--bg);
+    }
+
+    #rail-status {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* CENTER */
+    #main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      min-width: 0;
+    }
+
+    #main-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform-origin: center center;
+    }
+
+    #main-img.kb { animation: kb 18s ease-in-out infinite alternate; }
+
+    @keyframes kb {
+      0%   { transform: scale(1.06) translate(0%,    0%);    }
+      33%  { transform: scale(1.10) translate(-1.2%, 0.4%);  }
+      66%  { transform: scale(1.08) translate(0.6%,  -0.6%); }
+      100% { transform: scale(1.06) translate(-0.4%, 0.8%);  }
+    }
+
+    #main-fade {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+    #main-fade.show { opacity: 1; }
+
+    #main-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      z-index: 1;
+    }
+
+    #photo-nav {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dot.on { background: rgba(255,255,255,0.85); }
+
+    /* ─── INFO PANEL ─────────────────────────── */
+    #panel {
+      width: var(--panel);
+      flex-shrink: 0;
+      border-left: 1px solid var(--b1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+
+    #info-body {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.18s ease;
+    }
+    #info-body.dim { opacity: 0; }
+    #info-body::-webkit-scrollbar { width: 3px; }
+    #info-body::-webkit-scrollbar-track { background: transparent; }
+    #info-body::-webkit-scrollbar-thumb { background: var(--b2); }
+
+    /* Header section: common name + scientific */
+    .p-head {
+      padding: 1.4rem 1.25rem 1.2rem;
+      border-bottom: 1px solid var(--b1);
+      flex-shrink: 0;
+    }
+
+    .p-eye {
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .p-eye::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.6;
+    }
+
+    .p-name {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 500;
+      line-height: 1.15;
+      color: var(--text);
+      letter-spacing: -0.005em;
+    }
+
+    .p-sci {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 6px;
       line-height: 1.3;
     }
 
-    .obs-sci {
+    /* Metadata section */
+    .p-meta {
+      padding: 0.4rem 1.25rem 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 1rem;
+      align-items: baseline;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--b1);
+    }
+    .meta-row:last-child { border-bottom: none; }
+
+    .meta-k {
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding-top: 2px;
+    }
+
+    .meta-v {
+      font-size: 0.74rem;
+      color: var(--text);
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .meta-v.notes {
+      font-family: var(--serif);
+      font-size: 0.92rem;
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--text);
+      max-height: 5.6em;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid;
+      font-weight: 500;
+    }
+    .b-research { border-color: var(--accent); color: var(--accent); }
+    .b-needs_id { border-color: #c49540; color: #c49540; }
+    .b-casual   { border-color: var(--dim);    color: var(--muted); }
+
+    /* Grade tooltip */
+    .grade-row {
+      position: relative;
+      cursor: help;
+      isolation: isolate;
+      z-index: 1;
+    }
+    .grade-row:hover { z-index: 10000; }
+    .grade-tip {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      width: 240px;
+      background: var(--s2);
+      border: 1px solid var(--b2);
+      padding: 0.7rem 0.85rem;
       font-family: var(--mono);
       font-size: 0.62rem;
-      font-style: italic;
-      color: var(--muted);
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      line-height: 1.5;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      text-transform: none;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 10001;
+      white-space: normal;
+    }
+    .grade-row:hover .grade-tip,
+    .grade-row:focus-within .grade-tip {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .obs-date {
-      font-family: var(--mono);
+    /* Map */
+    #map-wrap {
+      border-top: 1px solid var(--b1);
+      border-bottom: 1px solid var(--b1);
+      position: relative;
+      flex-shrink: 0;
+    }
+    #map {
+      height: 180px;
+      background: var(--s1);
+    }
+    #map-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+    }
+
+    .map-coords {
+      padding: 0.7rem 1.25rem;
+      border-bottom: 1px solid var(--b1);
       font-size: 0.58rem;
+      letter-spacing: 0.1em;
       color: var(--muted);
-      margin-top: 3px;
-    }
-
-    /* ─── LOAD MORE ───────────────────────────── */
-    .load-more-area {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 2rem 3.5rem;
+      flex-shrink: 0;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .map-coords .coord-label {
+      color: var(--dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.52rem;
     }
 
-    .load-btn {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      padding: 0.65rem 2.25rem;
-      border: 1px solid var(--ink);
-      background: transparent;
-      color: var(--ink);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .load-btn:hover { background: var(--ink); color: var(--bg); }
-    .load-btn:disabled { opacity: 0.4; cursor: default; }
-
-    /* ─── STATUS MESSAGE ──────────────────────── */
-    .status {
-      max-width: 1080px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-      font-family: var(--mono);
-      font-size: 0.75rem;
+    #obs-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+      margin-top: auto;
+      border-top: 1px solid var(--b1);
+      flex-shrink: 0;
+    }
+    #obs-link:hover {
+      color: var(--text);
+      background: var(--s1);
+    }
+    #obs-link .arrow {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+    #obs-link:hover .arrow { transform: translate(2px, -2px); }
+
+    /* Empty / loading state for panel */
+    .p-empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.8rem;
+      padding: 2rem;
+      color: var(--dim);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
       text-align: center;
     }
+    .p-empty::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: var(--b2);
+    }
 
-    /* ─── MODAL ───────────────────────────────── */
+    /* ─── GALLERY VIEW ───────────────────────── */
+    #view-gal {
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+    #view-gal::-webkit-scrollbar { width: 3px; }
+    #view-gal::-webkit-scrollbar-thumb { background: var(--b2); }
+
+    #gal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1px;
+      background: var(--b1);
+    }
+
+    .gc {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--s1);
+      aspect-ratio: 1;
+    }
+
+    .gc img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.38s ease, opacity 0.2s;
+    }
+    .gc:hover img { transform: scale(1.05); opacity: 0.75; }
+
+    .gc-ov {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 0.65rem 0.8rem;
+      background: rgba(0,0,0,0.72);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .gc:hover .gc-ov { opacity: 1; }
+
+    .gc-name {
+      font-family: var(--serif);
+      font-size: 0.88rem;
+      font-style: italic;
+      color: #fff;
+    }
+
+    .gc-date {
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+
+    /* ─── LIST VIEW ──────────────────────────── */
+    #view-list {
+      display: none;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+    #view-list::-webkit-scrollbar { width: 3px; }
+    #view-list::-webkit-scrollbar-thumb { background: var(--b2); }
+
+    .li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1.5rem;
+      border-bottom: 1px solid var(--b1);
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .li:hover { background: var(--s1); }
+
+    .li-thumb {
+      width: 44px; height: 44px;
+      object-fit: cover;
+      flex-shrink: 0;
+      display: block;
+      background: var(--s2);
+    }
+
+    .li-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.2;
+    }
+    .li-sci { font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
+
+    .li-right {
+      margin-left: auto;
+      text-align: right;
+      font-size: 0.6rem;
+      color: var(--dim);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .li-right p + p { margin-top: 3px; }
+
+    /* Leaflet override — make the map feel calmer */
+    .leaflet-container { background: var(--s1) !important; }
+
+    /* ─── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 1100px) {
+      :root { --panel: 280px; }
+    }
+    @media (max-width: 900px) {
+      #rail { width: 180px; --rail: 180px; }
+      :root { --panel: 260px; }
+    }
+    @media (max-width: 740px) {
+      #panel { display: none; }
+    }
+    @media (max-width: 768px) {
+      #rail { display: none; }
+      #panel { display: none; }
+      #view-imm { display: none !important; }
+      #view-list { display: none !important; }
+      #view-gal { display: block !important; }
+      .v-btn[data-v="imm"], .v-btn[data-v="list"] { display: none !important; }
+    }
+
+    /* ─── MODAL (nature.html style) ──────────── */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -248,6 +775,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s;
+      font-family: 'Libre Baskerville', Georgia, serif;
     }
 
     .modal-overlay.open {
@@ -256,7 +784,8 @@
     }
 
     .modal-box {
-      background: var(--bg);
+      background: #f8f7f4;
+      color: #111110;
       width: 100%;
       max-width: 860px;
       max-height: 90dvh;
@@ -278,7 +807,7 @@
     .modal-body {
       padding: 2rem 1.75rem;
       overflow-y: auto;
-      border-left: 1px solid var(--border);
+      border-left: 1px solid #e0ddd5;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
@@ -293,29 +822,31 @@
       font-size: 1.3rem;
       line-height: 1;
       cursor: pointer;
-      color: var(--bg);
+      color: #f8f7f4;
       text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       z-index: 10;
       padding: 0.2rem;
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
     }
 
     .modal-common {
       font-size: 1.2rem;
       font-weight: 700;
       line-height: 1.2;
+      color: #111110;
     }
 
     .modal-sci {
-      font-family: var(--mono);
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
       font-size: 0.75rem;
       font-style: italic;
-      color: var(--muted);
+      color: #8a8880;
       margin-top: 4px;
     }
 
     .modal-rule {
       height: 1px;
-      background: var(--border);
+      background: #e0ddd5;
     }
 
     .meta-list {
@@ -324,152 +855,282 @@
       gap: 0.85rem;
     }
 
-    .meta-item {}
-
     .meta-key {
-      font-family: var(--mono);
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
       font-size: 0.58rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: var(--muted);
+      color: #8a8880;
       margin-bottom: 3px;
     }
 
     .meta-val {
       font-size: 0.82rem;
       line-height: 1.45;
+      color: #111110;
+      word-break: break-word;
     }
 
-    .badge {
+    .modal-badge {
       display: inline-block;
-      font-family: var(--mono);
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
       font-size: 0.58rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 2px 7px;
       border: 1px solid;
     }
-
-    .badge-research  { border-color: #2d6a2d; color: #2d6a2d; }
-    .badge-needs_id  { border-color: #b06800; color: #b06800; }
-    .badge-casual    { border-color: var(--muted); color: var(--muted); }
+    .modal-badge-research { border-color: #2d6a2d; color: #2d6a2d; }
+    .modal-badge-needs_id { border-color: #b06800; color: #b06800; }
+    .modal-badge-casual   { border-color: #8a8880; color: #8a8880; }
 
     .modal-link {
-      font-family: var(--mono);
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
       font-size: 0.68rem;
-      color: var(--muted);
+      color: #8a8880;
       text-decoration: none;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid #e0ddd5;
       padding-bottom: 1px;
       transition: color 0.12s, border-color 0.12s;
       align-self: flex-start;
     }
-
     .modal-link:hover {
-      color: var(--ink);
-      border-color: var(--ink);
+      color: #111110;
+      border-color: #111110;
     }
 
-    /* ─── FOOTER ──────────────────────────────── */
-    .site-footer {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 1.25rem 2rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
+    .modal-map-wrap {
+      border-top: 1px solid #e0ddd5;
+      padding-top: 1.1rem;
+    }
+    .modal-map {
+      height: 150px;
+      background: #e5e2da;
+      border: 1px solid #e0ddd5;
+    }
+    .modal-map .leaflet-container { background: #e5e2da !important; }
+
+    /* Modal grade tooltip */
+    .modal-grade-item {
+      position: relative;
+      cursor: help;
+    }
+    .modal-grade-tip {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      width: 260px;
+      background: #ffffff;
+      border: 1px solid #d6d2c8;
+      padding: 0.7rem 0.85rem;
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 0.7rem;
+      line-height: 1.55;
+      color: #111110;
+      letter-spacing: 0.01em;
+      text-transform: none;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 9999;
+      white-space: normal;
+    }
+    .modal-grade-item:hover .modal-grade-tip,
+    .modal-grade-item:focus-within .modal-grade-tip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── MOBILE NOTICE OVERLAY ─────────────── */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,9,0.86);
+      z-index: 9999;
       align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.25s ease;
       font-family: var(--mono);
-      font-size: 0.62rem;
-      color: var(--muted);
     }
-
-    .site-footer a {
-      color: var(--muted);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1px;
-      transition: color 0.12s;
+    .mobile-overlay.show {
+      display: flex;
+      opacity: 1;
     }
-    .site-footer a:hover { color: var(--ink); }
-
-    /* ─── RESPONSIVE ──────────────────────────── */
-    @media (max-width: 860px) {
-      .obs-grid { grid-template-columns: repeat(3, 1fr); }
-      .header-stats { gap: 1.5rem; }
+    .mobile-box {
+      background: var(--s2);
+      border: 1px solid var(--b2);
+      padding: 2rem 1.5rem 1.75rem;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+    .mobile-title {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.85rem;
+      line-height: 1.1;
+    }
+    .mobile-msg {
+      font-size: 0.72rem;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.01em;
+    }
+    .mobile-btn {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.6rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .mobile-btn:hover {
+      background: var(--accent);
+      color: var(--bg);
     }
 
     @media (max-width: 640px) {
-      .site-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.75rem;
-        padding: 2.5rem 1.25rem 1.75rem;
-      }
-      .header-stats { text-align: left; margin-left: 0; }
-      .obs-grid { grid-template-columns: repeat(2, 1fr); }
-      .grid-wrap { padding: 1.25rem; }
-      .filters-bar { padding: 0.85rem 1.25rem; }
       .modal-box { grid-template-columns: 1fr; }
       .modal-photo { min-height: 220px; }
-      .modal-body { border-left: none; border-top: 1px solid var(--border); }
+      .modal-body { border-left: none; border-top: 1px solid #e0ddd5; }
     }
   </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <div class="header-left">
-      <p class="header-eyebrow">iNaturalist · Field Observations</p>
-      <h1 class="header-name">Alvin Liu</h1>
-      <p class="header-bio" id="bio">Loading profile…</p>
-    </div>
-    <div class="header-stats" id="stats">
-      <div>
-        <span class="stat-num" id="stat-obs">—</span>
-        <span class="stat-label">Observations</span>
-      </div>
-      <div>
-        <span class="stat-num" id="stat-spp">—</span>
-        <span class="stat-label">Species</span>
-      </div>
-      <div>
-        <span class="stat-num" id="stat-id">—</span>
-        <span class="stat-label">IDs given</span>
+  <!-- Topbar -->
+  <div id="topbar">
+    <div class="logo" id="logo">
+      Alvin Liu <em>/ Field Catalog</em>
+      <div class="logo-tip" id="logo-tip" role="tooltip" aria-hidden="true">
+        <div class="lt-row"><span class="lt-num" id="lt-obs">—</span><span class="lt-lbl">Observations</span></div>
+        <div class="lt-row"><span class="lt-num" id="lt-spp">—</span><span class="lt-lbl">Species</span></div>
+        <div class="lt-row"><span class="lt-num" id="lt-id">—</span><span class="lt-lbl">Identifications given</span></div>
       </div>
     </div>
-  </header>
-
-  <nav class="filters-bar" aria-label="Filter by taxon">
-    <span class="filter-prefix">Filter</span>
-    <button class="filter-btn active" data-taxon="">All</button>
-    <button class="filter-btn" data-taxon="Aves">Birds</button>
-    <button class="filter-btn" data-taxon="Plantae">Plants</button>
-    <button class="filter-btn" data-taxon="Insecta">Insects</button>
-    <button class="filter-btn" data-taxon="Fungi">Fungi</button>
-    <button class="filter-btn" data-taxon="Mammalia">Mammals</button>
-    <button class="filter-btn" data-taxon="Reptilia">Reptiles</button>
-    <button class="filter-btn" data-taxon="Amphibia">Amphibians</button>
-  </nav>
-
-  <main class="grid-wrap">
-    <div class="obs-grid" id="grid" aria-label="Observations"></div>
-  </main>
-
-  <p class="status" id="status" aria-live="polite">Loading observations…</p>
-
-  <div class="load-more-area" id="load-more-area" style="display:none">
-    <button class="load-btn" id="load-btn">Load more</button>
+    <div class="filters">
+      <div class="species-wrap" id="species-wrap">
+        <button class="f-btn species-trigger" id="species-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+          <span id="species-label">All</span><span class="species-chev" aria-hidden="true">▾</span>
+        </button>
+        <div class="species-group" id="species-group" role="menu">
+          <button class="f-btn on" data-t="">All</button>
+          <button class="f-btn"    data-t="Aves">Birds</button>
+          <button class="f-btn"    data-t="Plantae">Plants</button>
+          <button class="f-btn"    data-t="Insecta">Insects</button>
+          <button class="f-btn"    data-t="Fungi">Fungi</button>
+          <button class="f-btn"    data-t="Mammalia">Mammals</button>
+          <button class="f-btn"    data-t="Reptilia">Reptiles</button>
+          <button class="f-btn"    data-t="Amphibia">Amphibians</button>
+        </div>
+      </div>
+      <span class="f-sep" aria-hidden="true"></span>
+      <button class="f-btn f-grade" data-q="research">Research Grade</button>
+    </div>
+    <div class="views">
+      <button class="v-btn on"  data-v="imm">Immersive</button>
+      <button class="v-btn"     data-v="gal">Gallery</button>
+      <button class="v-btn"     data-v="list">List</button>
+    </div>
   </div>
 
-  <footer class="site-footer">
-    <span>Data via iNaturalist API</span>
-    <a href="https://www.inaturalist.org/people/officeofalvinliu" target="_blank" rel="noopener">
-      View full profile ↗
-    </a>
-  </footer>
+  <!-- App -->
+  <div id="app">
 
-  <!-- Modal -->
+    <!-- Immersive -->
+    <div id="view-imm">
+
+      <!-- Rail -->
+      <div id="rail">
+        <div id="rail-track"></div>
+        <div id="rail-mask"></div>
+        <div id="rail-status"></div>
+      </div>
+
+      <!-- Main photo -->
+      <div id="main">
+        <div id="main-empty">Loading…</div>
+        <img id="main-img" src="" alt="">
+        <div id="main-fade" class="show"></div>
+        <div id="photo-nav"></div>
+      </div>
+
+      <!-- Info panel -->
+      <aside id="panel">
+        <div id="info-body">
+
+          <!-- Empty state, replaced once an observation is selected -->
+          <div class="p-empty" id="p-empty">Select an observation</div>
+
+          <div class="p-head" id="p-head" style="display:none;">
+            <p class="p-eye" id="p-group">Observation</p>
+            <h2 class="p-name" id="p-name">—</h2>
+            <p class="p-sci"  id="p-sci">—</p>
+          </div>
+
+          <div class="p-meta" id="meta-wrap" style="display:none;"></div>
+
+          <div id="map-wrap" style="display:none;">
+            <div id="map"></div>
+          </div>
+
+          <div class="map-coords" id="obsnum-wrap" style="display:none;">
+            <span class="coord-label">Observation #</span>
+            <span id="obsnum">—</span>
+          </div>
+
+          <div class="map-coords" id="coords-wrap" style="display:none;">
+            <span class="coord-label">Coordinates</span>
+            <span id="coords">—</span>
+          </div>
+
+          <div class="map-coords" id="accuracy-wrap" style="display:none;">
+            <span class="coord-label">Accuracy</span>
+            <span id="accuracy">—</span>
+          </div>
+
+          <a id="obs-link" href="#" target="_blank" rel="noopener" style="display:none;">
+            <span>View on iNaturalist</span>
+            <span class="arrow">↗</span>
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Gallery -->
+    <div id="view-gal">
+      <div id="gal-grid"></div>
+    </div>
+
+    <!-- List -->
+    <div id="view-list">
+      <div id="list-inner"></div>
+    </div>
+
+  </div>
+
+  <!-- Mobile notice overlay -->
+  <div class="mobile-overlay" id="mobile-overlay" role="dialog" aria-modal="true" aria-label="Mobile notice">
+    <div class="mobile-box">
+      <h2 class="mobile-title">Hey there!</h2>
+      <p class="mobile-msg">We noticed you were viewing this on mobile and wanted to tell you that some features are restricted on mobile devices. Please switch over to a laptop or desktop view for the best experience!</p>
+      <button class="mobile-btn" id="mobile-dismiss" type="button">Got it</button>
+    </div>
+  </div>
+
+  <!-- Modal popup (gallery + list views) -->
   <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-label="Observation detail">
     <div class="modal-box">
       <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
@@ -481,6 +1142,9 @@
         </div>
         <div class="modal-rule"></div>
         <div class="meta-list" id="modal-meta"></div>
+        <div class="modal-map-wrap" id="modal-map-wrap" style="display:none;">
+          <div class="modal-map" id="modal-map"></div>
+        </div>
         <a class="modal-link" id="modal-link" href="#" target="_blank" rel="noopener">
           View on iNaturalist ↗
         </a>
@@ -488,185 +1152,620 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const USER     = 'officeofalvinliu';
-    const API      = 'https://api.inaturalist.org/v1';
-    const PER_PAGE = 24;
+    /* ── Constants ─────────────────────────── */
+    const USER    = 'officeofalvinliu';
+    const API     = 'https://api.inaturalist.org/v1';
+    const PER     = 200;          // iNat API max — load everything in one or two calls
+    const CARD_H  = 192;
+    const CARD_G  = 12;
+    const STEP    = CARD_H + CARD_G;
 
-    let page        = 1;
-    let taxon       = '';
-    let loading     = false;
-    let exhausted   = false;
+    /* ── State ─────────────────────────────── */
+    const S = {
+      obs:      [],
+      cur:      -1,
+      page:     1,
+      taxon:    '',
+      grade:    '',     // '' or 'research'
+      more:     true,
+      busy:     false,
+      view:     'imm',
+      pos:      0,
+      vel:      0,
+      drag:     false,
+      dragY:    0,
+      dragPos:  0,
+      photo:    0,
+    };
 
-    const grid      = document.getElementById('grid');
-    const status    = document.getElementById('status');
-    const loadArea  = document.getElementById('load-more-area');
-    const loadBtn   = document.getElementById('load-btn');
-    const overlay   = document.getElementById('modal-overlay');
+    /* ── DOM ───────────────────────────────── */
+    const railEl    = document.getElementById('rail');
+    const railTrack = document.getElementById('rail-track');
+    const railSt    = document.getElementById('rail-status');
+    const mainImg   = document.getElementById('main-img');
+    const mainFade  = document.getElementById('main-fade');
+    const mainEmpty = document.getElementById('main-empty');
+    const photoNav  = document.getElementById('photo-nav');
+    const infoBody  = document.getElementById('info-body');
+    const galGrid   = document.getElementById('gal-grid');
+    const listInner = document.getElementById('list-inner');
 
-    /* ── Profile ─────────────────────────────── */
-    async function loadProfile() {
-      try {
-        const r = await fetch(`${API}/users/${USER}`);
-        const d = await r.json();
-        const u = d.results?.[0];
-        if (!u) return;
+    const elEmpty   = document.getElementById('p-empty');
+    const elHead    = document.getElementById('p-head');
+    const elGroup   = document.getElementById('p-group');
+    const elName    = document.getElementById('p-name');
+    const elSci     = document.getElementById('p-sci');
+    const elMeta    = document.getElementById('meta-wrap');
+    const elMapWrap = document.getElementById('map-wrap');
+    const elObsNumW = document.getElementById('obsnum-wrap');
+    const elObsNum  = document.getElementById('obsnum');
+    const elCoordsW = document.getElementById('coords-wrap');
+    const elCoords  = document.getElementById('coords');
+    const elAccW    = document.getElementById('accuracy-wrap');
+    const elAcc     = document.getElementById('accuracy');
+    const elLink    = document.getElementById('obs-link');
 
-        const fmt = n => (n ?? 0).toLocaleString();
-        document.getElementById('stat-obs').textContent = fmt(u.observations_count);
-        document.getElementById('stat-spp').textContent = fmt(u.species_count);
-        document.getElementById('stat-id').textContent  = fmt(u.identifications_count);
+    /* ── Grade tooltip text ────────────────── */
+    const GRADE_TIPS = {
+      research: 'This observation was given a Research Grade tag on iNaturalist, meaning the community has reached consensus on the species ID and the record can be used for research and biodiversity data.',
+      needs_id: 'This observation was given a Needs ID tag on iNaturalist, meaning it is awaiting further identification or community agreement before reaching Research Grade.',
+      casual:   'This observation was given a Casual Grade tag on iNaturalist, meaning it is missing required data (date, location, or photo/sound) or has been flagged as not wild, captive, or otherwise non-evidence.',
+    };
 
-        const raw = (u.description_html || '').replace(/<[^>]+>/g, '').trim();
-        document.getElementById('bio').textContent = raw || 'Naturalist & observer';
-      } catch {
-        document.getElementById('bio').textContent = 'Naturalist & observer';
+    /* ── Map ───────────────────────────────── */
+    const map = L.map('map', {
+      zoomControl: false,
+      attributionControl: false,
+      interactive: false,
+      dragging: false,
+      scrollWheelZoom: false,
+    }).setView([20, 0], 2);
+
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      { maxZoom: 18 }
+    ).addTo(map);
+
+    let mapMarker = null;
+    let mapInit   = false;
+
+    /* ── API ───────────────────────────────── */
+    async function load(reset = false) {
+      if (S.busy || (!S.more && !reset)) return;
+      S.busy = true;
+      if (reset) {
+        S.obs = []; S.cur = -1; S.pos = 0; S.vel = 0;
+        S.page = 1; S.more = true;
+        railTrack.innerHTML = '';
+        galGrid.innerHTML   = '';
+        listInner.innerHTML = '';
+        railSt.textContent  = 'Loading…';
       }
+
+      const params = new URLSearchParams({
+        user_id: USER, per_page: PER, page: S.page,
+        order_by: 'observed_on', order: 'desc', photos: 'true',
+      });
+      if (S.taxon) params.append('iconic_taxa[]', S.taxon);
+      if (S.grade) params.append('quality_grade', S.grade);
+
+      try {
+        const r = await fetch(`${API}/observations?${params}`);
+        const d = await r.json();
+        const results = d.results || [];
+        const total   = d.total_results || 0;
+
+        results.forEach(o => {
+          const i = S.obs.length;
+          S.obs.push(o);
+          buildRailCard(o, i);
+          buildGalCard(o, i);
+          buildListItem(o, i);
+        });
+
+        S.more = S.obs.length < total;
+        railSt.textContent = S.more ? `${S.obs.length} / ${total}` : `${S.obs.length}`;
+
+        if (S.cur === -1 && S.obs.length > 0) select(0);
+
+      } catch (e) {
+        railSt.textContent = 'Error loading';
+        console.error(e);
+        S.busy = false;
+        return;
+      }
+      S.busy = false;
+      S.page++;
+
+      // Load every remaining page automatically (no scroll-trigger needed)
+      if (S.more) setTimeout(() => load(), 60);
     }
 
-    /* ── Observations ─────────────────────────── */
-    async function loadObs(reset = false) {
-      if (loading || exhausted) return;
-      loading = true;
-      loadBtn.disabled = true;
-      loadBtn.textContent = 'Loading…';
-      if (reset) { status.textContent = 'Loading observations…'; status.style.display = 'block'; }
-
-      let url = `${API}/observations?user_id=${USER}&per_page=${PER_PAGE}&page=${page}&order_by=created_at&order=desc&photos=true`;
-      if (taxon) url += `&iconic_taxa[]=${taxon}`;
-
-      try {
-        const r = await fetch(url);
-        const d = await r.json();
-        const obs = d.results || [];
-        const total = d.total_results || 0;
-
-        status.style.display = 'none';
-        if (obs.length === 0 && reset) {
-          status.textContent = 'No observations found for this filter.';
-          status.style.display = 'block';
-          loadArea.style.display = 'none';
-          loading = false;
-          return;
-        }
-
-        obs.forEach(renderCard);
-
-        const loaded = (page - 1) * PER_PAGE + obs.length;
-        exhausted = loaded >= total;
-        loadArea.style.display = exhausted ? 'none' : 'flex';
-        loadBtn.textContent  = 'Load more';
-        loadBtn.disabled = false;
-        page++;
-      } catch {
-        status.textContent = 'Failed to load. Please refresh.';
-        status.style.display = 'block';
-        loadBtn.disabled = false;
-        loadBtn.textContent = 'Try again';
-      }
-
-      loading = false;
+    /* ── Rail card ─────────────────────────── */
+    function buildRailCard(obs, i) {
+      if (!obs.photos?.length) return;
+      const el = document.createElement('div');
+      el.className = 'rc';
+      el.dataset.i  = i;
+      const name = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      el.innerHTML = `
+        <img src="${obs.photos[0].url}" alt="${name}" loading="lazy">
+        <div class="rc-name">${name}</div>
+      `;
+      el.addEventListener('click', () => select(i));
+      railTrack.appendChild(el);
     }
 
-    /* ── Card ─────────────────────────────────── */
-    function renderCard(obs) {
-      const photo = obs.photos?.[0];
-      if (!photo) return;
-
-      const thumb  = photo.url;
-      const medium = photo.url?.replace('square', 'medium') || thumb;
-      const common = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
-      const sci    = obs.taxon?.name || '';
-      const date   = obs.observed_on ? fmtDate(obs.observed_on) : '';
-
-      const card = document.createElement('article');
-      card.className = 'obs-card';
-      card.innerHTML = `
-        <div class="obs-img-wrap">
-          <img class="obs-img" src="${thumb}" alt="${common}" loading="lazy">
-        </div>
-        <div class="obs-meta">
-          <p class="obs-common">${common}</p>
-          ${sci  ? `<p class="obs-sci">${sci}</p>` : ''}
-          ${date ? `<p class="obs-date">${date}</p>` : ''}
+    /* ── Gallery card ──────────────────────── */
+    function buildGalCard(obs, i) {
+      if (!obs.photos?.length) return;
+      const el   = document.createElement('div');
+      el.className = 'gc';
+      const name = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      const date = obs.observed_on ? fmt(obs.observed_on) : '';
+      const medium = obs.photos[0].url?.replace('square', 'medium') || obs.photos[0].url;
+      el.innerHTML = `
+        <img src="${medium}" alt="${name}" loading="eager" decoding="async">
+        <div class="gc-ov">
+          <p class="gc-name">${name}</p>
+          ${date ? `<p class="gc-date">${date}</p>` : ''}
         </div>
       `;
-      card.addEventListener('click', () => openModal(obs, medium));
-      grid.appendChild(card);
+      el.addEventListener('click', () => openModal(obs));
+      galGrid.appendChild(el);
     }
 
-    /* ── Modal ────────────────────────────────── */
-    function openModal(obs, imgUrl) {
-      const common  = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
-      const sci     = obs.taxon?.name || '';
-      const date    = obs.observed_on ? fmtDate(obs.observed_on) : null;
-      const place   = obs.place_guess || null;
-      const quality = obs.quality_grade || null;
-      const notes   = obs.description   || null;
-      const tax     = buildTaxonomy(obs.taxon);
+    /* ── List item ─────────────────────────── */
+    function buildListItem(obs, i) {
+      const el   = document.createElement('div');
+      el.className = 'li';
+      const thumb = obs.photos?.[0]?.url || '';
+      const name  = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      const sci   = obs.taxon?.name || '';
+      const date  = obs.observed_on ? fmt(obs.observed_on) : '';
+      const loc   = obs.place_guess || '';
+      el.innerHTML = `
+        ${thumb ? `<img class="li-thumb" src="${thumb}" alt="${name}" loading="eager" decoding="async">` : '<div class="li-thumb"></div>'}
+        <div>
+          <p class="li-name">${name}</p>
+          ${sci ? `<p class="li-sci">${sci}</p>` : ''}
+        </div>
+        <div class="li-right">
+          ${date ? `<p>${date}</p>` : ''}
+          ${loc  ? `<p>${loc}</p>` : ''}
+        </div>
+      `;
+      el.addEventListener('click', () => openModal(obs));
+      listInner.appendChild(el);
+    }
 
-      document.getElementById('modal-photo').src    = imgUrl;
-      document.getElementById('modal-photo').alt    = common;
-      document.getElementById('modal-common').textContent = common;
-      document.getElementById('modal-sci').textContent    = sci;
-      document.getElementById('modal-link').href          = `https://www.inaturalist.org/observations/${obs.id}`;
+    /* ── Select ────────────────────────────── */
+    function select(i) {
+      S.cur   = i;
+      S.photo = 0;
+      const obs = S.obs[i];
+      if (!obs) return;
 
-      const meta = document.getElementById('modal-meta');
-      meta.innerHTML = '';
+      // Snap rail
+      snapTo(i);
 
-      const rows = [
-        date    && { k: 'Observed',  v: date },
-        place   && { k: 'Location',  v: place },
-        quality && { k: 'Grade',     v: `<span class="badge badge-${quality}">${quality.replace('_',' ')}</span>` },
-        tax     && { k: 'Taxonomy',  v: tax },
-        notes   && { k: 'Notes',     v: notes },
-      ].filter(Boolean);
-
-      rows.forEach(({ k, v }) => {
-        const item = document.createElement('div');
-        item.className = 'meta-item';
-        item.innerHTML = `<p class="meta-key">${k}</p><p class="meta-val">${v}</p>`;
-        meta.appendChild(item);
+      // Update active card
+      document.querySelectorAll('.rc').forEach(el => {
+        el.classList.toggle('active', +el.dataset.i === i);
       });
 
-      overlay.classList.add('open');
+      // Update main photo
+      mainEmpty.style.display = 'none';
+      setPhoto(obs, 0);
+
+      // Update info
+      setInfo(obs);
+    }
+
+    /* ── Main photo ────────────────────────── */
+    function setPhoto(obs, pi) {
+      const photos = obs.photos || [];
+      if (!photos.length) return;
+      pi = Math.max(0, Math.min(pi, photos.length - 1));
+      S.photo = pi;
+
+      const url = photos[pi].url?.replace('square', 'large') || photos[pi].url;
+
+      // Fade out → swap → fade in
+      mainFade.classList.add('show');
+      setTimeout(() => {
+        mainImg.src = url;
+        mainImg.alt = obs.taxon?.preferred_common_name || '';
+        mainImg.classList.remove('kb');
+        void mainImg.offsetWidth;
+        mainImg.classList.add('kb');
+        mainFade.classList.remove('show');
+      }, 220);
+
+      // Photo dots
+      photoNav.innerHTML = '';
+      if (photos.length > 1) {
+        photos.forEach((_, di) => {
+          const dot = document.createElement('div');
+          dot.className = 'dot' + (di === pi ? ' on' : '');
+          dot.addEventListener('click', () => setPhoto(obs, di));
+          photoNav.appendChild(dot);
+        });
+      }
+    }
+
+    /* ── Info panel ────────────────────────── */
+    function setInfo(obs) {
+      infoBody.classList.add('dim');
+
+      setTimeout(() => {
+        // Hide empty state, show real sections
+        elEmpty.style.display    = 'none';
+        elHead.style.display     = 'block';
+        elMeta.style.display     = 'block';
+        elMapWrap.style.display  = 'block';
+        elObsNumW.style.display  = 'flex';
+        elCoordsW.style.display  = 'flex';
+        elAccW.style.display     = 'flex';
+        elLink.style.display     = 'flex';
+
+        const name   = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+        const sci    = obs.taxon?.name || '';
+        const group  = obs.taxon?.iconic_taxon_name || 'Observation';
+        const date   = obs.observed_on ? fmt(obs.observed_on) : null;
+        const loc    = obs.place_guess || null;
+        const grade  = obs.quality_grade || 'casual';
+        const notes  = stripHtml(obs.description) || null;
+        const taxStr = taxLine(obs.taxon);
+        const link   = `https://www.inaturalist.org/observations/${obs.id}`;
+        const acc    = obs.positional_accuracy ?? obs.public_positional_accuracy ?? null;
+
+        elGroup.textContent = group;
+        elName.textContent  = name;
+        elSci.textContent   = sci || '—';
+        elLink.href         = link;
+        elObsNum.textContent = `#${obs.id}`;
+        elAcc.textContent    = (acc != null && !isNaN(acc)) ? `± ${Number(acc).toLocaleString()} m` : '—';
+
+        // Build meta rows
+        const tipText = GRADE_TIPS[grade] || GRADE_TIPS.casual;
+        const gradeCell =
+          `<span class="badge b-${grade}">${grade.replace('_',' ')}</span>` +
+          `<span class="grade-tip" role="tooltip">${escapeHtml(tipText)}</span>`;
+
+        const rows = [
+          date    && { k: 'Date',     v: escapeHtml(date) },
+          loc     && { k: 'Location', v: escapeHtml(loc) },
+          grade   && { k: 'Grade',    v: gradeCell, cls: 'grade-row' },
+          taxStr  && { k: 'Taxonomy', v: escapeHtml(taxStr) },
+          notes   && { k: 'Notes',    v: `<span class="notes">${escapeHtml(notes)}</span>` },
+        ].filter(Boolean);
+
+        elMeta.innerHTML = '';
+        rows.forEach(({ k, v, cls }) => {
+          const row = document.createElement('div');
+          row.className = 'meta-row' + (cls ? ' ' + cls : '');
+          row.innerHTML = `<span class="meta-k">${k}</span><span class="meta-v">${v}</span>`;
+          elMeta.appendChild(row);
+        });
+
+        // Map
+        const [lat, lng] = (obs.location || '').split(',').map(Number);
+        if (lat && lng && !isNaN(lat) && !isNaN(lng)) {
+          const ns = lat >= 0 ? 'N' : 'S';
+          const ew = lng >= 0 ? 'E' : 'W';
+          elCoords.textContent =
+            `${Math.abs(lat).toFixed(4)}° ${ns}  ${Math.abs(lng).toFixed(4)}° ${ew}`;
+
+          if (mapMarker) map.removeLayer(mapMarker);
+          const icon = L.divIcon({
+            className: '',
+            html: `<div style="width:10px;height:10px;border-radius:50%;background:#8db83c;box-shadow:0 0 0 4px rgba(141,184,60,0.18),0 0 0 1.5px rgba(141,184,60,0.5);"></div>`,
+            iconSize: [10, 10], iconAnchor: [5, 5],
+          });
+          mapMarker = L.marker([lat, lng], { icon }).addTo(map);
+
+          // Make sure the map has its size right (especially first time)
+          requestAnimationFrame(() => map.invalidateSize());
+
+          if (mapInit) {
+            map.flyTo([lat, lng], 11, { duration: 1.0, easeLinearity: 0.5 });
+          } else {
+            map.setView([lat, lng], 11);
+            mapInit = true;
+          }
+        } else {
+          elCoords.textContent = '—';
+          if (mapMarker) { map.removeLayer(mapMarker); mapMarker = null; }
+        }
+
+        infoBody.classList.remove('dim');
+      }, 180);
+    }
+
+    /* ── Rail render loop ──────────────────── */
+    function renderRail() {
+      const cards = railTrack.querySelectorAll('.rc');
+      cards.forEach(card => {
+        const i      = +card.dataset.i;
+        const off    = i - S.pos;
+        const abs    = Math.abs(off);
+
+        if (abs > 5.5) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+
+        const ty    = off * STEP;
+        const tz    = -abs * 28;
+        const rx    = off * 7.5;
+        const sc    = Math.max(0.68, 1 - abs * 0.072);
+        const op    = Math.max(0.15, 1 - abs * 0.20);
+        const sat   = Math.max(0.15, 1 - abs * 0.38);
+        const bri   = Math.max(0.45, 1 - abs * 0.20);
+
+        card.style.transform = `translateY(${ty}px) translateZ(${tz}px) rotateX(${rx}deg) scale(${sc})`;
+        card.style.opacity   = op;
+        card.style.filter    = `saturate(${sat}) brightness(${bri})`;
+      });
+    }
+
+    /* ── Physics loop ──────────────────────── */
+    let snapping = false, snapTarget = 0;
+
+    function tick() {
+      if (snapping) {
+        S.pos += (snapTarget - S.pos) * 0.16;
+        if (Math.abs(S.pos - snapTarget) < 0.005) {
+          S.pos = snapTarget;
+          snapping = false;
+        }
+      } else if (!S.drag) {
+        S.pos += S.vel;
+        S.vel *= 0.90;
+        S.pos  = Math.max(0, Math.min(S.obs.length - 1, S.pos));
+
+        if (Math.abs(S.vel) < 0.004) {
+          const tgt = Math.round(S.pos);
+          S.pos += (tgt - S.pos) * 0.14;
+          if (Math.abs(S.pos - tgt) < 0.008) {
+            S.pos = tgt;
+            if (tgt !== S.cur && S.obs[tgt]) select(tgt);
+          }
+        }
+      }
+      renderRail();
+      requestAnimationFrame(tick);
+    }
+
+    function snapTo(i) {
+      snapTarget = i;
+      snapping   = true;
+      S.vel      = 0;
+    }
+
+    requestAnimationFrame(tick);
+
+    /* ── Rail input ────────────────────────── */
+    railEl.addEventListener('wheel', e => {
+      e.preventDefault();
+      S.vel += e.deltaY * 0.0025;
+      S.vel  = Math.max(-1, Math.min(1, S.vel));
+      snapping = false;
+    }, { passive: false });
+
+    railEl.addEventListener('mousedown', e => {
+      S.drag    = true;
+      S.dragY   = e.clientY;
+      S.dragPos = S.pos;
+      S.vel     = 0;
+      snapping  = false;
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!S.drag) return;
+      const dy = e.clientY - S.dragY;
+      const np = S.dragPos - dy / STEP;
+      S.vel    = (np - S.pos) * 0.55;
+      S.pos    = Math.max(0, Math.min(S.obs.length - 1, np));
+    });
+
+    window.addEventListener('mouseup', () => { S.drag = false; });
+
+    railEl.addEventListener('touchstart', e => {
+      S.drag    = true;
+      S.dragY   = e.touches[0].clientY;
+      S.dragPos = S.pos;
+      S.vel     = 0;
+      snapping  = false;
+    }, { passive: true });
+
+    railEl.addEventListener('touchmove', e => {
+      if (!S.drag) return;
+      const dy = e.touches[0].clientY - S.dragY;
+      const np = S.dragPos - dy / STEP;
+      S.vel    = (np - S.pos) * 0.5;
+      S.pos    = Math.max(0, Math.min(S.obs.length - 1, np));
+    }, { passive: true });
+
+    railEl.addEventListener('touchend', () => { S.drag = false; });
+
+    /* ── Filters ───────────────────────────── */
+    // Species dropdown (collapses on narrow widths)
+    const speciesWrap    = document.getElementById('species-wrap');
+    const speciesTrigger = document.getElementById('species-trigger');
+    const speciesGroup   = document.getElementById('species-group');
+    const speciesLabel   = document.getElementById('species-label');
+
+    speciesTrigger.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = speciesWrap.classList.toggle('open');
+      speciesTrigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', e => {
+      if (!speciesWrap.contains(e.target)) {
+        speciesWrap.classList.remove('open');
+        speciesTrigger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Taxon filters (mutually exclusive radio-style)
+    document.querySelectorAll('.f-btn[data-t]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.f-btn[data-t]').forEach(b => b.classList.remove('on'));
+        btn.classList.add('on');
+        S.taxon = btn.dataset.t;
+        speciesLabel.textContent = btn.textContent.trim();
+        speciesTrigger.classList.toggle('on', !!btn.dataset.t);
+        speciesWrap.classList.remove('open');
+        speciesTrigger.setAttribute('aria-expanded', 'false');
+        S.page  = 1;
+        S.more  = true;
+        mainFade.classList.add('show');
+        load(true);
+      });
+    });
+
+    // Research Grade toggle (independent of taxon)
+    document.querySelectorAll('.f-btn[data-q]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const turnOn = !btn.classList.contains('on');
+        btn.classList.toggle('on', turnOn);
+        S.grade = turnOn ? btn.dataset.q : '';
+        S.page  = 1;
+        S.more  = true;
+        mainFade.classList.add('show');
+        load(true);
+      });
+    });
+
+    /* ── Views ─────────────────────────────── */
+    function switchView(v) {
+      S.view = v;
+      ['imm','gal','list'].forEach(k => {
+        document.getElementById('view-' + k).style.display =
+          k === v ? (k === 'imm' ? 'flex' : 'block') : 'none';
+      });
+      document.querySelectorAll('.v-btn').forEach(b => {
+        b.classList.toggle('on', b.dataset.v === v);
+      });
+      if (v === 'imm') setTimeout(() => map.invalidateSize(), 120);
+    }
+
+    document.querySelectorAll('.v-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.dataset.v));
+    });
+
+    /* ── Modal popup (gallery + list) ──────── */
+    const overlayEl = document.getElementById('modal-overlay');
+    const mPhoto    = document.getElementById('modal-photo');
+    const mCommon   = document.getElementById('modal-common');
+    const mSci      = document.getElementById('modal-sci');
+    const mLink     = document.getElementById('modal-link');
+    const mMeta     = document.getElementById('modal-meta');
+    const mMapWrap  = document.getElementById('modal-map-wrap');
+
+    let modalMap = null;
+    let modalMapMarker = null;
+
+    function ensureModalMap() {
+      if (modalMap) return;
+      modalMap = L.map('modal-map', {
+        zoomControl: false,
+        attributionControl: false,
+        interactive: false,
+        dragging: false,
+        scrollWheelZoom: false,
+      }).setView([20, 0], 2);
+      L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        { maxZoom: 18 }
+      ).addTo(modalMap);
+    }
+
+    function openModal(obs) {
+      const common  = obs.taxon?.preferred_common_name || obs.taxon?.name || 'Unknown';
+      const sci     = obs.taxon?.name || '';
+      const date    = obs.observed_on ? fmt(obs.observed_on) : null;
+      const place   = obs.place_guess || null;
+      const quality = obs.quality_grade || null;
+      const notes   = obs.description || null;
+      const tax     = buildModalTaxonomy(obs.taxon);
+      const photo   = obs.photos?.[0];
+      const imgUrl  = photo ? (photo.url?.replace('square', 'medium') || photo.url) : '';
+      const acc     = obs.positional_accuracy ?? obs.public_positional_accuracy ?? null;
+
+      // Coordinates
+      const [lat, lng] = (obs.location || '').split(',').map(Number);
+      const hasCoords  = !isNaN(lat) && !isNaN(lng) && (lat || lng);
+      let coordStr = null;
+      if (hasCoords) {
+        const ns = lat >= 0 ? 'N' : 'S';
+        const ew = lng >= 0 ? 'E' : 'W';
+        coordStr = `${Math.abs(lat).toFixed(4)}° ${ns}  ${Math.abs(lng).toFixed(4)}° ${ew}`;
+      }
+
+      mPhoto.src = imgUrl;
+      mPhoto.alt = common;
+      mCommon.textContent = common;
+      mSci.textContent    = sci;
+      mLink.href          = `https://www.inaturalist.org/observations/${obs.id}`;
+
+      mMeta.innerHTML = '';
+      const gradeKey  = quality || 'casual';
+      const gradeTip  = GRADE_TIPS[gradeKey] || GRADE_TIPS.casual;
+      const gradeCell = quality
+        ? `<span class="modal-badge modal-badge-${quality}">${quality.replace('_',' ')}</span>` +
+          `<span class="modal-grade-tip" role="tooltip">${escapeHtml(gradeTip)}</span>`
+        : null;
+
+      // Reordered: when → where → quality → classification → notes → reference
+      const rows = [
+        date     && { k: 'Observed',    v: escapeHtml(date) },
+        place    && { k: 'Location',    v: escapeHtml(place) },
+        coordStr && { k: 'Coordinates', v: coordStr },
+        (acc != null && !isNaN(acc)) && { k: 'Accuracy', v: `± ${Number(acc).toLocaleString()} m` },
+        gradeCell && { k: 'Grade',      v: gradeCell, cls: 'modal-grade-item' },
+        tax      && { k: 'Taxonomy',    v: escapeHtml(tax) },
+        notes    && { k: 'Notes',       v: notes },
+        { k: 'Observation #', v: `#${obs.id}` },
+      ].filter(Boolean);
+
+      rows.forEach(({ k, v, cls }) => {
+        const item = document.createElement('div');
+        item.className = 'meta-item' + (cls ? ' ' + cls : '');
+        item.innerHTML = `<p class="meta-key">${k}</p><p class="meta-val">${v}</p>`;
+        mMeta.appendChild(item);
+      });
+
+      // Small map
+      if (hasCoords) {
+        mMapWrap.style.display = 'block';
+        ensureModalMap();
+        if (modalMapMarker) modalMap.removeLayer(modalMapMarker);
+        const icon = L.divIcon({
+          className: '',
+          html: `<div style="width:10px;height:10px;border-radius:50%;background:#2d6a2d;box-shadow:0 0 0 4px rgba(45,106,45,0.18),0 0 0 1.5px rgba(45,106,45,0.5);"></div>`,
+          iconSize: [10, 10], iconAnchor: [5, 5],
+        });
+        modalMapMarker = L.marker([lat, lng], { icon }).addTo(modalMap);
+        modalMap.setView([lat, lng], 11);
+        // Recompute size after the modal is visible
+        setTimeout(() => modalMap.invalidateSize(), 60);
+      } else {
+        mMapWrap.style.display = 'none';
+      }
+
+      overlayEl.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
-      overlay.classList.remove('open');
+      overlayEl.classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    document.getElementById('modal-close').addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-    /* ── Filters ──────────────────────────────── */
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        taxon     = btn.dataset.taxon;
-        page      = 1;
-        exhausted = false;
-        grid.innerHTML = '';
-        loadArea.style.display = 'none';
-        loadObs(true);
-      });
-    });
-
-    loadBtn.addEventListener('click', () => loadObs(false));
-
-    /* ── Utils ────────────────────────────────── */
-    function fmtDate(str) {
-      try {
-        const d = new Date(str + 'T00:00:00');
-        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-      } catch { return str; }
-    }
-
-    function buildTaxonomy(taxon) {
+    function buildModalTaxonomy(taxon) {
       if (!taxon) return '';
       const parts = [];
       if (taxon.iconic_taxon_name) parts.push(taxon.iconic_taxon_name);
@@ -677,10 +1776,88 @@
       return parts.join(' · ');
     }
 
-    /* ── Init ─────────────────────────────────── */
-    loadProfile();
-    loadObs(true);
-  </script>
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    overlayEl.addEventListener('click', e => { if (e.target === overlayEl) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+    /* ── Logo hover stats ──────────────────── */
+    async function loadProfile() {
+      try {
+        const r = await fetch(`${API}/users/${USER}`);
+        const d = await r.json();
+        const u = d.results?.[0];
+        if (!u) return;
+        const fmtN = n => (n ?? 0).toLocaleString();
+        document.getElementById('lt-obs').textContent = fmtN(u.observations_count);
+        document.getElementById('lt-spp').textContent = fmtN(u.species_count);
+        document.getElementById('lt-id').textContent  = fmtN(u.identifications_count);
+      } catch (e) {
+        console.error('profile load failed', e);
+      }
+    }
+    loadProfile();
+
+    /* ── Utils ─────────────────────────────── */
+    function fmt(s) {
+      try {
+        return new Date(s + 'T00:00:00').toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+      } catch { return s; }
+    }
+
+    function taxLine(taxon) {
+      if (!taxon) return '';
+      const parts = [];
+      if (taxon.iconic_taxon_name) parts.push(taxon.iconic_taxon_name);
+      if (taxon.rank) parts.push(taxon.rank.charAt(0).toUpperCase() + taxon.rank.slice(1));
+      return parts.join(' · ');
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function stripHtml(s) {
+      if (!s) return '';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = s;
+      return (tmp.textContent || tmp.innerText || '').trim();
+    }
+
+    /* ── Mobile notice + view lock ─────────── */
+    const mobileMQ      = window.matchMedia('(max-width: 768px)');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const mobileDismiss = document.getElementById('mobile-dismiss');
+
+    function applyMobileLock() {
+      if (mobileMQ.matches && S.view !== 'gal') switchView('gal');
+    }
+
+    mobileDismiss.addEventListener('click', () => {
+      mobileOverlay.classList.remove('show');
+    });
+
+    if (mobileMQ.matches) {
+      mobileOverlay.classList.add('show');
+    }
+
+    // Re-apply view lock if the user resizes into the mobile range
+    mobileMQ.addEventListener?.('change', applyMobileLock);
+    window.addEventListener('resize', applyMobileLock);
+
+    /* ── Init ──────────────────────────────── */
+    // Make sure map sizes correctly once Leaflet is ready
+    setTimeout(() => { map.invalidateSize(); }, 300);
+
+    load(true);
+    switchView(mobileMQ.matches ? 'gal' : 'imm');
+  </script>
 </body>
 </html>
