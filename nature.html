@@ -815,19 +815,33 @@
 
     .modal-close {
       position: absolute;
-      top: 0.75rem;
-      right: 0.85rem;
-      background: none;
-      border: none;
-      font-size: 1.3rem;
+      top: 0.65rem;
+      right: 0.65rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 0.95rem;
       line-height: 1;
       cursor: pointer;
-      color: #f8f7f4;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-      z-index: 10;
-      padding: 0.2rem;
+      color: #ffffff;
+      z-index: 20;
       font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
     }
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.78);
+      border-color: rgba(255, 255, 255, 0.32);
+      transform: scale(1.06);
+    }
+    .modal-close:active { transform: scale(0.96); }
 
     .modal-common {
       font-size: 1.2rem;
@@ -1002,9 +1016,25 @@
     }
 
     @media (max-width: 640px) {
-      .modal-box { grid-template-columns: 1fr; }
-      .modal-photo { min-height: 220px; }
-      .modal-body { border-left: none; border-top: 1px solid #e0ddd5; }
+      .modal-box {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: 92dvh;
+        -webkit-overflow-scrolling: touch;
+      }
+      .modal-photo {
+        height: auto;
+        min-height: 0;
+        max-height: 60vh;
+        aspect-ratio: 4 / 3;
+      }
+      .modal-body {
+        border-left: none;
+        border-top: 1px solid #e0ddd5;
+        overflow-y: visible;
+        padding: 1.5rem 1.25rem 1.75rem;
+      }
     }
   </style>
 </head>
@@ -1358,31 +1388,101 @@
 
       // Update main photo
       mainEmpty.style.display = 'none';
+      _lastShown = i;
       setPhoto(obs, 0);
 
       // Update info
       setInfo(obs);
+
+      // Warm up neighbors so the next scroll feels instant
+      preloadNeighbors(i, 3);
+    }
+
+    /* ── Image preloading ──────────────────── */
+    // Keeps a Set of URLs we've kicked off Image() loads for, plus a
+    // weak handle to the actual decoded element so it stays in the
+    // browser's HTTP/decoded cache while we're in this tab.
+    const _preloaded = new Map();
+    function preloadImage(url) {
+      if (!url || _preloaded.has(url)) return _preloaded.get(url);
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = url;
+      _preloaded.set(url, img);
+      return img;
+    }
+    function bigUrl(obs) {
+      const p = obs?.photos?.[0];
+      if (!p) return '';
+      return p.url?.replace('square', 'large') || p.url;
+    }
+    function medUrl(obs) {
+      const p = obs?.photos?.[0];
+      if (!p) return '';
+      return p.url?.replace('square', 'medium') || p.url;
+    }
+    // Preload large versions for cards near the current selection so
+    // when the user lands on one (or skips past it) the image is hot.
+    function preloadNeighbors(centerIdx, range = 3) {
+      for (let i = centerIdx - range; i <= centerIdx + range; i++) {
+        if (i < 0 || i >= S.obs.length || i === centerIdx) continue;
+        preloadImage(bigUrl(S.obs[i]));
+        preloadImage(medUrl(S.obs[i]));
+      }
     }
 
     /* ── Main photo ────────────────────────── */
+    let _photoToken = 0;       // cancels stale loads when user keeps scrolling
+    let _lastShown  = -1;      // last index displayed in main-img
+
     function setPhoto(obs, pi) {
       const photos = obs.photos || [];
       if (!photos.length) return;
       pi = Math.max(0, Math.min(pi, photos.length - 1));
       S.photo = pi;
 
-      const url = photos[pi].url?.replace('square', 'large') || photos[pi].url;
+      const photo = photos[pi];
+      const urlBig = photo.url?.replace('square', 'large')  || photo.url;
+      const urlMed = photo.url?.replace('square', 'medium') || photo.url;
 
-      // Fade out → swap → fade in
+      // Cancel any in-flight swap from a previous card
+      const myToken = ++_photoToken;
       mainFade.classList.add('show');
-      setTimeout(() => {
-        mainImg.src = url;
+
+      const apply = (src) => {
+        if (myToken !== _photoToken) return;        // newer call superseded us
+        mainImg.src = src;
         mainImg.alt = obs.taxon?.preferred_common_name || '';
         mainImg.classList.remove('kb');
         void mainImg.offsetWidth;
         mainImg.classList.add('kb');
-        mainFade.classList.remove('show');
-      }, 220);
+        // Wait one frame so the new src is committed before fading away
+        requestAnimationFrame(() => {
+          if (myToken === _photoToken) mainFade.classList.remove('show');
+        });
+      };
+
+      // 1) Try the large (already-cached) preload first
+      const cachedBig = _preloaded.get(urlBig);
+      if (cachedBig && cachedBig.complete && cachedBig.naturalWidth > 0) {
+        apply(urlBig);
+      } else {
+        // 2) Show medium quickly while large loads
+        const med = preloadImage(urlMed);
+        if (med.complete && med.naturalWidth > 0) {
+          apply(urlMed);
+        } else {
+          med.addEventListener('load',  () => { if (myToken === _photoToken) apply(urlMed); }, { once: true });
+          med.addEventListener('error', () => { if (myToken === _photoToken) mainFade.classList.remove('show'); }, { once: true });
+        }
+        // 3) Upgrade to large when it finishes
+        const big = preloadImage(urlBig);
+        if (!big.complete) {
+          big.addEventListener('load', () => {
+            if (myToken === _photoToken) apply(urlBig);
+          }, { once: true });
+        }
+      }
 
       // Photo dots
       photoNav.innerHTML = '';
@@ -1534,6 +1634,33 @@
           }
         }
       }
+
+      // While scrolling/dragging: swap the main image to whichever card is
+      // currently nearest center, so users see images flow by in real time
+      // (using whichever resolution is already loaded — typically the rail
+      // thumb falls back to medium as it warms up).
+      if (S.drag || snapping || Math.abs(S.vel) > 0.01) {
+        const near = Math.round(S.pos);
+        if (near !== _lastShown && S.obs[near]) {
+          _lastShown = near;
+          const obs = S.obs[near];
+          // Pick best already-decoded source
+          const big = _preloaded.get(bigUrl(obs));
+          const med = preloadImage(medUrl(obs));
+          let src = null;
+          if (big && big.complete && big.naturalWidth > 0)        src = bigUrl(obs);
+          else if (med && med.complete && med.naturalWidth > 0)   src = medUrl(obs);
+          else                                                    src = obs.photos?.[0]?.url || ''; // square thumb as last resort
+          if (src) {
+            mainImg.src = src;
+            mainImg.alt = obs.taxon?.preferred_common_name || '';
+          }
+          mainFade.classList.remove('show');  // no fade-cover during scroll
+          // Keep priming further-out neighbors
+          preloadNeighbors(near, 2);
+        }
+      }
+
       renderRail();
       requestAnimationFrame(tick);
     }
@@ -1547,10 +1674,14 @@
     requestAnimationFrame(tick);
 
     /* ── Rail input ────────────────────────── */
+    // Sensitivity dialed down so a normal wheel tick advances ~1 card,
+    // not several. Velocity also clamped tighter for finer control.
     railEl.addEventListener('wheel', e => {
       e.preventDefault();
-      S.vel += e.deltaY * 0.0025;
-      S.vel  = Math.max(-1, Math.min(1, S.vel));
+      // Normalize across mouse-wheel (deltaMode 0/1) vs trackpads
+      const norm = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      S.vel += norm * 0.0011;
+      S.vel  = Math.max(-0.55, Math.min(0.55, S.vel));
       snapping = false;
     }, { passive: false });
 
@@ -1566,7 +1697,7 @@
       if (!S.drag) return;
       const dy = e.clientY - S.dragY;
       const np = S.dragPos - dy / STEP;
-      S.vel    = (np - S.pos) * 0.55;
+      S.vel    = (np - S.pos) * 0.4;
       S.pos    = Math.max(0, Math.min(S.obs.length - 1, np));
     });
 
@@ -1584,7 +1715,7 @@
       if (!S.drag) return;
       const dy = e.touches[0].clientY - S.dragY;
       const np = S.dragPos - dy / STEP;
-      S.vel    = (np - S.pos) * 0.5;
+      S.vel    = (np - S.pos) * 0.4;
       S.pos    = Math.max(0, Math.min(S.obs.length - 1, np));
     }, { passive: true });
 
@@ -1757,12 +1888,12 @@
       }
 
       overlayEl.classList.add('open');
-      document.body.style.overflow = 'hidden';
+      // body already has overflow:hidden in CSS — touching it inline can leave
+      // mobile gallery scroll in a stuck state when the overlay closes
     }
 
     function closeModal() {
       overlayEl.classList.remove('open');
-      document.body.style.overflow = '';
     }
 
     function buildModalTaxonomy(taxon) {
