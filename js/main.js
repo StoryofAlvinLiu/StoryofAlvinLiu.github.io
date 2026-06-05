@@ -440,7 +440,11 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Initialize after boot sequence completes
+let portfolioInitialized = false;
 function initializePortfolio() {
+  if (portfolioInitialized) return;
+  portfolioInitialized = true;
+
   document.querySelectorAll('.scroll-animate').forEach(section => {
     observer.observe(section);
   });
