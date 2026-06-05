@@ -263,6 +263,7 @@ input {
 }
 
 .portfolio-content.visible {
+  display: block;
   opacity: 1;
 }
 

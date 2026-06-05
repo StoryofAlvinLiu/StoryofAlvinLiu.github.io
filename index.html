@@ -7,11 +7,10 @@
   <title>Alvin Liu - Cross-disciplinary Software Engineer & Business Strategist</title>
   <meta name="description" content="Alvin Liu builds software, strategies, and sustainable solutions. Software Engineering, Business Operations, Marketing & Advertising, Environment & Sustainability.">
 
-<!-- Favicon -->
-<link rel="icon" type="image/avif" href="images/FAVICON.avif">
-<link rel="shortcut icon" type="image/avif" href="images/FAVICON.avif">
-<link rel="apple-touch-icon" href="images/FAVICON.avif">
-
+  <!-- Favicon -->
+  <link rel="icon" type="image/avif" href="images/FAVICON.avif">
+  <link rel="shortcut icon" type="image/avif" href="images/FAVICON.avif">
+  <link rel="apple-touch-icon" href="images/FAVICON.avif">
 
   <!-- Google Analytics G-P3BT6ENHW2 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-P3BT6ENHW2"></script>
@@ -22,44 +21,220 @@
     gtag('config', 'G-P3BT6ENHW2');
   </script>
 
-
   <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    /* ─── Animated Hero — fluid scale tokens ────────────────────────────────
+       All hero sizing derives from these. JS reads wrap.offsetHeight / 5
+       for ITEM_H so CSS and animation always stay in sync.                 */
+    :root {
+      --fs-label:  clamp(22px, 3.8vw + 8px, 48px);
+      --fs-tick:   clamp(20px, 3.5vw + 7px, 46px);
+      --item-h:    clamp(33px, 5.7vw + 12px, 72px);
+      --wrap-h:    calc(var(--item-h) * 5);
+      --grad-h:    calc(var(--item-h) * 1.8);
+      --fs-h2:     clamp(30px, 4.8vw + 8px, 62px);
+      --fs-p:      clamp(13px, 1.2vw + 7px, 18px);
+      --fs-hint:   clamp(10px, 0.6vw + 6px, 12px);
+      --hero-pad:  clamp(1.5rem, 5vw, 4rem);
+    }
+
+    /* ─── Hero layout ────────────────────────────────────────────────────── */
+    #hero {
+      height: 100svh !important;
+      width: 100% !important;
+      overflow: hidden !important;
+      display: grid !important;
+      grid-template-columns: 1fr auto;
+      align-items: center !important;
+      padding: 0 0 0 var(--hero-pad) !important;
+      column-gap: clamp(1rem, 3vw, 2.5rem);
+      background: #0a0a0a;
+    }
+    #hero-content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* ─── Hero right column (button + image) ────────────────────────────── */
+    #hero-right {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      align-self: end;
+      gap: clamp(0.75rem, 2vw, 1.5rem);
+    }
+    #hero-right .resume-btn {
+      margin-bottom: calc(clamp(200px, 42vh, 420px) / 3); /* 1/3 up from image bottom */
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* ─── Hero image ─────────────────────────────────────────────────────── */
+    #hero-img {
+      height: auto;
+      width: auto;
+      max-height: clamp(200px, 42vh, 420px);
+      max-width: clamp(160px, 20vw, 320px);
+      pointer-events: none;
+      user-select: none;
+      display: block;
+    }
+    @media (max-width: 959px) {
+      #hero { grid-template-columns: 1fr !important; padding-right: var(--hero-pad) !important; }
+      #hero-right { display: none; }
+    }
+
+    /* ─── Phase 1 : "I work with [ticker]" ──────────────────────────────── */
+    #row1 {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: visible;
+      min-width: 0;
+    }
+    #label-work::after { content: '\00A0'; }
+    #label-work {
+      font-size: var(--fs-label);
+      font-weight: 500;
+      color: #fff;
+      white-space: nowrap;
+      flex-shrink: 0;
+      line-height: var(--item-h);
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    #ticker-wrap {
+      position: relative;
+      height: var(--wrap-h);
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black calc(var(--grad-h)),
+        black calc(100% - var(--grad-h)),
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black calc(var(--grad-h)),
+        black calc(100% - var(--grad-h)),
+        transparent 100%
+      );
+    }
+    #ticker-inner { position: absolute; left: 0; right: 0; }
+    .tick-item {
+      height: var(--item-h);
+      display: flex;
+      align-items: center;
+      font-size: var(--fs-tick);
+      font-weight: 400;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+      position: absolute;
+      left: 0; right: 0;
+    }
+
+    /* ─── Phase 2 : "Problems that need / Solutions" ─────────────────────── */
+    #phase2 {
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+    #line1-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: clamp(8px, 1.2vw, 14px);
+      min-height: var(--item-h);
+      flex-wrap: wrap;
+    }
+    #word-problems {
+      font-size: var(--fs-label);
+      font-weight: 500;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+    }
+    #suffix1-pre {
+      font-size: var(--fs-label);
+      font-weight: 400;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    #solutions-reveal {
+      display: flex;
+      align-items: center;
+      min-height: calc(var(--fs-h2) * 1.15);
+    }
+    #word-solutions {
+      font-size: var(--fs-h2);
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+      line-height: 1.1;
+    }
+
+    /* ─── Intersection line ──────────────────────────────────────────────── */
+    #intersection-wrap {
+      font-size: var(--fs-p);
+      font-weight: 400;
+      color: #888;
+      letter-spacing: 0.03em;
+      white-space: normal;
+      max-width: 100%;
+      margin-top: 4px;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    #int-tech, #int-innov, #int-lead { color: #888; }
+
+    /* ─── Scroll hint ────────────────────────────────────────────────────── */
+    #scroll-hint {
+      font-size: var(--fs-hint);
+      color: #666;
+      letter-spacing: 0.02em;
+      margin-top: 4px;
+      opacity: 0;
+    }
+    #click-me {
+      color: #888;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.2s;
+      text-decoration-color: currentColor;
+    }
+    #click-me:hover { color: #bbb; }
+
+    /* ─── Blinking cursor ────────────────────────────────────────────────── */
+    .hero-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1em;
+      background: #fff;
+      vertical-align: text-bottom;
+      margin-left: 2px;
+      animation: heroBlink 0.9s step-end infinite;
+    }
+    @keyframes heroBlink { 50% { opacity: 0; } }
+  </style>
 </head>
 <body>
-  <!-- Boot Sequence -->
-  <div class="boot-sequence" id="bootSequence">
-    
-    <div id="logo" class="screen active">
-      <img src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/refs/heads/main/images/2026.01_ALVINOS_TransparentIcon.png" alt="AlvinOS logo">
-    </div>
 
-<button class="skip-loading-btn" id="skipLoadingBtn" style="position:fixed;top:20px;right:20px;z-index:10001;padding:12px 24px;background:rgba(0,255,136,0.2);border:1px solid #00ff88;border-radius:8px;color:#00ff88;font-family:'Consolas','Courier New',monospace;font-size:0.9rem;cursor:pointer;backdrop-filter:blur(10px);transition:all 0.3s;opacity:0;pointer-events:none;" onclick="skipLoading()">Skip Loading →</button>
+  <!-- Background Effects -->
+  <div class="bg-gradient" id="bgGradient"></div>
 
-    <div id="boot" class="screen">
-      <div class="boot">
-        <h2>ALVIN OS BOOT MANAGER</h2><br>
-        Choose an operating system to start.<br>
-        Use arrow keys, then ENTER<br><br>
-        <div class="option active" id="bootOption">ALVIN OS v1.0 (STABLE)</div>
-        <br>
-        To specify an advanced option, press Coming soon!
-        <br><br>
-        Seconds until start: <span id="timer">12</span>
-      </div>
-    </div>
-
-
-    <div id="console" class="screen">
-      <div class="console" id="terminal"></div>
-    </div>
-  </div>
-
-
-  <!-- Portfolio Content (Hidden initially) -->
-  <div class="portfolio-content" id="portfolioContent" style="display: none;">
-    <!-- Background Effects -->
-    <div class="bg-gradient" id="bgGradient"></div>
-
+  <!-- portfolio-content gets 'visible' class so main.js initialises immediately -->
+  <div class="portfolio-content visible" id="portfolioContent">
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
@@ -85,7 +260,6 @@
       </button>
     </nav>
 
-
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
       <a href="/" class="mobile-link">Home</a>
@@ -96,25 +270,54 @@
       <a href="contact.html" class="mobile-link">Get in touch</a>
     </div>
 
-
     <!-- Hero Section -->
-    <section class="hero parallax-section" id="hero">
-      <div class="hero-container">
-        <div class="hero-image parallax-layer" data-speed="0.5">
-          <img src="images/2026.01_ALVINHEROBODY.png" alt="Alvin Liu - Software Engineer & Business Strategist" loading="eager">
+    <section id="hero">
+      <div id="hero-content">
+
+        <!-- Phase 1 -->
+        <div id="row1">
+          <div id="label-work">I work with</div>
+          <div id="ticker-wrap">
+            <div id="ticker-inner"></div>
+          </div>
         </div>
-        <div class="hero-text parallax-layer" data-speed="0.3">
-          <h1 class="hero-title">ALVIN LIU</h1>
-          <p class="hero-subtitle">Cross-disciplinary Software Engineer<br>& Business Strategist</p>
-          <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download Resume
-          </a>
+
+        <!-- Phase 2 -->
+        <div id="phase2">
+          <div id="line1-wrap">
+            <span id="word-problems">Problems</span>
+            <span id="suffix1-pre">that need</span>
+          </div>
+          <div id="solutions-reveal">
+            <div id="word-solutions"></div>
+          </div>
+          <div id="intersection-wrap">
+            at the intersection of
+            <span id="int-tech">technology</span>,
+            <span id="int-innov">innovation</span>, and
+            <span id="int-lead">leadership.</span>
+          </div>
+          <div id="scroll-hint">
+            scroll down to learn more, or <a id="click-me" href="https://www.officeofalvinliu.com/projects">click me to view projects!</a>
+          </div>
         </div>
+
+      </div>
+
+      <div id="hero-right">
+        <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Resume
+        </a>
+        <img
+          id="hero-img"
+          src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/main/images/2026.01_ALVINHEROBODY.png"
+          alt="Alvin Liu"
+        />
       </div>
     </section>
 
@@ -125,7 +328,6 @@
         <h2 class="section-title">Take a look at what I can do for you!</h2>
         <p class="section-subtitle">Here are some of my skills and I'm always trying to learn more!</p>
 
-
         <div class="skills-carousel">
           <button class="carousel-arrow left" id="prevCategory" aria-label="Previous category">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -133,14 +335,9 @@
             </svg>
           </button>
 
-
           <div class="category-display">
             <h3 class="category-title" id="categoryTitle">Software Engineering</h3>
-
-
             <div class="icons-slider" id="iconsSlider"></div>
-
-
             <div class="category-content">
               <div class="content-left">
                 <div class="project-preview" id="projectPreview">
@@ -148,21 +345,16 @@
                 </div>
                 <div class="featured-projects" id="featuredProjects"></div>
               </div>
-
-
               <div class="content-right">
                 <p class="category-description" id="categoryDescription"></p>
                 <div class="tools-list" id="toolsList"></div>
                 <a href="projects.html" class="cta-btn">Learn what I can do for you here →</a>
               </div>
             </div>
-
-
             <div class="carousel-progress">
               <div class="progress-bar" id="progressBar"></div>
             </div>
           </div>
-
 
           <button class="carousel-arrow right" id="nextCategory" aria-label="Next category">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -171,7 +363,6 @@
           </button>
         </div>
 
-
         <div class="carousel-dots" id="categoryDots"></div>
       </div>
     </section>
@@ -179,12 +370,10 @@
     <!-- Spacer Section to prevent jitter -->
     <div class="section-spacer"></div>
 
-
     <!-- Recommendations -->
     <section class="recommendations-section scroll-animate" id="recommendations">
       <div class="container">
         <h2 class="section-title">What others say</h2>
-
 
         <div class="recommendations-scroll-container">
           <button class="scroll-arrow left" id="scrollLeft" aria-label="Scroll left">
@@ -192,11 +381,7 @@
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
           </button>
-
-
           <div class="recommendations-carousel-horizontal" id="recommendationsCarousel"></div>
-
-
           <button class="scroll-arrow right" id="scrollRight" aria-label="Scroll right">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6"></polyline>
@@ -212,7 +397,6 @@
       <div class="container">
         <h2 class="section-title">Let's work together</h2>
         <p class="contact-subtitle">Ready to bring your ideas to life? Get in touch!</p>
-
 
         <div class="contact-buttons">
           <a href="mailto:alvinliu@officeofalvinliu.com" class="contact-btn primary">
@@ -248,11 +432,369 @@
         </div>
       </div>
     </footer>
-  </div>
+
+  </div><!-- end .portfolio-content -->
 
 
   <script src="js/data.js"></script>
-  <script src="js/boot.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- Hero animation -->
+  <script>
+    const ITEMS = [
+      'Software', 'UI/UX Design', 'Customer Discovery',
+      'Intellectual Property', 'Public Speaking', 'Data Science',
+      'Market Research', 'Problems',
+    ];
+
+    const ANIM_MS   = 320;
+    const HOLD_MS   = 180;
+    const ERASE_SPD = 34;
+    const TYPE_SPD  = 80;
+
+    const RED    = '#E24B4A';
+    const BLUE   = '#378ADD';
+    const PURPLE = '#A855F7';
+    const GOLD   = '#F59E0B';
+
+    let ITEM_H, WRAP_H, CENTER_PX;
+
+    function recalcMetrics() {
+      WRAP_H    = document.getElementById('ticker-wrap').offsetHeight;
+      ITEM_H    = WRAP_H / 5;
+      CENTER_PX = WRAP_H / 2 - ITEM_H / 2;
+    }
+
+    let running  = false;
+    let domItems = [];
+
+    const sleep      = ms  => new Promise(r => setTimeout(r, ms));
+    const lerp       = (a, b, t) => a + (b - a) * t;
+    const easeOut    = t   => 1 - Math.pow(1 - t, 3);
+    const easeSettle = t   => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+
+    function animate(dur, fn) {
+      return new Promise(resolve => {
+        const start = performance.now();
+        (function frame(now) {
+          const t = Math.min((now - start) / dur, 1);
+          fn(t);
+          t < 1 ? requestAnimationFrame(frame) : resolve();
+        })(performance.now());
+      });
+    }
+
+    function distToOpacity(dist) {
+      return Math.max(0, Math.pow(Math.max(0, 1 - dist / 3.5), 1.6));
+    }
+    function distToWeight(dist) {
+      return Math.round(lerp(700, 400, Math.min(1, dist)));
+    }
+    function distToSize(dist) {
+      return lerp(ITEM_H * (50 / 72), ITEM_H * (44 / 72), Math.min(1, dist));
+    }
+
+    function snapPositions(ci) {
+      domItems.forEach((el, i) => {
+        const dist = Math.abs(i - ci);
+        el.style.top        = (CENTER_PX + (i - ci) * ITEM_H) + 'px';
+        el.style.opacity    = distToOpacity(dist);
+        el.style.fontWeight = distToWeight(dist);
+        el.style.fontSize   = distToSize(dist) + 'px';
+      });
+    }
+
+    function scrollToIndex(ci) {
+      return new Promise(resolve => {
+        const prev  = ci - 1;
+        const start = performance.now();
+        (function frame(now) {
+          const t = Math.min((now - start) / ANIM_MS, 1);
+          const e = easeSettle(t);
+          domItems.forEach((el, i) => {
+            const yFrom    = CENTER_PX + (i - prev) * ITEM_H;
+            const yTo      = CENTER_PX + (i - ci)   * ITEM_H;
+            const distFrom = Math.abs(i - prev);
+            const distTo   = Math.abs(i - ci);
+            el.style.top        = lerp(yFrom, yTo, e) + 'px';
+            el.style.opacity    = lerp(distToOpacity(distFrom), distToOpacity(distTo), e);
+            el.style.fontWeight = Math.round(lerp(distToWeight(distFrom), distToWeight(distTo), e));
+            el.style.fontSize   = lerp(distToSize(distFrom), distToSize(distTo), e) + 'px';
+          });
+          t < 1 ? requestAnimationFrame(frame) : (snapPositions(ci), resolve());
+        })(performance.now());
+      });
+    }
+
+    async function typeText(el, text, speed, cursor) {
+      let typed = '';
+      for (const char of text) {
+        if (!running) return;
+        typed += char;
+        el.textContent = typed;
+        if (cursor) el.appendChild(cursor);
+        await sleep(speed + Math.random() * 18);
+      }
+    }
+
+    async function eraseLabel() {
+      const el = document.getElementById('label-work');
+      let text = el.textContent;
+      while (text.length > 0 && running) {
+        text = text.slice(0, -1);
+        el.textContent = text;
+        await sleep(ERASE_SPD + Math.random() * 14);
+      }
+    }
+
+    function hexToRgb(hex) {
+      return [
+        parseInt(hex.slice(1, 3), 16),
+        parseInt(hex.slice(3, 5), 16),
+        parseInt(hex.slice(5, 7), 16),
+      ];
+    }
+
+    function animateColor(el, fromHex, toHex, dur) {
+      const [r1, g1, b1] = hexToRgb(fromHex);
+      const [r2, g2, b2] = hexToRgb(toHex);
+      return animate(dur, t => {
+        const e = easeOut(t);
+        el.style.color = `rgb(
+          ${Math.round(lerp(r1, r2, e))},
+          ${Math.round(lerp(g1, g2, e))},
+          ${Math.round(lerp(b1, b2, e))}
+        )`;
+      });
+    }
+
+    function getComputedHex(el) {
+      const [r, g, b] = getComputedStyle(el).color.match(/\d+/g);
+      return '#' + [r, g, b].map(v => parseInt(v).toString(16).padStart(2, '0')).join('');
+    }
+
+    async function startAnimation() {
+      running = false;
+      await sleep(60);
+      running = true;
+
+      recalcMetrics();
+
+      const wrap       = document.getElementById('ticker-wrap');
+      const inner      = document.getElementById('ticker-inner');
+      const labelEl    = document.getElementById('label-work');
+      const phase2     = document.getElementById('phase2');
+      const row1       = document.getElementById('row1');
+      const wpEl       = document.getElementById('word-problems');
+      const s1pre      = document.getElementById('suffix1-pre');
+      const wsEl       = document.getElementById('word-solutions');
+      const intWrap    = document.getElementById('intersection-wrap');
+      const scrollHint = document.getElementById('scroll-hint');
+
+      wrap.style.opacity        = '1';
+      wrap.style.transition     = '';
+      labelEl.style.opacity     = '0';
+      labelEl.style.transform   = 'translateX(-24px)';
+      labelEl.style.transition  = '';
+      phase2.style.display      = 'none';
+      row1.style.display        = 'flex';
+      inner.innerHTML           = '';
+      domItems                  = [];
+      wsEl.innerHTML            = '';
+      wsEl.style.opacity        = '0';
+      wpEl.style.opacity        = '0';
+      wpEl.style.color          = '';
+      s1pre.style.opacity       = '0';
+      s1pre.style.transform     = 'translateY(18px)';
+      intWrap.innerHTML         = 'at the intersection of <span id="int-tech">technology</span>, <span id="int-innov">innovation</span>, and <span id="int-lead">leadership</span>';
+      intWrap.style.opacity     = '0';
+      intWrap.style.transform   = 'translateY(10px)';
+      scrollHint.style.opacity  = '0';
+
+      ITEMS.forEach(text => {
+        const el = document.createElement('div');
+        el.className   = 'tick-item';
+        el.textContent = '';
+        el.style.cssText = 'position:absolute; left:0; right:0; opacity:0;';
+        inner.appendChild(el);
+        domItems.push(el);
+      });
+      domItems.forEach((el, i) => {
+        el.style.top     = (CENTER_PX + i * ITEM_H) + 'px';
+        el.style.opacity = '0';
+      });
+
+      await sleep(400);
+
+      // 1. "I work with" slides in
+      labelEl.style.transition = 'opacity 500ms ease, transform 500ms ease';
+      labelEl.style.opacity    = '1';
+      labelEl.style.transform  = 'translateX(0)';
+      await sleep(560);
+      labelEl.style.transition = '';
+      await sleep(120);
+
+      // 2. Type "Software" at center
+      const centerEl = domItems[0];
+      centerEl.style.opacity    = '1';
+      centerEl.style.fontWeight = '500';
+      centerEl.style.top        = CENTER_PX + 'px';
+      const cursor = document.createElement('span');
+      cursor.className = 'hero-cursor';
+      await typeText(centerEl, ITEMS[0], TYPE_SPD, cursor);
+      await sleep(400);
+      cursor.remove();
+
+      // 3. Neighbours drift in
+      for (let i = 1; i < ITEMS.length; i++) domItems[i].textContent = ITEMS[i];
+      const d1 = domItems[1];
+      d1.style.top = (CENTER_PX + ITEM_H) + 'px';
+      animate(500, t => { d1.style.opacity = distToOpacity(1) * easeOut(t); });
+      await sleep(80);
+      const d2 = domItems[2];
+      d2.style.top = (CENTER_PX + 2 * ITEM_H) + 'px';
+      await animate(500, t => { d2.style.opacity = distToOpacity(2) * easeOut(t); });
+      await sleep(250);
+
+      // 4. Scroll through all items except Problems
+      for (let i = 1; i < ITEMS.length - 1; i++) {
+        if (!running) return;
+        await scrollToIndex(i);
+        await sleep(HOLD_MS);
+      }
+
+      // 5. Scroll to "Problems" — color shifts red simultaneously
+      const lastIdx    = ITEMS.length - 1;
+      const problemsEl = domItems[lastIdx];
+      animateColor(problemsEl, getComputedHex(problemsEl), RED, ANIM_MS);
+      await scrollToIndex(lastIdx);
+      await sleep(500);
+
+      // 6. Fade out neighbours + erase label
+      const others = domItems.filter((_, i) => i !== lastIdx);
+      await Promise.all([
+        eraseLabel(),
+        animate(400, t => {
+          others.forEach(el => {
+            const d = Math.abs(domItems.indexOf(el) - lastIdx);
+            el.style.opacity = distToOpacity(d) * (1 - easeOut(t));
+          });
+        }),
+      ]);
+
+      // 7. FLIP: slide "Problems" into phase2
+      const fromRect  = problemsEl.getBoundingClientRect();
+      row1.style.display   = 'none';
+      wrap.style.opacity   = '0';
+      phase2.style.display = 'flex';
+      wpEl.style.color     = RED;
+      wpEl.style.opacity   = '0';
+      wpEl.getBoundingClientRect();
+      const toRect    = wpEl.getBoundingClientRect();
+      const overlayFS = getComputedStyle(wpEl).fontSize;
+      const overlay   = document.createElement('div');
+      overlay.textContent  = 'Problems';
+      overlay.style.cssText = [
+        'position:fixed', 'z-index:9999', 'pointer-events:none',
+        'margin:0', 'padding:0', 'white-space:nowrap',
+        `line-height:${ITEM_H}px`,
+        `font-size:${overlayFS}`,
+        'font-weight:500', 'font-family:inherit',
+        `color:${RED}`,
+        `left:${fromRect.left}px`,
+        `top:${fromRect.top}px`,
+      ].join(';');
+      document.body.appendChild(overlay);
+      await animate(420, t => {
+        const e = easeOut(t);
+        overlay.style.left = lerp(fromRect.left, toRect.left, e) + 'px';
+        overlay.style.top  = lerp(fromRect.top,  toRect.top,  e) + 'px';
+      });
+      wpEl.style.opacity = '1';
+      overlay.remove();
+      await sleep(80);
+
+      // 8. "that need" fades up
+      await animate(380, t => {
+        const e = easeOut(t);
+        s1pre.style.opacity   = e;
+        s1pre.style.transform = `translateY(${18 * (1 - e)}px)`;
+      });
+      await sleep(30);
+
+      // 9. "Solutions" — letter-by-letter stagger
+      const SOLUTIONS_TEXT = 'Solutions';
+      const LETTER_DUR     = 480;
+      const STAGGER        = 54;
+      const letterSpans = SOLUTIONS_TEXT.split('').map(char => {
+        const span = document.createElement('span');
+        span.textContent  = char;
+        span.style.cssText = 'display:inline-block; opacity:0; transform:translateY(30px);';
+        wsEl.appendChild(span);
+        return span;
+      });
+      wsEl.style.opacity = '1';
+      await sleep(20);
+      letterSpans.forEach((span, i) => {
+        setTimeout(() => {
+          animate(LETTER_DUR, t => {
+            const e = easeOut(t);
+            span.style.opacity   = e;
+            span.style.transform = `translateY(${30 * (1 - e)}px)`;
+          });
+        }, i * STAGGER);
+      });
+      await sleep(LETTER_DUR + SOLUTIONS_TEXT.length * STAGGER + 100);
+
+      // 10. Intersection: gibberish → decrypt
+      const FULL_TEXT   = 'at the intersection of technology, innovation, and leadership.';
+      const GLYPH_POOL  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*-_=+[];:\'",./<>?~`';
+      const SCAN_WINDOW = 5;
+      const randGlyph   = () => GLYPH_POOL[Math.floor(Math.random() * GLYPH_POOL.length)];
+      intWrap.innerHTML = '<span id="crypt-display" style="color:#888"></span>';
+      const cryptDisplay = document.getElementById('crypt-display');
+      await animate(200, t => {
+        const e = easeOut(t);
+        intWrap.style.opacity   = e;
+        intWrap.style.transform = `translateY(${10 * (1 - e)}px)`;
+      });
+      const gibberish = Array.from(FULL_TEXT, () => randGlyph());
+      for (let i = 0; i < FULL_TEXT.length; i++) {
+        cryptDisplay.textContent = gibberish.slice(0, i + 1).join('');
+        await sleep(14 + Math.random() * 10);
+      }
+      await sleep(380);
+      for (let head = 0; head <= FULL_TEXT.length + SCAN_WINDOW; head++) {
+        cryptDisplay.textContent = FULL_TEXT.split('').map((_, j) => {
+          if (j < head - SCAN_WINDOW) return FULL_TEXT[j];
+          if (j < head)               return randGlyph();
+          return gibberish[j];
+        }).join('');
+        await sleep(26);
+      }
+      intWrap.innerHTML = 'at the intersection of <span id="int-tech">technology</span>, <span id="int-innov">innovation</span>, and <span id="int-lead">leadership.</span>';
+      await sleep(200);
+
+      // 11. Scroll hint fades in
+      sleep(150).then(() =>
+        animate(420, t => { scrollHint.style.opacity = easeOut(t) * 0.85; })
+      );
+
+      // 12. Highlight keywords
+      async function highlightKeyword(el, fromHex, toHex) {
+        await animateColor(el, fromHex, toHex, 420);
+        await sleep(480);
+        await animateColor(el, toHex, '#999', 580);
+      }
+      await sleep(280);
+      await highlightKeyword(document.getElementById('int-tech'),  '#888', BLUE);
+      await sleep(60);
+      await highlightKeyword(document.getElementById('int-innov'), '#888', PURPLE);
+      await sleep(60);
+      await highlightKeyword(document.getElementById('int-lead'),  '#888', GOLD);
+    }
+
+    startAnimation();
+  </script>
 </body>
 </html>
