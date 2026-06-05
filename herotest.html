@@ -30,8 +30,14 @@
     #row1 {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 0;
       overflow: visible;
+    }
+    /* Appends a font-native word space so the gap between "I work with"
+       and the ticker always matches inter-word spacing for whatever font
+       renders on the user's platform. */
+    #label-work::after {
+      content: '\00A0';
     }
     #label-work {
       font-size: 48px;
@@ -136,7 +142,7 @@
       font-size: 12px;
       color: #666;
       letter-spacing: 0.02em;
-      margin-top: 26px;
+      margin-top: 4px;
       opacity: 0;
     }
     #click-me {
