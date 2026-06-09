@@ -176,6 +176,7 @@ body {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
+  touch-action: manipulation;
 }
 
 #list-view {
@@ -263,9 +264,207 @@ body {
   line-height: 1.6;
 }
 .tt-used-in strong { color: #111; font-size: 11px; display: block; margin-bottom: 3px; }
+
+/* ── Mobile: filter drawer ───────────────────── */
+#filter-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px; height: 100vh;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  z-index: 1100;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  display: flex; flex-direction: column;
+  padding: 20px 16px 16px;
+  gap: 16px;
+  overflow-y: auto;
+}
+#filter-drawer.open { transform: translateX(0); }
+#drawer-close {
+  align-self: flex-end;
+  background: none; border: none;
+  font-size: 18px; cursor: pointer;
+  color: #888; padding: 0 2px;
+  line-height: 1;
+  font-family: inherit;
+}
+
+/* ── Mobile: sheet + drawer overlay ─────────── */
+#mob-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1000;
+}
+#mob-overlay.visible { display: block; }
+
+/* ── Mobile: filter FAB ──────────────────────── */
+#filter-fab {
+  display: none;
+  position: fixed;
+  bottom: 20px; right: 16px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: #111; color: #fff;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  z-index: 900;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+  align-items: center; justify-content: center;
+}
+
+/* ── Mobile: sheet handle + close ────────────── */
+#sheet-handle {
+  display: none;
+  width: 36px; height: 4px;
+  background: #ddd; border-radius: 2px;
+  margin: 10px auto 2px;
+  flex-shrink: 0;
+}
+#sheet-close {
+  display: none;
+  position: absolute;
+  top: 10px; right: 12px;
+  background: #f0f0f0; border: none;
+  border-radius: 50%; width: 26px; height: 26px;
+  font-size: 13px; cursor: pointer;
+  align-items: center; justify-content: center;
+  color: #555; z-index: 2;
+  font-family: inherit;
+}
+
+/* ── Mobile: header bar ──────────────────────── */
+#mobile-header {
+  display: none;
+  align-items: center;
+  padding: 0 10px;
+  height: 48px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
+  gap: 8px;
+}
+.mh-title {
+  font-size: 13px; font-weight: 800; color: #111;
+  white-space: nowrap; line-height: 1.1; flex-shrink: 0;
+}
+.mh-title small {
+  display: block; font-size: 9px; font-weight: 400; color: #999;
+}
+.mh-spacer { flex: 1; }
+.mh-vtoggle {
+  display: flex; gap: 2px;
+  background: #f0f0f0; padding: 2px; border-radius: 6px;
+}
+.mh-vtoggle button {
+  padding: 4px 7px; font-size: 9.5px; font-weight: 600;
+  border: none; border-radius: 5px; cursor: pointer;
+  background: transparent; color: #777;
+  font-family: inherit; white-space: nowrap; transition: all 0.15s;
+}
+.mh-vtoggle button.active {
+  background: #fff; color: #111;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+.mh-disp { display: flex; gap: 2px; }
+.mh-disp button {
+  padding: 4px 8px; font-size: 9.5px; font-weight: 600;
+  border: 1px solid #ddd; border-radius: 4px; cursor: pointer;
+  background: #fff; color: #888; font-family: inherit; transition: all 0.15s;
+}
+.mh-disp button.active { background: #111; color: #fff; border-color: #111; }
+#mh-filter-btn {
+  padding: 5px 9px; font-size: 14px; line-height: 1;
+  border: 1px solid #ddd; border-radius: 4px; cursor: pointer;
+  background: #fff; color: #444; font-family: inherit;
+  flex-shrink: 0; transition: all 0.15s;
+}
+#mh-filter-btn:active { background: #111; color: #fff; border-color: #111; }
+
+/* ── @media mobile ───────────────────────────── */
+@media (max-width: 640px) {
+  body { flex-direction: column; overflow: hidden; }
+
+  #sidebar { display: none; }
+
+  #mobile-header { display: flex; }
+
+  #filter-fab { display: none !important; }
+
+  #main { padding: 6px; flex: 1; min-height: 0; }
+
+  /* Bottom sheet tooltip */
+  #tooltip {
+    position: fixed !important;
+    bottom: 0 !important; left: 0 !important;
+    top: auto !important; right: 0 !important;
+    width: 100% !important;
+    max-height: 72vh;
+    border-radius: 16px 16px 0 0;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    pointer-events: auto !important;
+    overflow-y: auto;
+    transform: translateY(105%);
+    transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    display: block !important;
+    z-index: 1050;
+  }
+  #tooltip.sheet-up { transform: translateY(0); }
+
+  .tt-resp { max-height: none; }
+
+  #sheet-handle { display: block; }
+  #sheet-close  { display: flex; }
+}
 </style>
 </head>
 <body>
+
+<!-- Mobile header bar (hidden on desktop) -->
+<div id="mobile-header">
+  <div class="mh-title">The Story <small>of Alvin Liu</small></div>
+  <div class="mh-spacer"></div>
+  <div class="mh-vtoggle">
+    <button id="mh-vbtn-jobs" class="active">Jobs &amp; Exp</button>
+    <button id="mh-vbtn-tools">Tools &amp; Apps</button>
+  </div>
+  <div class="mh-disp">
+    <button id="mh-btn-market" class="active">Map</button>
+    <button id="mh-btn-list">List</button>
+  </div>
+  <button id="mh-filter-btn" title="Filters &amp; Settings">☰</button>
+</div>
+
+<!-- Overlay (closes drawer or sheet) -->
+<div id="mob-overlay"></div>
+
+<!-- Filter drawer (slides in from left on mobile) -->
+<div id="filter-drawer">
+  <button id="drawer-close">✕</button>
+  <div class="s-section">
+    <h3>Map Filters</h3>
+    <ul id="filter-list-mob"></ul>
+  </div>
+  <div class="s-section" id="stats-section-mob">
+    <h3>Statistics</h3>
+    <div class="stat-row">Yrs of Exp <span id="sm-years">—</span></div>
+    <div class="stat-row">Positions <span id="sm-count">—</span></div>
+    <div class="stat-row">Companies <span id="sm-cos">—</span></div>
+    <div class="stat-row">Tools <span id="sm-tools">—</span></div>
+  </div>
+  <div class="s-section">
+    <h3>Legend</h3>
+    <div id="legend-mob"></div>
+  </div>
+  <div class="spacer"></div>
+  <a href="https://officeofalvinliu.com/" target="_blank" class="website-btn">← Visit my website!</a>
+</div>
+
+<!-- Filter FAB button -->
+<button id="filter-fab" title="Filters">⚙</button>
 
 <div id="sidebar">
   <div class="sidebar-hero">
@@ -320,6 +519,8 @@ body {
 </div>
 
 <div id="tooltip">
+  <div id="sheet-handle"></div>
+  <button id="sheet-close" onclick="hideTooltip()">✕</button>
   <div class="tt-header" id="tt-header-bar"></div>
   <div class="tt-mid" id="tt-mid-row">
     <span class="tt-position" id="tt-pos"></span>
@@ -899,9 +1100,10 @@ function buildJobsTreemap() {
     .attr("width",d=>Math.max(0,d.x1-d.x0-2)).attr("height",d=>Math.max(0,d.y1-d.y0-2))
     .attr("fill",d=>{ const t=d._total>1?d._idx/(d._total-1):0; return d3.color(d.data.baseColor).brighter(t*0.65); })
     .attr("rx",2).style("cursor","pointer")
-    .on("mouseenter",function(e,d){ d3.select(this).attr("opacity",0.8); showJobTooltip(e,d); })
-    .on("mousemove",function(e){ moveTooltip(e); })
-    .on("mouseleave",function(){ d3.select(this).attr("opacity",1); hideTooltip(); });
+    .on("mouseenter",function(e,d){ if(isMobile()) return; d3.select(this).attr("opacity",0.8); showJobTooltip(e,d); })
+    .on("mousemove",function(e){ if(isMobile()) return; moveTooltip(e); })
+    .on("mouseleave",function(){ if(isMobile()) return; d3.select(this).attr("opacity",1); hideTooltip(); })
+    .on("click",function(e,d){ if(!isMobile()) return; showJobTooltip(e,d); });
 
   addCellLabels(cells, svg,
     d => (d.x1-d.x0) < 44 ? "" : d.data.name,
@@ -982,9 +1184,10 @@ function buildToolsTreemap() {
     .attr("width",d=>Math.max(0,d.x1-d.x0-2)).attr("height",d=>Math.max(0,d.y1-d.y0-2))
     .attr("fill",d=>{ const t=d._total>1?d._idx/(d._total-1):0; return d3.color(d.data.color||TOOL_CAT_COLORS[d.data.category]||"#555").brighter(t*0.65); })
     .attr("rx",2).style("cursor","pointer")
-    .on("mouseenter",function(e,d){ d3.select(this).attr("opacity",0.8); showToolTooltip(e,d); })
-    .on("mousemove",function(e){ moveTooltip(e); })
-    .on("mouseleave",function(){ d3.select(this).attr("opacity",1); hideTooltip(); });
+    .on("mouseenter",function(e,d){ if(isMobile()) return; d3.select(this).attr("opacity",0.8); showToolTooltip(e,d); })
+    .on("mousemove",function(e){ if(isMobile()) return; moveTooltip(e); })
+    .on("mouseleave",function(){ if(isMobile()) return; d3.select(this).attr("opacity",1); hideTooltip(); })
+    .on("click",function(e,d){ if(!isMobile()) return; showToolTooltip(e,d); });
 
   addCellLabels(cells, svg,
     d => (d.x1-d.x0) < 42 ? "" : d.data.name,
@@ -1114,8 +1317,7 @@ function showJobTooltip(event, d) {
   footer.style.display = "block";
   footer.innerHTML = `<strong>About:</strong> ${c.description}`;
 
-  tooltip.style.display = "block";
-  positionTooltip(event);
+  showTooltip(event);
 
   // Start auto-scroll AFTER the tooltip is visible so scrollHeight is correct
   if (c.hideTools) {
@@ -1145,11 +1347,22 @@ function showToolTooltip(event, d) {
   const footer = document.getElementById("tt-footer");
   footer.style.display = "none";
 
-  tooltip.style.display = "block";
-  positionTooltip(event);
+  showTooltip(event);
 }
 
-function moveTooltip(event) { positionTooltip(event); }
+function isMobile() { return window.innerWidth <= 640; }
+
+function showTooltip(event) {
+  if (isMobile()) {
+    document.getElementById("mob-overlay").classList.add("visible");
+    tooltip.classList.add("sheet-up");
+  } else {
+    tooltip.style.display = "block";
+    positionTooltip(event);
+  }
+}
+
+function moveTooltip(event) { if (!isMobile()) positionTooltip(event); }
 
 function positionTooltip(event) {
   const tw=262, th=tooltip.offsetHeight||200;
@@ -1159,7 +1372,15 @@ function positionTooltip(event) {
   tooltip.style.left=x+"px"; tooltip.style.top=y+"px";
 }
 
-function hideTooltip() { stopAutoScroll(); tooltip.style.display="none"; }
+function hideTooltip() {
+  stopAutoScroll();
+  if (isMobile()) {
+    tooltip.classList.remove("sheet-up");
+    document.getElementById("mob-overlay").classList.remove("visible");
+  } else {
+    tooltip.style.display = "none";
+  }
+}
 
 // ════════════════════════════════════════════════════════════
 //  RENDER DISPATCH
@@ -1219,6 +1440,102 @@ document.getElementById("btn-list").addEventListener("click", () => {
 
 // Resize
 window.addEventListener("resize", () => { if (displayMode==="market") render(); });
+
+// ════════════════════════════════════════════════════════════
+//  MOBILE — header toggles, filter drawer, overlay
+// ════════════════════════════════════════════════════════════
+function syncMobileHeader() {
+  document.getElementById("mh-vbtn-jobs").classList.toggle("active", viewMode === "jobs");
+  document.getElementById("mh-vbtn-tools").classList.toggle("active", viewMode === "tools");
+  document.getElementById("mh-btn-market").classList.toggle("active", displayMode === "market");
+  document.getElementById("mh-btn-list").classList.toggle("active", displayMode === "list");
+}
+
+// Mobile view toggle
+document.getElementById("mh-vbtn-jobs").addEventListener("click", () => {
+  if (viewMode === "jobs") return;
+  document.getElementById("vbtn-jobs").click();
+  syncMobileHeader();
+});
+document.getElementById("mh-vbtn-tools").addEventListener("click", () => {
+  if (viewMode === "tools") return;
+  document.getElementById("vbtn-tools").click();
+  syncMobileHeader();
+});
+
+// Mobile display toggle
+document.getElementById("mh-btn-market").addEventListener("click", () => {
+  document.getElementById("btn-market").click();
+  syncMobileHeader();
+});
+document.getElementById("mh-btn-list").addEventListener("click", () => {
+  document.getElementById("btn-list").click();
+  syncMobileHeader();
+});
+
+// Header filter button — open drawer (same logic as FAB)
+document.getElementById("mh-filter-btn").addEventListener("click", () => {
+  document.getElementById("filter-fab").click();
+});
+
+// Filter FAB — open drawer
+document.getElementById("filter-fab").addEventListener("click", () => {
+  document.getElementById("filter-drawer").classList.add("open");
+  document.getElementById("mob-overlay").classList.add("visible");
+  // Sync mobile filter list with desktop list
+  const mobList = document.getElementById("filter-list-mob");
+  mobList.innerHTML = document.getElementById("filter-list").innerHTML;
+  mobList.querySelectorAll("li").forEach(li => {
+    li.addEventListener("click", () => {
+      const desktopLi = [...document.getElementById("filter-list").querySelectorAll("li")]
+        .find(el => el.dataset.filter === li.dataset.filter);
+      if (desktopLi) desktopLi.click();
+      closeMobileDrawer();
+      // Re-sync highlight
+      rebuildMobLegend();
+      syncMobFilter();
+    });
+  });
+  // Sync legend
+  document.getElementById("legend-mob").innerHTML = document.getElementById("legend").innerHTML;
+  // Sync stats
+  document.getElementById("sm-years").textContent  = document.getElementById("s-years").textContent;
+  document.getElementById("sm-count").textContent  = document.getElementById("s-count").textContent;
+  document.getElementById("sm-cos").textContent    = document.getElementById("s-cos").textContent;
+  document.getElementById("sm-tools").textContent  = document.getElementById("s-tools").textContent;
+});
+
+function syncMobFilter() {
+  const mobList = document.getElementById("filter-list-mob");
+  const desktopItems = document.getElementById("filter-list").querySelectorAll("li");
+  desktopItems.forEach(di => {
+    const mi = mobList.querySelector(`li[data-filter="${di.dataset.filter}"]`);
+    if (mi) mi.className = di.className;
+  });
+}
+
+function rebuildMobLegend() {
+  document.getElementById("legend-mob").innerHTML = document.getElementById("legend").innerHTML;
+}
+
+function closeMobileDrawer() {
+  document.getElementById("filter-drawer").classList.remove("open");
+  if (!tooltip.classList.contains("sheet-up")) {
+    document.getElementById("mob-overlay").classList.remove("visible");
+  }
+}
+
+// Drawer close button
+document.getElementById("drawer-close").addEventListener("click", closeMobileDrawer);
+
+// Overlay: close drawer OR sheet depending on what's open
+document.getElementById("mob-overlay").addEventListener("click", () => {
+  if (document.getElementById("filter-drawer").classList.contains("open")) {
+    closeMobileDrawer();
+  } else {
+    hideTooltip();
+  }
+});
 
 // Init
 window.addEventListener("load", render);
