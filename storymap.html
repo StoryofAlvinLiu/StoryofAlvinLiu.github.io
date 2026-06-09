@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Story of Alvin Liu</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #e8e8e8;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  color: #111;
+}
+
+/* ── Sidebar ─────────────────────────────────── */
+#sidebar {
+  width: 190px;
+  flex-shrink: 0;
+  background: #fff;
+  padding: 24px 16px 16px;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+}
+
+.sidebar-hero h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.05;
+}
+.sidebar-hero .subtitle {
+  font-size: 13px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* ── View Toggle ─────────────────────────────── */
+.view-toggle {
+  display: flex;
+  gap: 3px;
+  background: #f0f0f0;
+  padding: 3px;
+  border-radius: 7px;
+}
+.vtoggle-btn {
+  flex: 1;
+  padding: 6px 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: transparent;
+  color: #777;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.vtoggle-btn.active {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+.vtoggle-btn:hover:not(.active) { color: #333; }
+
+/* ── Sidebar Sections ────────────────────────── */
+.s-section h3 {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.s-section ul { list-style: none; }
+.s-section ul li {
+  font-size: 12.5px;
+  color: #666;
+  padding: 3px 0 3px 9px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: border-color 0.15s, color 0.15s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.s-section ul li:hover { color: #222; border-left-color: #bbb; }
+.s-section ul li.active { color: #111; border-left-color: #3f6278; font-weight: 600; }
+
+.dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  margin-right: 7px;
+  flex-shrink: 0;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+  padding: 2px 0;
+}
+.stat-row span { font-weight: 700; color: #111; }
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #555;
+  padding: 3px 0;
+}
+
+/* ── Display toggle ──────────────────────────── */
+.disp-toggle { display: flex; gap: 3px; }
+.disp-btn {
+  flex: 1;
+  padding: 5px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #fff;
+  color: #888;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.disp-btn.active { background: #111; color: #fff; border-color: #111; }
+.disp-btn:hover:not(.active) { background: #f5f5f5; color: #444; }
+
+/* ── Website button ──────────────────────────── */
+.spacer { flex: 1; }
+.website-btn {
+  display: block;
+  text-align: center;
+  padding: 10px 12px;
+  background: #111;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+}
+.website-btn:hover { background: #333; }
+
+/* ── Main ─────────────────────────────────────── */
+#main {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#treemap-wrap {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+#treemap-wrap svg {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+#list-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  display: none;
+}
+
+/* ── Tooltip ─────────────────────────────────── */
+#tooltip {
+  position: fixed;
+  background: #fff;
+  border: 1px solid #ccc;
+  width: 262px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+  pointer-events: none;
+  display: none;
+  z-index: 999;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.tt-header {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+}
+.tt-mid {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 12px 9px;
+  border-bottom: 1px solid #eee;
+}
+.tt-position { font-size: 13px; font-weight: 600; color: #111; }
+.tt-duration  { font-size: 12px; color: #888; white-space: nowrap; padding-left: 6px; }
+.tt-resp {
+  padding: 9px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  color: #444;
+  line-height: 1.55;
+  min-height: 54px;
+  max-height: 240px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.tt-resp::-webkit-scrollbar { width: 3px; }
+.tt-resp::-webkit-scrollbar-track { background: transparent; }
+.tt-resp::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+.tt-tools-row {
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid #eee;
+}
+.tool-chip {
+  font-size: 10px;
+  background: #f0f0f0;
+  color: #555;
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-weight: 500;
+}
+.tt-about {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.5;
+}
+.tt-about strong { color: #777; }
+
+/* tools tooltip sections */
+.tt-used-in {
+  padding: 9px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  color: #444;
+  line-height: 1.6;
+}
+.tt-used-in strong { color: #111; font-size: 11px; display: block; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="sidebar-hero">
+    <h1>The Story</h1>
+    <div class="subtitle">of Alvin Liu</div>
+  </div>
+
+  <!-- View toggle — above map filter -->
+  <div class="s-section">
+    <div class="view-toggle">
+      <button class="vtoggle-btn active" id="vbtn-jobs">Jobs &amp; Exp</button>
+      <button class="vtoggle-btn" id="vbtn-tools">Tools &amp; Apps</button>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <h3>Map Filters</h3>
+    <ul id="filter-list"></ul>
+  </div>
+
+  <div class="s-section">
+    <h3>Display</h3>
+    <div class="disp-toggle">
+      <button class="disp-btn active" id="btn-market">Market</button>
+      <button class="disp-btn" id="btn-list">List</button>
+    </div>
+  </div>
+
+  <div class="s-section" id="stats-section">
+    <h3>Statistics</h3>
+    <div class="stat-row">Yrs of Exp <span id="s-years">—</span></div>
+    <div class="stat-row">Positions <span id="s-count">—</span></div>
+    <div class="stat-row">Companies <span id="s-cos">—</span></div>
+    <div class="stat-row">Tools <span id="s-tools">—</span></div>
+  </div>
+
+  <div class="s-section">
+    <h3>Legend</h3>
+    <div id="legend"></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <a href="https://officeofalvinliu.com/" target="_blank" class="website-btn">
+    ← Visit my website!
+  </a>
+</div>
+
+<div id="main">
+  <div id="treemap-wrap"></div>
+  <div id="list-view"></div>
+</div>
+
+<div id="tooltip">
+  <div class="tt-header" id="tt-header-bar"></div>
+  <div class="tt-mid" id="tt-mid-row">
+    <span class="tt-position" id="tt-pos"></span>
+    <span class="tt-duration" id="tt-dur"></span>
+  </div>
+  <div class="tt-resp" id="tt-body"></div>
+  <div class="tt-tools-row" id="tt-chips"></div>
+  <div class="tt-about" id="tt-footer"></div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  CAREER DATA  —  real positions from resume
+// ════════════════════════════════════════════════════════════
+const CAREER = [
+  {
+    industry: "Technology",
+    color: "#2a7a52",
+    companies: [
+      {
+        name: "Northrop Grumman",
+        startDate: "2021-09", endDate: "2023-09",
+        position: "Engineering Intern (HIP Program)",
+        responsibilities: "2-year High School Internship Program at Space Park & El Segundo. Contributed to CUBESAT satellite CAD development, 3D printed mission mockups, and presented findings at Northrop Grumman's Space Park to engineers and mentors.",
+        description: "American aerospace, defense, and advanced technologies company. One of the world's largest defense contractors.",
+        tools: ["AutoCAD", "AutoDesk", "Onshape", "SolidWorks", "3D Printing", "Cura", "Bambu", "Microsoft 365"]
+      },
+      {
+        name: "Lawrence Livermore Natl. Lab",
+        startDate: "2026-04", endDate: "present",
+        position: "DSC Project Team Member",
+        responsibilities: "Selected for the Data Science Challenge program. Applying data science methods to national security and scientific challenges. Developing data analysis, modeling, and visualization techniques for large-scale datasets alongside LLNL researchers.",
+        description: "U.S. Department of Energy national laboratory focused on national security, high-performance computing, and energy research.",
+        tools: ["Python", "Anaconda", "SQL", "Git / Github", "Linux", "Data Visualization", "Machine Learning"]
+      },
+      {
+        name: "Roblox",
+        startDate: "2020-08", endDate: "2022-08",
+        position: "Game Developer / Community Manager",
+        responsibilities: "Developed games on the Roblox platform using Lua. Created game mechanics, 3D assets using Blender, and managed community engagement. Handled player communication and grew the game's community presence.",
+        description: "Online game platform and game creation system. Allows users to program and play games created by other users worldwide.",
+        tools: ["Roblox Studio", "Lua", "Blender", "Git / Github", "Discord"]
+      },
+      {
+        name: "National Science Foundation",
+        startDate: "2024-10", endDate: "2025-10",
+        position: "Research Assistant",
+        responsibilities: "Supported NSF I-Corps programming at UC Merced in collaboration with the OTIIR office. Assisted logistical coordination for cohort sessions, supported faculty translating research to commercial applications, and maintained program documentation.",
+        description: "Independent U.S. federal agency that supports fundamental research and education across all fields of science and engineering.",
+        tools: ["Google Workspace", "Notion", "Box", "Research Documentation", "Program Coordination"]
+      },
+      {
+        name: "Project Lead The Way",
+        startDate: "2016-05", endDate: "2018-05",
+        position: "STEM Educator Assistant",
+        responsibilities: "Assisted in teaching and moderating PLTW classes in middle school covering STEM fundamentals and engineering ideologies. Supported students through hands-on design challenges and introduced engineering tools and software.",
+        description: "National nonprofit that provides transformative learning experiences for K-12 students through STEM curricula, inspiring them to thrive in an evolving world.",
+        tools: ["AutoCAD", "AutoDesk", "Onshape", "3D Modeling", "Engineering Design"]
+      },
+      {
+        name: "Data 360",
+        startDate: "2022-07", endDate: "2022-07",
+        position: "Communications Server Designer (Volunteer)",
+        responsibilities: "Redesigned and improved Data 360's Discord communications server while they hosted the Hip-Hop Hackathon. Created user-friendly channels and categories to improve user experience, completed in a short, timely manner.",
+        description: "Data 360 hosted the Hip-Hop Hackathon, bringing together students and creatives to explore the intersection of data, technology, and culture.",
+        tools: ["Discord", "JS", "UI/UX Design", "Server Management"]
+      },
+      {
+        name: "The Knowledge House",
+        startDate: "2022-06", endDate: "2023-07",
+        position: "Karim Kharbouch Coding Fellow",
+        responsibilities: "Participated in a competitive coding fellowship alongside 120 fellows across NY, NJ, and LA. Trained 6 hrs/day across two summers covering Computer Science, Figma, UI/UX, and web development. Received career and financial mentorship throughout.",
+        description: "NYC-based nonprofit providing tech training and career pathways to young people from under-resourced communities. The Karim Kharbouch Fellowship is a highly competitive program.",
+        tools: ["Figma", "HTML/CSS", "JS", "SQL", "Git / Github", "UI/UX Design", "Unity", "Notion"]
+      }
+    ]
+  },
+  {
+    industry: "Management",
+    color: "#8a5c1e",
+    companies: [
+      {
+        name: "UC Merced OTIIR",
+        startDate: "2024-08", endDate: "present",
+        position: "IP & Innovation Research Administrator",
+        responsibilities: "Managed IP pipelines, website development, and event logistics. Organized Merced 2 Market, Startup Showdown, and the UC-wide IP Managers Conference for the entire UC system. Supported NSF I-Corps and Venture Labs programming.",
+        description: "UC Merced's Office of Technology Innovation and Industry Relations — the university's tech transfer office, facilitating commercialization of academic research.",
+        tools: ["WordPress", "Canva", "Adobe Suite", "Figma", "Google Workspace", "Notion", "Box", "Microsoft 365", "Social Media"]
+      },
+      {
+        name: "Blackstone LaunchPad",
+        startDate: "2024-12", endDate: "2025-09",
+        position: "Talent Acquisitions Assistant",
+        responsibilities: "Supported student recruitment and outreach to grow program participation at UC Merced. Connected students to internship pipelines and entrepreneurial resources. Coordinated event logistics and applied inbound digital marketing strategies.",
+        description: "Blackstone Charitable Foundation initiative designed to close the opportunity gap for college students through entrepreneurship and career development.",
+        tools: ["LinkedIn", "Canva", "Adobe Suite", "Google Workspace", "Box", "Social Media"]
+      },
+      {
+        name: "The Woo Agency",
+        startDate: "2022-10", endDate: "2023-08",
+        position: "Advertising Mentee",
+        responsibilities: "Created a competitive advertising campaign pitch targeting Generation Z for client Supergoop! Applied digital marketing, strategic planning, branding, and presentation skills under mentorship of seasoned advertising professionals.",
+        description: "Creative advertising agency running T.E.A.M. Woo — a mentorship exposing students to real-world advertising and creative career paths. Real client work and professional mentorship throughout.",
+        tools: ["Figma", "Canva", "Adobe Suite", "Campaign Strategy", "Keynote / Slides"]
+      },
+      {
+        name: "HS & Collegiate Clubs",
+        startDate: "2021-08", endDate: "2027-08",
+        position: "Multi-Org Leadership & Membership Roles",
+        hideTools: true,
+        responsibilities: "Business Society @ UCM — Chief Operating Officer\nDelta Sigma Pi — Vice President of Marketing\nGoogle Developer Community — Member\nHackMerced — Participant\nVanguard Engineering Society — Member\nUCM Economics Club — Member\nSASE @ UC Merced — Member\nSACNAS — President · VP · Prof. Development Chair\nAIAA — Member\nComputer Science Club ACM @ ECC — Member\nFIRST Robotics — Member\nDECA — VP of Career Development · Chapter Leader\nAlpha Gamma Sigma @ ECC — Member\nAsian Student Union — Member",
+        description: "Cumulative involvement across high school and collegiate clubs spanning engineering, business, cultural, and professional organizations — with executive and leadership roles held in multiple organizations simultaneously.",
+        tools: ["Google Workspace", "Microsoft 365", "Notion", "Leadership", "Public Speaking", "Event Management", "Canva", "Adobe Suite"]
+      }
+    ]
+  },
+  {
+    industry: "Leadership & Service",
+    color: "#3f4f6a",
+    companies: [
+      {
+        name: "US Marine Corps",
+        startDate: "2023-09", endDate: "present",
+        position: "NROTC Officer Candidate (OCS)",
+        responsibilities: "NROTC Alternative Training across Central & Northern California. Completed field exercises in leadership, small-unit coordination, and land navigation. Achieved First-Class PFT score of 242 pts. Trained on M16A2/M4 rifle platforms. Participated in MEPS.",
+        description: "United States Marine Corps — a branch of the U.S. Armed Forces responsible for conducting expeditionary and amphibious operations.",
+        tools: ["Leadership", "Land Navigation", "Field Equipment", "Physical Training"]
+      },
+      {
+        name: "Da Vinci Schools",
+        startDate: "2022-10", endDate: "2023-06",
+        position: "Student Board Member",
+        responsibilities: "Represented 500+ students from Da Vinci Communications HS as part of a board collectively representing 2,500+ students. Delivered monthly updates on events, operations, and student body perspectives. Coordinated with other board members to avoid redundancies and maintain timely presentations.",
+        description: "Da Vinci Schools is a network of small public charter high schools in El Segundo, CA focused on project-based, real-world learning.",
+        tools: ["Leadership", "Governance", "Public Speaking", "Google Workspace"]
+      },
+      {
+        name: "LA County Registrar",
+        startDate: "2022-02", endDate: "2022-11",
+        position: "Student Election Worker",
+        responsibilities: "Served two cycles as a Student Election Worker in LA County elections. Gained hands-on experience with democratic processes, civic engagement, and election administration. Received stipend through the official LA County student program.",
+        description: "Los Angeles County Registrar-Recorder/County Clerk — responsible for conducting all federal, state, and local elections in LA County, the largest voting jurisdiction in the U.S.",
+        tools: ["Election Systems", "Civic Technology", "Data Entry", "Google Workspace", "Public Speaking"]
+      },
+      {
+        name: "Yosemite Facelift",
+        startDate: "2023-09", endDate: "2023-10",
+        position: "Volunteer Conservation Crew",
+        responsibilities: "Participated in Yosemite Facelift, the world's largest single-location volunteer event for climbing area cleanups. Contributed to trail restoration, litter removal, and environmental stewardship in Yosemite National Park alongside hundreds of volunteers.",
+        description: "Annual volunteer event organized by the Access Fund in Yosemite National Park — the world's largest single-location climbing area cleanup and conservation effort.",
+        tools: ["Outdoor Leadership", "Environmental Conservation", "Team Coordination", "Community Service"]
+      }
+    ]
+  }
+];
+
+// ════════════════════════════════════════════════════════════
+//  TOOLS DATA — categories + tool→category mapping
+// ════════════════════════════════════════════════════════════
+// ── Customize the displayed duration for any tool in Tools & Apps ──
+// Leave a tool out to auto-calculate from position dates.
+const TOOL_DISPLAY_DURATIONS = {
+  // ── Technical ──────────────────────────────────
+  "Python":          "7 yr",
+  "C++":             "3 yr",
+  "C":               "2 yr",
+  "JS":              "9 yr",
+  "HTML/CSS":        "10 yr",
+  "SQL":             "1 yr",
+  "React":           "1 yr",
+  "Lua":             "2 yr",
+  "Roblox Studio":   "2 yr",
+  "Git / Github":    "2 yr",
+  "Anaconda":        "1 yr",
+  "Linux":           "4 yr",
+  "Unity":           "1 yr",
+  "AutoCAD":         "3 yr",
+  "AutoDesk":        "3 yr",
+  "Onshape":         "2 yr",
+  "SolidWorks":      "2 yr",
+  "3D Printing":     "2 yr",
+  "Cura":            "2 yr",
+  "Bambu":           "1 yr",
+  // ── Design & Creative ──────────────────────────
+  "Figma":           "2 yr",
+  "Canva":           "3 yr",
+  "Adobe Suite":     "3 yr",
+  "Blender":         "2 yr",
+  "UI/UX Design":    "2 yr",
+  // ── Operations ─────────────────────────────────
+  "Microsoft 365":   "5 yr",
+  "Google Workspace":"10 yr",
+  "Notion":          "2 yr",
+  "LinkedIn":        "2 yr",
+  "Discord":         "3 yr",
+  "Box":             "3 yr",
+};
+
+// Tools that stay in job-card tooltips but are hidden from the
+// Tools & Apps treemap (skills / abstract concepts, not apps)
+const TOOLS_HIDDEN_FROM_MAP = new Set([
+  "Civic Technology", "Program Coordination", "Data Entry",
+  "Election Systems", "HPC Tools", "Machine Learning", "WordPress",
+  "Field Equipment", "Data Visualization", "Campaign Strategy", "Social Media",
+  "Server Management", "Keynote / Slides", "Governance", "Outdoor Leadership",
+  "Environmental Conservation", "Team Coordination", "Community Service",
+  "Community Outreach", "Event Management", "Research Documentation",
+  "3D Modeling", "Engineering Design"
+]);
+const TOOL_CAT_COLORS = {
+  "Technical":           "#2d5a8e",
+  "Design & Creative":   "#7a3a8a",
+  "Operations":          "#2a7a6a",
+  "Leadership & Service":"#6b3a2a"
+};
+
+const TOOL_CATEGORY_MAP = {
+  // ── Technical ────────────────────────────────
+  "Python":              "Technical",
+  "C++":                 "Technical",
+  "C":                   "Technical",
+  "JS":                  "Technical",
+  "SQL":                 "Technical",
+  "HTML/CSS":            "Technical",
+  "React":               "Technical",
+  "Lua":                 "Technical",
+  "Roblox Studio":       "Technical",
+  "Git / Github":        "Technical",
+  "Anaconda":            "Technical",
+  "Linux":               "Technical",
+  "Unity":               "Technical",
+  "AutoCAD":             "Technical",
+  "AutoDesk":            "Technical",
+  "Onshape":             "Technical",
+  "SolidWorks":          "Technical",
+  "3D Printing":         "Technical",
+  "Cura":                "Technical",
+  "Bambu":               "Technical",
+  "Server Management":   "Technical",
+  "Engineering Design":  "Technical",
+  "Research Documentation": "Technical",
+  // ── Design & Creative ────────────────────────
+  "Figma":               "Design & Creative",
+  "Canva":               "Design & Creative",
+  "Adobe Suite":         "Design & Creative",
+  "Blender":             "Design & Creative",
+  "3D Modeling":         "Design & Creative",
+  "UI/UX Design":        "Design & Creative",
+  "Keynote / Slides":    "Design & Creative",
+  "PowerPoint":          "Design & Creative",
+  "Marketing":           "Design & Creative",
+  "Presentation Skills": "Design & Creative",
+  // ── Operations ───────────────────────────────
+  "Google Workspace":    "Operations",
+  "Notion":              "Operations",
+  "LinkedIn":            "Operations",
+  "Discord":             "Operations",
+  "Event Management":    "Operations",
+  "Strategic Planning":  "Operations",
+  "Box":                 "Operations",
+  "Microsoft 365":       "Operations",
+  // ── Leadership & Service ─────────────────────
+  "Leadership":          "Leadership & Service",
+  "Land Navigation":     "Leadership & Service",
+  "Physical Training":   "Leadership & Service",
+  "Public Speaking":     "Leadership & Service",
+  "Community Outreach":  "Leadership & Service",
+  "Governance":          "Leadership & Service",
+  "Outdoor Leadership":  "Leadership & Service",
+  "Environmental Conservation": "Leadership & Service",
+  "Team Coordination":   "Leadership & Service",
+  "Community Service":   "Leadership & Service"
+};
+
+// ════════════════════════════════════════════════════════════
+//  UTILITIES
+// ════════════════════════════════════════════════════════════
+function parseDays(start, end) {
+  const s = new Date(start + "-01");
+  const e = end === "present" ? new Date() : new Date(end + "-01");
+  return Math.max(30, Math.round((e - s) / 86400000));
+}
+function fmtDuration(days) {
+  const y = Math.floor(days / 365);
+  const m = Math.round((days % 365) / 30.5);
+  if (y === 0) return `${m} mo`;
+  if (m === 0) return `${y} yr`;
+  return `${y} yr, ${m} mo`;
+}
+
+// Enrich career data
+CAREER.forEach(sector => {
+  sector.companies.forEach(c => {
+    c.days     = parseDays(c.startDate, c.endDate);
+    c.duration = fmtDuration(c.days);
+    c.sector   = sector.industry;
+    c.baseColor = sector.color;
+  });
+});
+
+const allCompanies = CAREER.flatMap(s => s.companies);
+const totalDays    = allCompanies.reduce((a, c) => a + c.days, 0);
+const allToolNames = [...new Set(allCompanies.flatMap(c => c.tools))];
+
+// Tools shown in Tools & Apps but not tied to any specific company
+const STANDALONE_TOOLS = ["C++", "C", "React"];
+
+// Convert a display string like "3 yr" or "10 mo" to approximate days for cell sizing
+function parseDurationStr(str) {
+  const yrM = str.match(/(\d+(?:\.\d+)?)\s*yr/);
+  const moM = str.match(/(\d+)\s*mo/);
+  return (yrM ? parseFloat(yrM[1]) * 365 : 0) + (moM ? parseInt(moM[1]) * 30 : 0);
+}
+
+// Build tools dataset — excludes anything in TOOLS_HIDDEN_FROM_MAP
+function buildToolsDataset() {
+  const toolMap = {};
+
+  // Company-linked tools
+  CAREER.forEach(sector => {
+    sector.companies.forEach(c => {
+      c.tools.forEach(tool => {
+        if (TOOLS_HIDDEN_FROM_MAP.has(tool)) return;
+        if (!toolMap[tool]) {
+          toolMap[tool] = { name: tool, totalDays: 0, usedIn: [], category: TOOL_CATEGORY_MAP[tool] || "Technical" };
+        }
+        toolMap[tool].totalDays += c.days;
+        toolMap[tool].usedIn.push({ company: c.name, duration: c.duration, sector: c.sector });
+      });
+    });
+  });
+
+  // Standalone tools (not tied to a company — sized via TOOL_DISPLAY_DURATIONS)
+  STANDALONE_TOOLS.forEach(tool => {
+    if (TOOLS_HIDDEN_FROM_MAP.has(tool)) return;
+    if (!toolMap[tool]) {
+      const dispDur = TOOL_DISPLAY_DURATIONS[tool] || "1 yr";
+      toolMap[tool] = {
+        name: tool,
+        totalDays: parseDurationStr(dispDur),
+        usedIn: [{ company: "Various / Personal", duration: dispDur, sector: "—" }],
+        category: TOOL_CATEGORY_MAP[tool] || "Technical"
+      };
+    }
+  });
+
+  // Override cell sizes with TOOL_DISPLAY_DURATIONS for ALL tools that have an entry
+  Object.keys(toolMap).forEach(tool => {
+    if (TOOL_DISPLAY_DURATIONS[tool]) {
+      toolMap[tool].totalDays = parseDurationStr(TOOL_DISPLAY_DURATIONS[tool]);
+    }
+  });
+
+  return Object.values(toolMap);
+}
+const TOOLS_FLAT = buildToolsDataset();
+
+// ════════════════════════════════════════════════════════════
+//  SIDEBAR — static setup
+// ════════════════════════════════════════════════════════════
+document.getElementById("s-years").textContent = (totalDays / 365).toFixed(1);
+document.getElementById("s-count").textContent = allCompanies.length;
+document.getElementById("s-cos").textContent   = allCompanies.length;
+document.getElementById("s-tools").textContent = allToolNames.length;
+
+// ── State ─────────────────────────────────────
+let viewMode    = "jobs";   // "jobs" | "tools"
+let displayMode = "market"; // "market" | "list"
+let activeFilter = "all";
+
+// ── Filter list ───────────────────────────────
+function rebuildFilterList() {
+  const fl = document.getElementById("filter-list");
+  fl.innerHTML = "";
+  activeFilter = "all";
+
+  const items = viewMode === "jobs"
+    ? [{ label: "All Industries", val: "all", color: null }, ...CAREER.map(s => ({ label: s.industry, val: s.industry, color: s.color }))]
+    : [{ label: "All Categories", val: "all", color: null }, ...Object.entries(TOOL_CAT_COLORS).map(([k,v]) => ({ label: k, val: k, color: v }))];
+
+  items.forEach(item => {
+    const li = document.createElement("li");
+    li.dataset.filter = item.val;
+    if (item.color) {
+      li.innerHTML = `<span class="dot" style="background:${item.color}"></span>${item.label}`;
+    } else {
+      li.textContent = item.label;
+      li.style.paddingLeft = "9px";
+    }
+    if (item.val === "all") li.classList.add("active");
+    li.addEventListener("click", () => {
+      fl.querySelectorAll("li").forEach(l => l.classList.remove("active"));
+      li.classList.add("active");
+      activeFilter = item.val;
+      render();
+    });
+    fl.appendChild(li);
+  });
+}
+
+// ── Legend ────────────────────────────────────
+function rebuildLegend() {
+  const el = document.getElementById("legend");
+  el.innerHTML = "";
+  const entries = viewMode === "jobs"
+    ? CAREER.map(s => ({ label: s.industry, color: s.color }))
+    : Object.entries(TOOL_CAT_COLORS).map(([k,v]) => ({ label: k, color: v }));
+
+  entries.forEach(({ label, color }) => {
+    const d = document.createElement("div");
+    d.className = "legend-row";
+    d.innerHTML = `<span class="dot" style="background:${color}"></span>${label}`;
+    el.appendChild(d);
+  });
+}
+
+rebuildFilterList();
+rebuildLegend();
+
+// ════════════════════════════════════════════════════════════
+//  SHARED LABEL HELPER — word-wrap + per-cell clip path
+// ════════════════════════════════════════════════════════════
+function addCellLabels(cells, svg, nameFn, subFn) {
+  cells.each(function(d, ci) {
+    const g  = d3.select(this);
+    const cw = d.x1 - d.x0, ch = d.y1 - d.y0;
+    const cx = (d.x0 + d.x1) / 2, cy = (d.y0 + d.y1) / 2;
+    if (cw < 24 || ch < 18) return;
+
+    const name = nameFn(d) || "";
+    const sub  = subFn ? subFn(d) : "";
+    if (!name) return;
+
+    // Per-cell clip path prevents any text overflow
+    const clipId = `cc-${ci}`;
+    svg.append("clipPath").attr("id", clipId)
+      .append("rect")
+        .attr("x", d.x0 + 2).attr("y", d.y0 + 2)
+        .attr("width",  Math.max(0, cw - 4))
+        .attr("height", Math.max(0, ch - 4));
+
+    const fontSize = Math.min(14, Math.max(8, Math.sqrt(cw * ch) / 5.8));
+    const lineH    = fontSize * 1.3;
+    const maxW     = cw - 14;
+
+    // Word-wrap using an invisible probe element
+    const words = name.split(/\s+/).filter(Boolean);
+    const lines = [];
+    let cur = [];
+
+    const probe     = svg.append("text").style("opacity","0")
+                         .attr("font-size", fontSize + "px")
+                         .attr("font-family","inherit");
+    const probeSpan = probe.append("tspan");
+
+    words.forEach(word => {
+      cur.push(word);
+      probeSpan.text(cur.join(" "));
+      const tw = probeSpan.node().getComputedTextLength
+        ? probeSpan.node().getComputedTextLength() : 9999;
+      if (tw > maxW && cur.length > 1) {
+        cur.pop();
+        lines.push(cur.join(" "));
+        cur = [word];
+      }
+    });
+    if (cur.length) lines.push(cur.join(" "));
+    probe.remove();
+
+    // Layout: reserve space for sub-label
+    const showSub   = !!sub && cw > 52 && ch > 38;
+    const subFontSz = Math.min(11, Math.max(7, Math.sqrt(cw * ch) / 9));
+    const subH      = showSub ? subFontSz * 1.5 : 0;
+    const maxNLines = Math.max(1, Math.floor((ch - subH - 12) / lineH));
+    const visLines  = lines.slice(0, maxNLines);
+    const totalH    = visLines.length * lineH + subH;
+    const startY    = cy - totalH / 2 + lineH * 0.75;
+
+    // Name (multi-line tspans)
+    const nameText = g.append("text")
+      .attr("text-anchor", "middle")
+      .attr("fill", "rgba(255,255,255,0.95)")
+      .attr("font-weight", "700")
+      .attr("font-size", fontSize + "px")
+      .attr("font-family", "inherit")
+      .attr("pointer-events", "none")
+      .attr("clip-path", `url(#${clipId})`);
+
+    visLines.forEach((line, i) => {
+      nameText.append("tspan")
+        .attr("x", cx)
+        .attr("y", startY + i * lineH)
+        .text(line);
+    });
+
+    // Sub-label (duration / exp)
+    if (showSub) {
+      g.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", cx)
+        .attr("y", startY + visLines.length * lineH + subFontSz * 0.5)
+        .attr("fill", "rgba(255,255,255,0.70)")
+        .attr("font-size", subFontSz + "px")
+        .attr("font-family", "inherit")
+        .attr("pointer-events", "none")
+        .attr("clip-path", `url(#${clipId})`)
+        .text(sub.toUpperCase());
+    }
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  JOBS TREEMAP
+// ════════════════════════════════════════════════════════════
+function buildJobsTreemap() {
+  const wrap = document.getElementById("treemap-wrap");
+  wrap.innerHTML = "";
+  const { width, height } = wrap.getBoundingClientRect();
+  if (!width || !height) return;
+
+  const sectors = activeFilter === "all"
+    ? CAREER
+    : CAREER.filter(s => s.industry === activeFilter);
+
+  const hier = {
+    name: "root",
+    children: sectors.map(s => ({
+      name: s.industry, color: s.color,
+      children: s.companies.map(c => ({ ...c, value: c.days }))
+    }))
+  };
+
+  const root = d3.hierarchy(hier).sum(d => d.value || 0).sort((a,b) => b.value - a.value);
+
+  d3.treemap()
+    .size([width, height])
+    .paddingOuter(6).paddingTop(22).paddingInner(3)
+    .tile(d3.treemapSquarify.ratio(1.2))(root);
+
+  const svg = d3.select(wrap).append("svg").attr("width", width).attr("height", height);
+
+  // Industry groups
+  const groups = svg.selectAll(".ig").data(root.children).join("g").attr("class","ig");
+
+  groups.append("rect")
+    .attr("x", d=>d.x0).attr("y",d=>d.y0)
+    .attr("width",d=>d.x1-d.x0).attr("height",d=>d.y1-d.y0)
+    .attr("fill",d=>d.data.color).attr("opacity",0.1).attr("rx",3);
+
+  groups.append("rect")
+    .attr("x",d=>d.x0).attr("y",d=>d.y0)
+    .attr("width",d=>d.x1-d.x0).attr("height",18)
+    .attr("fill","#2e2e2e").attr("rx",3);
+
+  groups.each(function(d,i) {
+    const g = d3.select(this);
+    const cid = `hc${i}`;
+    svg.append("clipPath").attr("id",cid).append("rect")
+      .attr("x",d.x0+8).attr("y",d.y0)
+      .attr("width",Math.max(0,d.x1-d.x0-16)).attr("height",22);
+    g.append("text")
+      .attr("x",d.x0+8).attr("y",d.y0+13)
+      .attr("clip-path",`url(#${cid})`)
+      .attr("fill","#fff").attr("font-size","9.5px").attr("font-weight","700")
+      .attr("letter-spacing","0.9px").attr("font-family","inherit")
+      .text(d.data.name.toUpperCase());
+  });
+
+  // Company leaves
+  const leaves = root.leaves();
+  leaves.forEach(l => { l._idx = l.parent.children.indexOf(l); l._total = l.parent.children.length; });
+
+  const cells = svg.selectAll(".cell").data(leaves).join("g").attr("class","cell");
+
+  cells.append("rect")
+    .attr("x",d=>d.x0+1).attr("y",d=>d.y0+1)
+    .attr("width",d=>Math.max(0,d.x1-d.x0-2)).attr("height",d=>Math.max(0,d.y1-d.y0-2))
+    .attr("fill",d=>{ const t=d._total>1?d._idx/(d._total-1):0; return d3.color(d.data.baseColor).brighter(t*0.65); })
+    .attr("rx",2).style("cursor","pointer")
+    .on("mouseenter",function(e,d){ d3.select(this).attr("opacity",0.8); showJobTooltip(e,d); })
+    .on("mousemove",function(e){ moveTooltip(e); })
+    .on("mouseleave",function(){ d3.select(this).attr("opacity",1); hideTooltip(); });
+
+  addCellLabels(cells, svg,
+    d => (d.x1-d.x0) < 44 ? "" : d.data.name,
+    d => d.data.duration
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  TOOLS TREEMAP
+// ════════════════════════════════════════════════════════════
+function buildToolsTreemap() {
+  const wrap = document.getElementById("treemap-wrap");
+  wrap.innerHTML = "";
+  const { width, height } = wrap.getBoundingClientRect();
+  if (!width || !height) return;
+
+  const visTools = activeFilter === "all"
+    ? TOOLS_FLAT
+    : TOOLS_FLAT.filter(t => t.category === activeFilter);
+
+  // Group by category
+  const catMap = {};
+  visTools.forEach(t => {
+    if (!catMap[t.category]) catMap[t.category] = [];
+    catMap[t.category].push({ ...t, value: t.totalDays });
+  });
+
+  const hier = {
+    name: "root",
+    children: Object.entries(catMap).map(([cat, tools]) => ({
+      name: cat, color: TOOL_CAT_COLORS[cat] || "#555",
+      children: tools
+    }))
+  };
+
+  const root = d3.hierarchy(hier).sum(d=>d.value||0).sort((a,b)=>b.value-a.value);
+
+  d3.treemap()
+    .size([width,height])
+    .paddingOuter(6).paddingTop(22).paddingInner(3)
+    .tile(d3.treemapSquarify.ratio(1.2))(root);
+
+  const svg = d3.select(wrap).append("svg").attr("width",width).attr("height",height);
+
+  const groups = svg.selectAll(".ig").data(root.children).join("g").attr("class","ig");
+
+  groups.append("rect")
+    .attr("x",d=>d.x0).attr("y",d=>d.y0)
+    .attr("width",d=>d.x1-d.x0).attr("height",d=>d.y1-d.y0)
+    .attr("fill",d=>d.data.color).attr("opacity",0.1).attr("rx",3);
+
+  groups.append("rect")
+    .attr("x",d=>d.x0).attr("y",d=>d.y0)
+    .attr("width",d=>d.x1-d.x0).attr("height",18)
+    .attr("fill","#2e2e2e").attr("rx",3);
+
+  groups.each(function(d,i) {
+    const g=d3.select(this);
+    const cid=`tc${i}`;
+    svg.append("clipPath").attr("id",cid).append("rect")
+      .attr("x",d.x0+8).attr("y",d.y0)
+      .attr("width",Math.max(0,d.x1-d.x0-16)).attr("height",22);
+    g.append("text")
+      .attr("x",d.x0+8).attr("y",d.y0+13)
+      .attr("clip-path",`url(#${cid})`)
+      .attr("fill","#fff").attr("font-size","9.5px").attr("font-weight","700")
+      .attr("letter-spacing","0.9px").attr("font-family","inherit")
+      .text(d.data.name.toUpperCase());
+  });
+
+  const leaves = root.leaves();
+  leaves.forEach(l=>{ l._idx=l.parent.children.indexOf(l); l._total=l.parent.children.length; });
+
+  const cells = svg.selectAll(".cell").data(leaves).join("g").attr("class","cell");
+
+  cells.append("rect")
+    .attr("x",d=>d.x0+1).attr("y",d=>d.y0+1)
+    .attr("width",d=>Math.max(0,d.x1-d.x0-2)).attr("height",d=>Math.max(0,d.y1-d.y0-2))
+    .attr("fill",d=>{ const t=d._total>1?d._idx/(d._total-1):0; return d3.color(d.data.color||TOOL_CAT_COLORS[d.data.category]||"#555").brighter(t*0.65); })
+    .attr("rx",2).style("cursor","pointer")
+    .on("mouseenter",function(e,d){ d3.select(this).attr("opacity",0.8); showToolTooltip(e,d); })
+    .on("mousemove",function(e){ moveTooltip(e); })
+    .on("mouseleave",function(){ d3.select(this).attr("opacity",1); hideTooltip(); });
+
+  addCellLabels(cells, svg,
+    d => (d.x1-d.x0) < 42 ? "" : d.data.name,
+    d => (TOOL_DISPLAY_DURATIONS[d.data.name] || fmtDuration(d.data.totalDays)) + "+ EXP"
+  );
+}
+
+// ════════════════════════════════════════════════════════════
+//  LIST VIEWS
+// ════════════════════════════════════════════════════════════
+function buildJobsList() {
+  const el = document.getElementById("list-view");
+  el.innerHTML = "";
+  const sectors = activeFilter==="all" ? CAREER : CAREER.filter(s=>s.industry===activeFilter);
+  sectors.forEach(sector => {
+    const sec = document.createElement("div");
+    sec.style.cssText = "margin-bottom:20px;";
+    const hdr = document.createElement("div");
+    hdr.style.cssText = `background:${sector.color};color:#fff;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:7px 12px;border-radius:3px;margin-bottom:8px;`;
+    hdr.textContent = sector.industry;
+    sec.appendChild(hdr);
+    sector.companies.forEach(c => {
+      const row = document.createElement("div");
+      row.style.cssText = `display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #eee;border-radius:3px;margin-bottom:6px;border-left:4px solid ${sector.color};background:#fafafa;`;
+      row.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:#111;">${c.name}</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">${c.position}</div>
+        </div>
+        <div style="flex:0 0 auto;text-align:right;">
+          <div style="font-size:13px;font-weight:600;color:#444;">${c.duration}</div>
+          <div style="font-size:11px;color:#aaa;margin-top:2px;">${c.days} days</div>
+        </div>`;
+      sec.appendChild(row);
+    });
+    el.appendChild(sec);
+  });
+}
+
+function buildToolsList() {
+  const el = document.getElementById("list-view");
+  el.innerHTML = "";
+  const cats = activeFilter==="all"
+    ? Object.keys(TOOL_CAT_COLORS)
+    : [activeFilter];
+  cats.forEach(cat => {
+    const tools = TOOLS_FLAT.filter(t=>t.category===cat).sort((a,b)=>b.totalDays-a.totalDays);
+    if (!tools.length) return;
+    const sec = document.createElement("div");
+    sec.style.cssText = "margin-bottom:20px;";
+    const hdr = document.createElement("div");
+    hdr.style.cssText = `background:${TOOL_CAT_COLORS[cat]};color:#fff;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:7px 12px;border-radius:3px;margin-bottom:8px;`;
+    hdr.textContent = cat;
+    sec.appendChild(hdr);
+    tools.forEach(t => {
+      const row = document.createElement("div");
+      row.style.cssText = `display:flex;align-items:center;padding:8px 12px;border:1px solid #eee;border-radius:3px;margin-bottom:5px;border-left:4px solid ${TOOL_CAT_COLORS[cat]};background:#fafafa;gap:10px;`;
+      row.innerHTML = `
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#111;">${t.name}</div>
+          <div style="font-size:11px;color:#888;margin-top:2px;">${t.usedIn.map(u=>u.company).join(", ")}</div>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:#555;white-space:nowrap;">${fmtDuration(t.totalDays)}</div>`;
+      sec.appendChild(row);
+    });
+    el.appendChild(sec);
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  TOOLTIP
+// ════════════════════════════════════════════════════════════
+const tooltip = document.getElementById("tooltip");
+
+// Auto-scroll for long tooltip bodies (used on HS & Collegiate Clubs)
+let _scrollRaf = null;
+let _scrollDir = 1;
+const SCROLL_SPEED = 0.4; // px per frame — lower = slower
+
+function startAutoScroll() {
+  stopAutoScroll();
+  const el = document.getElementById("tt-body");
+  _scrollDir = 1;
+  let pauseFrames = 60; // pause at each end (~1 s at 60 fps)
+
+  function tick() {
+    if (pauseFrames > 0) { pauseFrames--; _scrollRaf = requestAnimationFrame(tick); return; }
+    el.scrollTop += SCROLL_SPEED * _scrollDir;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+    const atTop    = el.scrollTop <= 0;
+    if (_scrollDir === 1 && atBottom) { _scrollDir = -1; pauseFrames = 60; }
+    if (_scrollDir === -1 && atTop)   { _scrollDir =  1; pauseFrames = 60; }
+    _scrollRaf = requestAnimationFrame(tick);
+  }
+  _scrollRaf = requestAnimationFrame(tick);
+}
+
+function stopAutoScroll() {
+  if (_scrollRaf) { cancelAnimationFrame(_scrollRaf); _scrollRaf = null; }
+  const el = document.getElementById("tt-body");
+  if (el) el.scrollTop = 0;
+}
+
+function showJobTooltip(event, d) {
+  const c = d.data;
+  const headerBar = document.getElementById("tt-header-bar");
+  headerBar.textContent = c.name;
+  headerBar.style.background = c.baseColor || "#2e2e2e";
+
+  document.getElementById("tt-mid-row").style.display = "flex";
+  document.getElementById("tt-pos").textContent = c.position;
+  document.getElementById("tt-dur").textContent = c.duration;
+  document.getElementById("tt-body").innerHTML = c.responsibilities
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/\n/g, "<br>");
+
+  const chips = document.getElementById("tt-chips");
+  if (c.hideTools) {
+    chips.style.display = "none";
+    chips.innerHTML = "";
+  } else {
+    chips.style.display = "flex";
+    chips.innerHTML = c.tools.map(t=>`<span class="tool-chip">${t}</span>`).join("");
+  }
+
+  const footer = document.getElementById("tt-footer");
+  footer.style.display = "block";
+  footer.innerHTML = `<strong>About:</strong> ${c.description}`;
+
+  tooltip.style.display = "block";
+  positionTooltip(event);
+
+  // Start auto-scroll AFTER the tooltip is visible so scrollHeight is correct
+  if (c.hideTools) {
+    requestAnimationFrame(() => requestAnimationFrame(() => startAutoScroll()));
+  }
+}
+
+function showToolTooltip(event, d) {
+  const t = d.data;
+  const catColor = TOOL_CAT_COLORS[t.category] || "#2e2e2e";
+  const headerBar = document.getElementById("tt-header-bar");
+  headerBar.textContent = t.name;
+  headerBar.style.background = catColor;
+
+  document.getElementById("tt-mid-row").style.display = "flex";
+  document.getElementById("tt-pos").textContent = t.category;
+  document.getElementById("tt-dur").textContent = fmtDuration(t.totalDays) + " exp";
+
+  document.getElementById("tt-body").innerHTML =
+    `<strong style="font-size:11px;color:#888;display:block;margin-bottom:5px;">USED IN</strong>` +
+    t.usedIn.map(u=>`<span style="display:inline-block;margin-right:8px;color:#333;">${u.company} <span style="color:#aaa;">(${u.duration})</span></span>`).join("<br>");
+
+  const chips = document.getElementById("tt-chips");
+  chips.style.display = "none";
+  chips.innerHTML = "";
+
+  const footer = document.getElementById("tt-footer");
+  footer.style.display = "none";
+
+  tooltip.style.display = "block";
+  positionTooltip(event);
+}
+
+function moveTooltip(event) { positionTooltip(event); }
+
+function positionTooltip(event) {
+  const tw=262, th=tooltip.offsetHeight||200;
+  let x=event.clientX+16, y=event.clientY+16;
+  if(x+tw>window.innerWidth-8)  x=event.clientX-tw-14;
+  if(y+th>window.innerHeight-8) y=event.clientY-th-14;
+  tooltip.style.left=x+"px"; tooltip.style.top=y+"px";
+}
+
+function hideTooltip() { stopAutoScroll(); tooltip.style.display="none"; }
+
+// ════════════════════════════════════════════════════════════
+//  RENDER DISPATCH
+// ════════════════════════════════════════════════════════════
+function render() {
+  const tw = document.getElementById("treemap-wrap");
+  const lv = document.getElementById("list-view");
+
+  if (displayMode === "market") {
+    tw.style.display = "block";
+    lv.style.display = "none";
+    viewMode === "jobs" ? buildJobsTreemap() : buildToolsTreemap();
+  } else {
+    tw.style.display = "none";
+    lv.style.display = "block";
+    viewMode === "jobs" ? buildJobsList() : buildToolsList();
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  EVENT WIRING
+// ════════════════════════════════════════════════════════════
+
+// View toggle (Jobs / Tools)
+document.getElementById("vbtn-jobs").addEventListener("click", () => {
+  if (viewMode === "jobs") return;
+  viewMode = "jobs";
+  document.getElementById("vbtn-jobs").classList.add("active");
+  document.getElementById("vbtn-tools").classList.remove("active");
+  rebuildFilterList();
+  rebuildLegend();
+  render();
+});
+document.getElementById("vbtn-tools").addEventListener("click", () => {
+  if (viewMode === "tools") return;
+  viewMode = "tools";
+  document.getElementById("vbtn-tools").classList.add("active");
+  document.getElementById("vbtn-jobs").classList.remove("active");
+  rebuildFilterList();
+  rebuildLegend();
+  render();
+});
+
+// Display toggle (Market / List)
+document.getElementById("btn-market").addEventListener("click", () => {
+  displayMode = "market";
+  document.getElementById("btn-market").classList.add("active");
+  document.getElementById("btn-list").classList.remove("active");
+  render();
+});
+document.getElementById("btn-list").addEventListener("click", () => {
+  displayMode = "list";
+  document.getElementById("btn-list").classList.add("active");
+  document.getElementById("btn-market").classList.remove("active");
+  render();
+});
+
+// Resize
+window.addEventListener("resize", () => { if (displayMode==="market") render(); });
+
+// Init
+window.addEventListener("load", render);
+</script>
+</body>
+</html>
