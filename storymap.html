@@ -227,7 +227,8 @@ body {
   min-height: 54px;
   max-height: 240px;
   overflow-y: auto;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth intentionally omitted — JS auto-scroll uses
+     behavior:'instant' and smooth here would abort every rAF frame */
 }
 .tt-resp::-webkit-scrollbar { width: 3px; }
 .tt-resp::-webkit-scrollbar-track { background: transparent; }
@@ -1271,15 +1272,26 @@ function startAutoScroll() {
   stopAutoScroll();
   const el = document.getElementById("tt-body");
   _scrollDir = 1;
-  let pauseFrames = 60; // pause at each end (~1 s at 60 fps)
+  let pos = 0;           // tracked in JS to avoid sub-pixel rounding issues
+  let pauseFrames = 90;  // ~1.5 s initial pause at 60 fps
 
   function tick() {
+    const maxScroll = el.scrollHeight - el.clientHeight;
+
+    // Layout not ready yet — keep waiting
+    if (maxScroll <= 2) { _scrollRaf = requestAnimationFrame(tick); return; }
+
     if (pauseFrames > 0) { pauseFrames--; _scrollRaf = requestAnimationFrame(tick); return; }
-    el.scrollTop += SCROLL_SPEED * _scrollDir;
-    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-    const atTop    = el.scrollTop <= 0;
-    if (_scrollDir === 1 && atBottom) { _scrollDir = -1; pauseFrames = 60; }
-    if (_scrollDir === -1 && atTop)   { _scrollDir =  1; pauseFrames = 60; }
+
+    pos += SCROLL_SPEED * _scrollDir;
+    pos  = Math.max(0, Math.min(pos, maxScroll));
+
+    // behavior:'instant' bypasses scroll-behavior:smooth entirely
+    el.scrollTo({ top: pos, behavior: "instant" });
+
+    if (_scrollDir === 1  && pos >= maxScroll) { _scrollDir = -1; pauseFrames = 90; }
+    if (_scrollDir === -1 && pos <= 0)         { _scrollDir =  1; pauseFrames = 90; }
+
     _scrollRaf = requestAnimationFrame(tick);
   }
   _scrollRaf = requestAnimationFrame(tick);
@@ -1288,7 +1300,7 @@ function startAutoScroll() {
 function stopAutoScroll() {
   if (_scrollRaf) { cancelAnimationFrame(_scrollRaf); _scrollRaf = null; }
   const el = document.getElementById("tt-body");
-  if (el) el.scrollTop = 0;
+  if (el) el.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function showJobTooltip(event, d) {
@@ -1319,9 +1331,9 @@ function showJobTooltip(event, d) {
 
   showTooltip(event);
 
-  // Start auto-scroll AFTER the tooltip is visible so scrollHeight is correct
+  // Start auto-scroll after a layout tick so scrollHeight is fully computed
   if (c.hideTools) {
-    requestAnimationFrame(() => requestAnimationFrame(() => startAutoScroll()));
+    setTimeout(startAutoScroll, 60);
   }
 }
 
