@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pi Dashboard</title>
+  <style>
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #151820;
+      --border:    #252a35;
+      --text:      #c8cdd8;
+      --muted:     #4a5168;
+      --green:     #3ddc84;
+      --amber:     #ffb347;
+      --red:       #ff5c5c;
+      --blue:      #5c9eff;
+      --font:      'JetBrains Mono', 'Fira Mono', 'Courier New', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      height: 4px;
+      width: 100%;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--indicator-color, var(--muted));
+      transform: scaleX(1);
+      transform-origin: left;
+      transition: background 0.4s;
+    }
+
+    /* Scan-line animation when online */
+    .status-bar.online::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -40%;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+      animation: scan 1.8s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes scan {
+      to { left: 140%; }
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--indicator-color, var(--muted));
+      flex-shrink: 0;
+      transition: background 0.4s;
+    }
+
+    .dot.online  { animation: pulse 1.6s ease-in-out infinite; }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 var(--green-glow, rgba(61,220,132,.7)); }
+      50%       { box-shadow: 0 0 0 5px transparent; }
+    }
+
+    .header-title {
+      flex: 1;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .status-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--indicator-color, var(--muted));
+      transition: color 0.4s;
+    }
+
+    /* ── Body ── */
+    .body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .value { color: var(--text); text-align: right; word-break: break-all; }
+    .value.mono { font-variant-numeric: tabular-nums; }
+    .value.dim  { color: var(--muted); }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── Meta grid ── */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+    }
+
+    .meta-item .label { margin-bottom: 3px; }
+
+    /* ── Event log ── */
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .log-clear {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+    }
+    .log-clear:hover { border-color: var(--muted); color: var(--text); }
+
+    .log {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+      max-height: 160px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .log::-webkit-scrollbar { width: 4px; }
+    .log::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .log-entry {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .log-time  { color: var(--muted); flex-shrink: 0; }
+    .log-msg   { color: var(--text); }
+    .log-msg.ok     { color: var(--green); }
+    .log-msg.warn   { color: var(--amber); }
+    .log-msg.error  { color: var(--red); }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 10px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="status-bar" id="statusBar"></div>
+
+  <div class="header">
+    <div class="dot" id="dot"></div>
+    <span class="header-title">Raspberry Pi — Device Monitor</span>
+    <span class="status-label" id="statusLabel">WAITING</span>
+  </div>
+
+  <div class="body">
+
+    <div class="row">
+      <span class="label">Device ID</span>
+      <span class="value dim" id="deviceId">—</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Device IP</span>
+      <span class="value mono dim" id="deviceIp">—</span>
+    </div>
+
+    <div class="row">
+      <span class="label">Last Ping</span>
+      <span class="value mono dim" id="lastSeen">—</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">CPU Temp</div>
+        <div class="value mono dim" id="cpuTemp">—</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Uptime</div>
+        <div class="value mono dim" id="uptime">—</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="log-header">
+        <span class="label">Event Log</span>
+        <button class="log-clear" onclick="clearLog()">CLEAR</button>
+      </div>
+      <div class="log" id="log"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span id="sseStatus">SSE: connecting…</span>
+    <span id="serverTime">—</span>
+  </div>
+</div>
+
+<script>
+  // ── DOM refs ────────────────────────────────────────────────────────────────
+  const statusBar   = document.getElementById('statusBar');
+  const dot         = document.getElementById('dot');
+  const statusLabel = document.getElementById('statusLabel');
+  const elDeviceId  = document.getElementById('deviceId');
+  const elDeviceIp  = document.getElementById('deviceIp');
+  const elLastSeen  = document.getElementById('lastSeen');
+  const elCpuTemp   = document.getElementById('cpuTemp');
+  const elUptime    = document.getElementById('uptime');
+  const elLog       = document.getElementById('log');
+  const elSseStatus = document.getElementById('sseStatus');
+  const elServerTime= document.getElementById('serverTime');
+
+  // ── Relative-time ticker ────────────────────────────────────────────────────
+  let lastSeenMs = null;
+
+  setInterval(() => {
+    if (lastSeenMs === null) return;
+    elLastSeen.textContent = relTime(lastSeenMs);
+  }, 1000);
+
+  setInterval(() => {
+    elServerTime.textContent = new Date().toLocaleTimeString();
+  }, 1000);
+
+  function relTime(ms) {
+    const s = Math.floor((Date.now() - ms) / 1000);
+    if (s < 5)  return 'just now';
+    if (s < 60) return `${s}s ago`;
+    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+    return `${Math.floor(s / 3600)}h ago`;
+  }
+
+  // ── State renderer ──────────────────────────────────────────────────────────
+  function applyState(state) {
+    const { online, paired, deviceId, lastSeen, ip, meta } = state;
+
+    let mode, color, glow;
+    if (!paired) {
+      mode = 'waiting'; color = 'var(--muted)';  glow = null;
+    } else if (online) {
+      mode = 'online';  color = 'var(--green)';  glow = 'rgba(61,220,132,.7)';
+    } else {
+      mode = 'offline'; color = 'var(--red)';    glow = null;
+    }
+
+    document.documentElement.style.setProperty('--indicator-color', color);
+    if (glow) document.documentElement.style.setProperty('--green-glow', glow);
+
+    statusBar.className = 'status-bar' + (mode === 'online' ? ' online' : '');
+    dot.className = 'dot' + (mode === 'online' ? ' online' : '');
+    statusLabel.textContent = mode.toUpperCase();
+
+    elDeviceId.textContent = deviceId ?? '—';
+    elDeviceId.className   = 'value' + (deviceId ? '' : ' dim');
+
+    elDeviceIp.textContent = ip ?? '—';
+    elDeviceIp.className   = 'value mono' + (ip ? '' : ' dim');
+
+    lastSeenMs = lastSeen ?? null;
+    elLastSeen.textContent = lastSeen ? relTime(lastSeen) : '—';
+    elLastSeen.className   = 'value mono' + (lastSeen ? '' : ' dim');
+
+    const temp = meta?.cpu_temp_c != null ? `${meta.cpu_temp_c.toFixed(1)} °C` : '—';
+    elCpuTemp.textContent = temp;
+    elCpuTemp.className   = 'value mono' + (meta?.cpu_temp_c != null ? '' : ' dim');
+
+    const up = meta?.uptime_s != null ? fmtUptime(meta.uptime_s) : '—';
+    elUptime.textContent = up;
+    elUptime.className   = 'value mono' + (meta?.uptime_s != null ? '' : ' dim');
+  }
+
+  function fmtUptime(s) {
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m ${Math.floor(s % 60)}s`;
+  }
+
+  // ── Event log ───────────────────────────────────────────────────────────────
+  let prevOnline = null;
+  let prevPaired = null;
+
+  function logEvent(msg, type = '') {
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    const t = new Date().toLocaleTimeString();
+    entry.innerHTML = `<span class="log-time">${t}</span><span class="log-msg ${type}">${msg}</span>`;
+    elLog.appendChild(entry);
+    elLog.scrollTop = elLog.scrollHeight;
+    // Keep last 100 entries
+    while (elLog.children.length > 100) elLog.removeChild(elLog.firstChild);
+  }
+
+  function clearLog() {
+    elLog.innerHTML = '';
+  }
+
+  function diffState(state) {
+    const { online, paired, deviceId } = state;
+    if (prevPaired === null && !paired) {
+      logEvent('Listening for device…', '');
+    }
+    if (!prevPaired && paired) {
+      logEvent(`Device paired: ${deviceId}`, 'ok');
+    }
+    if (prevOnline === false && online) {
+      logEvent(`${deviceId} came online`, 'ok');
+    }
+    if (prevOnline === true && !online) {
+      logEvent(`${deviceId ?? 'Device'} went offline`, 'warn');
+    }
+    prevOnline = online;
+    prevPaired = paired;
+  }
+
+  // ── SSE connection ──────────────────────────────────────────────────────────
+  let sse = null;
+  let reconnectTimer = null;
+
+  function connect() {
+    if (sse) { sse.close(); sse = null; }
+    elSseStatus.textContent = 'SSE: connecting…';
+
+    sse = new EventSource('/api/status');
+
+    sse.onopen = () => {
+      elSseStatus.textContent = 'SSE: connected';
+      logEvent('SSE stream connected', 'ok');
+    };
+
+    sse.onmessage = (e) => {
+      try {
+        const state = JSON.parse(e.data);
+        diffState(state);
+        applyState(state);
+      } catch (err) {
+        console.error('SSE parse error', err);
+      }
+    };
+
+    sse.onerror = () => {
+      elSseStatus.textContent = 'SSE: reconnecting…';
+      logEvent('SSE connection lost — retrying in 5s', 'error');
+      sse.close();
+      sse = null;
+      clearTimeout(reconnectTimer);
+      reconnectTimer = setTimeout(connect, 5000);
+    };
+  }
+
+  // Initial log entry then connect
+  logEvent('Dashboard loaded', '');
+  connect();
+</script>
+</body>
+</html>
