@@ -433,6 +433,7 @@ input {
 }
 
 .mobile-menu.active {
+  display: flex;
   opacity: 1;
   pointer-events: all;
 }

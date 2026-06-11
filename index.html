@@ -89,8 +89,37 @@
       display: block;
     }
     @media (max-width: 959px) {
-      #hero { grid-template-columns: 1fr !important; padding-right: var(--hero-pad) !important; }
-      #hero-right { display: none; }
+      :root {
+        --fs-label: clamp(13px, 3.5vw, 18px);
+        --fs-tick:  clamp(12px, 3.2vw, 17px);
+        --item-h:   clamp(18px, 4.8vw, 26px);
+      }
+      #hero {
+        height: auto !important;
+        overflow: visible !important;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: 100svh auto !important;
+        padding-right: var(--hero-pad) !important;
+        align-items: center !important;
+      }
+      #hero-right {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 1rem !important;
+        padding: 1.75rem var(--hero-pad) 3rem !important;
+        align-self: stretch !important;
+      }
+      #hero-img {
+        max-height: 200px !important;
+        max-width: 140px !important;
+        flex-shrink: 0;
+      }
+      #hero-buttons {
+        align-items: flex-start !important;
+        flex-shrink: 0;
+      }
     }
 
     /* ─── Phase 1 : "I work with [ticker]" ──────────────────────────────── */
