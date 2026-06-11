@@ -62,12 +62,18 @@
     #hero-right {
       display: flex;
       flex-direction: row;
-      align-items: flex-end;
+      align-items: center;
       align-self: end;
       gap: clamp(0.75rem, 2vw, 1.5rem);
     }
+    #hero-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.5rem, 1.5vw, 0.875rem);
+      align-self: center;
+      flex-shrink: 0;
+    }
     #hero-right .resume-btn {
-      margin-bottom: calc(clamp(200px, 42vh, 420px) / 3); /* 1/3 up from image bottom */
       flex-shrink: 0;
       white-space: nowrap;
     }
@@ -305,14 +311,24 @@
       </div>
 
       <div id="hero-right">
-        <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          Download Resume
-        </a>
+        <div id="hero-buttons">
+          <a href="images/2026.01_AlvinLiuResume.pdf" class="resume-btn" download aria-label="Download Resume">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Resume
+          </a>
+          <a href="https://www.officeofalvinliu.com/storymap" class="resume-btn" target="_blank" rel="noopener noreferrer" aria-label="View Jobs & Skils">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            View Jobs & Skills!
+          </a>
+        </div>
         <img
           id="hero-img"
           src="https://raw.githubusercontent.com/StoryofAlvinLiu/StoryofAlvinLiu.github.io/main/images/2026.01_ALVINHEROBODY.png"
